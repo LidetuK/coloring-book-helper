@@ -7,7 +7,23 @@ import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import Benefits from "@/components/Benefits";
 import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
+import ConsultationOffer from "@/components/ConsultationOffer";
+import Elevate from "@/components/Elevate";
+import Countdown from '@/components/Countdown';
+import RushMe from '@/components/RushMe';
+import Benefit from '@/components/Benefit';
+import AuthorBio from '@/components/AuthorBio';
+import CallToAction from '@/components/CallToAction';
+import AnimatedTestimonials from '@/components/AnimatedTestimonials';
+import BookShow from '@/components/BookShow';
+import Review from '@/components/Review';
+import Testimonial from '@/components/Testimonial';
+import BookOne from '@/components/BookOne';
+import BonusSection from '@/components/BonusSection';
+import LimitedOffer from '@/components/LimitedOffer';
+import FinalCTA from '@/components/FinalCTA';
+
+
 
 const Index = () => {
   useEffect(() => {
@@ -37,12 +53,24 @@ const Index = () => {
     <div className="min-h-screen overflow-hidden">
       <Navbar />
       <Hero />
-      <BookShowcase />
-      <Testimonials />
-      <Benefits />
-      <FAQ />
+      <Elevate/>
+      <Countdown/>
+      <Benefit/>
+      <AuthorBio/>
+      <RushMe/>
       <CTASection />
-      <Footer />
+      <CallToAction/>
+      <AnimatedTestimonials/>
+      <BookShow/>
+      <Review/>
+      <Testimonial/>
+      <BookOne/>
+      <BonusSection/>
+      <LimitedOffer/>
+      
+      <FinalCTA/>
+      <FAQ />
+      <ConsultationOffer/>
     </div>
   );
 };
