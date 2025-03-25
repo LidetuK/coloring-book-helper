@@ -1,6 +1,109 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+
+// Load stripe outside of component rendering to avoid recreating it on each render
+const stripePromise = loadStripe("pk_test_51Gx2sVCNjyaQ14tCaqL6XpRPHLRMtzOK8vjEx6WrqHsA4g6PwjQrMJbjgIkpUCj9Rll9t6wPhYfQt35w0qZ0zvrX003sS4B1yS");
+
+const CheckoutForm = ({ clientSecret, orderDetails, onSuccess }) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!stripe || !elements || !clientSecret) {
+      return;
+    }
+
+    setIsProcessing(true);
+    setErrorMessage("");
+
+    try {
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: `${orderDetails.firstName} ${orderDetails.lastName}`,
+            email: orderDetails.email,
+          },
+        },
+      });
+
+      if (error) {
+        setErrorMessage(error.message);
+        toast.error(error.message);
+      } else if (paymentIntent.status === "succeeded") {
+        // Call our success endpoint to handle fulfillment
+        const response = await supabase.functions.invoke("payment-success", {
+          body: { paymentIntentId: paymentIntent.id },
+        });
+
+        if (response.error) {
+          throw new Error(response.error.message);
+        }
+
+        toast.success("Payment successful!");
+        onSuccess(response.data);
+      }
+    } catch (err) {
+      console.error("Payment error:", err);
+      toast.error("Payment processing error. Please try again.");
+      setErrorMessage(err.message);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="bg-white p-4 rounded-md shadow-sm">
+        <h3 className="font-medium mb-2">Card Details</h3>
+        <CardElement 
+          options={{
+            style: {
+              base: {
+                fontSize: '16px',
+                color: '#424770',
+                '::placeholder': {
+                  color: '#aab7c4',
+                },
+              },
+              invalid: {
+                color: '#9e2146',
+              },
+            },
+          }}
+        />
+      </div>
+      
+      <div className="flex items-center space-x-2 text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span>Secure payment via Stripe</span>
+      </div>
+
+      <button
+        type="submit" 
+        disabled={!stripe || !elements || isProcessing} 
+        className="w-full cta-button justify-center"
+      >
+        {isProcessing ? "Processing..." : `Pay $9.95`}
+      </button>
+      
+      {errorMessage && (
+        <div className="text-red-500 text-sm">{errorMessage}</div>
+      )}
+    </form>
+  );
+};
 
 const CTASection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -13,6 +116,10 @@ const CTASection = () => {
     state: '',
     zipCode: ''
   });
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [clientSecret, setClientSecret] = useState('');
+  const [orderComplete, setOrderComplete] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const observerRef = useRef<IntersectionObserver | null>(null);
   
   useEffect(() => {
@@ -42,24 +149,59 @@ const CTASection = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast.success("Your order has been received! Check your email for confirmation details.");
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        address: '',
-        city: '',
-        state: '',
-        zipCode: ''
+    try {
+      // Create payment intent via our edge function
+      const response = await supabase.functions.invoke("create-payment", {
+        body: {
+          amount: 9.95, // Shipping & handling cost
+          currency: "usd",
+          productType: "physical", // Free physical book
+          customerEmail: formData.email,
+          customerName: `${formData.firstName} ${formData.lastName}`,
+          shippingAddress: {
+            address: formData.address,
+            city: formData.city,
+            state: formData.state,
+            zipCode: formData.zipCode,
+            country: "us" // Default to US
+          }
+        },
       });
-    }, 2000);
+      
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+      
+      // Show Stripe checkout
+      setClientSecret(response.data.clientSecret);
+      setShowCheckout(true);
+      
+    } catch (error) {
+      console.error("Error creating payment:", error);
+      toast.error("There was a problem processing your order. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handlePaymentSuccess = (data) => {
+    setOrderComplete(true);
+    setSuccessMessage(data.message || "Your order has been received! Check your email for confirmation details.");
+    setShowCheckout(false);
+    // Reset form
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: ''
+    });
   };
 
   // Countdown timer
@@ -87,6 +229,62 @@ const CTASection = () => {
     
     return () => clearInterval(interval);
   }, []);
+
+  // If order is complete, show success message
+  if (orderComplete) {
+    return (
+      <section id="claim" className="py-20 bg-gradient-to-b from-brand-gray to-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-xl">
+            <div className="text-center">
+              <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold mb-4">Order Successful!</h2>
+              <p className="mb-6">{successMessage}</p>
+              <button 
+                onClick={() => setOrderComplete(false)}
+                className="cta-button justify-center"
+              >
+                Place Another Order
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // If showing Stripe checkout
+  if (showCheckout && clientSecret) {
+    return (
+      <section id="claim" className="py-20 bg-gradient-to-b from-brand-gray to-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-md mx-auto bg-white rounded-xl shadow-xl overflow-hidden p-8">
+            <h2 className="text-2xl font-bold mb-4 text-center">Complete Your Order</h2>
+            <p className="text-center mb-6">Please enter your payment details to complete your order.</p>
+            
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <CheckoutForm 
+                clientSecret={clientSecret} 
+                orderDetails={formData}
+                onSuccess={handlePaymentSuccess}
+              />
+            </Elements>
+            
+            <button 
+              onClick={() => setShowCheckout(false)}
+              className="mt-4 w-full text-sm text-gray-500 hover:text-gray-700"
+            >
+              Back to order form
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="claim" className="py-20 bg-gradient-to-b from-brand-gray to-white">
