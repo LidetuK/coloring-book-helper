@@ -248,7 +248,7 @@ const CTASection = () => {
                   <div className="relative w-64">
                     <div className="absolute -inset-1 bg-gradient-to-br from-brand-purple to-brand-red opacity-20 blur-sm rounded-lg"></div>
                     <img 
-                      src="/lovable-uploads/32d41431-5610-4994-bcb5-67818e686355.png" 
+                      src="555.png" 
                       alt="Swaggerism, My Religion book" 
                       className="relative w-full h-auto shadow-xl rounded-lg" 
                     />

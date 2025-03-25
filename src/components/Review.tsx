@@ -43,7 +43,7 @@ const testimonials = [
         {/* Large Image */}
         <div className="flex justify-center mb-6 md:mb-10">
           <img
-            src="/lovable-uploads/111.png"
+            src="555.png"
             alt="ELEVATE HIGH'ER book reviews"
             className="w-full max-w-4xl rounded-lg shadow-lg"
           />

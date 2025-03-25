@@ -46,7 +46,7 @@ const Hero = () => {
         {/* Image Section with Adjusted Size */}
         <div className="relative flex items-center justify-center mt-4 md:mt-6 w-full">
           <img 
-            src="/8a6f75eb-74a5-4c36-bcf1-eaaa47514ad5 (1).png" 
+            src="/555.png" 
             alt="Main Feature" 
             className="rounded-lg shadow-xl w-full max-w-4xl object-cover"
           />
