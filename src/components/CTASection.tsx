@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { Check, ChevronDown } from "lucide-react";
 
 // Load stripe outside of component rendering to avoid recreating it on each render
 const stripePromise = loadStripe("pk_test_51Gx2sVCNjyaQ14tCaqL6XpRPHLRMtzOK8vjEx6WrqHsA4g6PwjQrMJbjgIkpUCj9Rll9t6wPhYfQt35w0qZ0zvrX003sS4B1yS");
@@ -13,6 +14,8 @@ const CheckoutForm = ({ clientSecret, orderDetails, onSuccess }) => {
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [billingIsSameAsShipping, setBillingIsSameAsShipping] = useState(true);
+  const [saveInfo, setSaveInfo] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,46 +64,80 @@ const CheckoutForm = ({ clientSecret, orderDetails, onSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white p-4 rounded-md shadow-sm">
-        <h3 className="font-medium mb-2">Card Details</h3>
-        <CardElement 
-          options={{
-            style: {
-              base: {
-                fontSize: '16px',
-                color: '#424770',
-                '::placeholder': {
-                  color: '#aab7c4',
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="mb-8">
+        <h3 className="font-medium mb-2 text-gray-700">Card information</h3>
+        <div className="border border-gray-300 rounded p-3 bg-white">
+          <CardElement 
+            options={{
+              style: {
+                base: {
+                  fontSize: '16px',
+                  color: '#424770',
+                  '::placeholder': {
+                    color: '#aab7c4',
+                  },
+                },
+                invalid: {
+                  color: '#9e2146',
                 },
               },
-              invalid: {
-                color: '#9e2146',
-              },
-            },
-          }}
-        />
+              hidePostalCode: true,
+            }}
+          />
+        </div>
       </div>
       
-      <div className="flex items-center space-x-2 text-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
-        <span>Secure payment via Stripe</span>
+      <div className="flex items-center mb-4">
+        <input
+          type="checkbox"
+          id="billingIsSame"
+          checked={billingIsSameAsShipping}
+          onChange={() => setBillingIsSameAsShipping(!billingIsSameAsShipping)}
+          className="mr-2 h-5 w-5"
+        />
+        <label htmlFor="billingIsSame" className="text-sm text-gray-700">
+          Billing info is same as shipping
+        </label>
+      </div>
+      
+      <div className="flex items-center mb-4">
+        <input
+          type="checkbox"
+          id="saveInfo"
+          checked={saveInfo}
+          onChange={() => setSaveInfo(!saveInfo)}
+          className="mr-2 h-5 w-5"
+        />
+        <label htmlFor="saveInfo" className="text-sm text-gray-700">
+          Securely save my information for 1-click checkout
+        </label>
+      </div>
+      
+      <div className="text-xs text-gray-500 mb-4">
+        Pay faster on AMZER LLC and everywhere Link is accepted.
       </div>
 
       <button
         type="submit" 
         disabled={!stripe || !elements || isProcessing} 
-        className="w-full cta-button justify-center"
+        className="w-full bg-blue-600 text-white py-3 px-4 rounded font-medium"
       >
-        {isProcessing ? "Processing..." : `Pay $9.95`}
+        {isProcessing ? "Processing..." : `Pay`}
       </button>
       
       {errorMessage && (
         <div className="text-red-500 text-sm">{errorMessage}</div>
       )}
+      
+      <div className="flex justify-center items-center mt-4 text-xs text-gray-500">
+        <span>Powered by</span>
+        <img src="https://cdn.jsdelivr.net/gh/stripe/stripe-js@9fcc34d95e11cf5e3a59bf522320bd3be9ed1ae7/fixture/stripe-logo-dark.svg" 
+             alt="Stripe" className="h-6 mx-2" />
+        <span className="mx-2">|</span>
+        <span className="mx-1">Terms</span>
+        <span className="mx-1">Privacy</span>
+      </div>
     </form>
   );
 };
@@ -111,11 +148,14 @@ const CTASection = () => {
     firstName: '',
     lastName: '',
     email: '',
-    address: '',
+    address1: '',
+    address2: '',
     city: '',
     state: '',
-    zipCode: ''
+    zipCode: '',
+    country: 'United States'
   });
+  const [productType, setProductType] = useState('physical'); // 'digital' or 'physical'
   const [showCheckout, setShowCheckout] = useState(false);
   const [clientSecret, setClientSecret] = useState('');
   const [orderComplete, setOrderComplete] = useState(false);
@@ -154,21 +194,28 @@ const CTASection = () => {
     setIsSubmitting(true);
     
     try {
+      // Calculate price based on product type
+      const amount = productType === 'digital' ? 9.99 : 29.99;
+      const shippingCost = productType === 'digital' ? 0 : 
+                           (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
+      const totalAmount = amount + shippingCost;
+      
       // Create payment intent via our edge function
       const response = await supabase.functions.invoke("create-payment", {
         body: {
-          amount: 9.95, // Shipping & handling cost
+          amount: totalAmount,
           currency: "usd",
-          productType: "physical", // Free physical book
+          productType: productType,
           customerEmail: formData.email,
           customerName: `${formData.firstName} ${formData.lastName}`,
-          shippingAddress: {
-            address: formData.address,
+          shippingAddress: productType === 'physical' ? {
+            address: formData.address1,
+            address2: formData.address2,
             city: formData.city,
             state: formData.state,
             zipCode: formData.zipCode,
-            country: "us" // Default to US
-          }
+            country: formData.country
+          } : undefined
         },
       });
       
@@ -197,10 +244,12 @@ const CTASection = () => {
       firstName: '',
       lastName: '',
       email: '',
-      address: '',
+      address1: '',
+      address2: '',
       city: '',
       state: '',
-      zipCode: ''
+      zipCode: '',
+      country: 'United States'
     });
   };
 
@@ -259,27 +308,129 @@ const CTASection = () => {
 
   // If showing Stripe checkout
   if (showCheckout && clientSecret) {
+    const price = productType === 'digital' ? 9.99 : 29.99;
+    const shipping = productType === 'digital' ? 0 : 
+                    (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
+    const totalPrice = price + shipping;
+
     return (
-      <section id="claim" className="py-20 bg-gradient-to-b from-brand-gray to-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-md mx-auto bg-white rounded-xl shadow-xl overflow-hidden p-8">
-            <h2 className="text-2xl font-bold mb-4 text-center">Complete Your Order</h2>
-            <p className="text-center mb-6">Please enter your payment details to complete your order.</p>
+      <section id="claim" className="py-10 bg-gradient-to-b from-brand-gray to-white">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden">
+            {/* Left Panel */}
+            <div className="bg-gray-50 p-6 md:w-2/5">
+              <div className="flex items-center mb-2 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+                <span>AMZER LLC</span>
+                <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs font-medium rounded">TEST MODE</span>
+              </div>
+              
+              <h2 className="text-lg font-medium mb-1">Elevate Higher Book</h2>
+              <div className="flex items-baseline mb-1">
+                <span className="text-2xl font-bold">${totalPrice.toFixed(2)}</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-4">
+                {productType === 'digital' ? 'Digital copy - instant access' : 'Your FREE copy - just pay shipping & handling'}
+              </p>
+              
+              <div className="border-t border-gray-200 pt-4 mt-4">
+                <div className="flex justify-between text-sm mb-2">
+                  <span>{productType === 'digital' ? 'Digital Book:' : 'Book:'}</span>
+                  <span>${price.toFixed(2)}</span>
+                </div>
+                {productType === 'physical' && (
+                  <div className="flex justify-between text-sm mb-2">
+                    <span>Shipping & Handling:</span>
+                    <span>${shipping.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-medium mt-2 pt-2 border-t border-gray-200">
+                  <span>Total:</span>
+                  <span>${totalPrice.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
             
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <CheckoutForm 
-                clientSecret={clientSecret} 
-                orderDetails={formData}
-                onSuccess={handlePaymentSuccess}
-              />
-            </Elements>
-            
-            <button 
-              onClick={() => setShowCheckout(false)}
-              className="mt-4 w-full text-sm text-gray-500 hover:text-gray-700"
-            >
-              Back to order form
-            </button>
+            {/* Right Panel - Checkout Form */}
+            <div className="p-6 md:w-3/5">
+              <div className="mb-6 flex justify-center">
+                <button className="bg-green-500 text-white font-medium py-2 px-4 rounded w-full">
+                  Pay with <span className="font-bold">Link</span>
+                </button>
+              </div>
+              
+              <div className="flex items-center justify-center text-sm text-gray-500 mb-6">
+                <div className="border-t border-gray-200 flex-grow mr-3"></div>
+                <span>Or pay with card</span>
+                <div className="border-t border-gray-200 flex-grow ml-3"></div>
+              </div>
+              
+              <div className="mb-6">
+                <h3 className="font-medium mb-2 text-gray-700">Shipping information</h3>
+                <div className="mb-4">
+                  <label className="block text-sm text-gray-600 mb-1">Email</label>
+                  <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                    {formData.email}
+                  </div>
+                </div>
+                
+                {productType === 'physical' && (
+                  <div>
+                    <h4 className="text-sm font-medium mb-2">Shipping address</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                        {formData.firstName} {formData.lastName}
+                      </div>
+                      <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                        {formData.country}
+                      </div>
+                      <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                        {formData.address1}
+                      </div>
+                      {formData.address2 && (
+                        <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                          {formData.address2}
+                        </div>
+                      )}
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                          {formData.city}
+                        </div>
+                        <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                          {formData.zipCode}
+                        </div>
+                      </div>
+                      <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                        {formData.state}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                <button 
+                  onClick={() => setShowCheckout(false)}
+                  className="mt-4 text-sm text-blue-600 hover:text-blue-800"
+                >
+                  Edit information
+                </button>
+              </div>
+              
+              <h3 className="font-medium mb-2 text-gray-700">Payment details</h3>
+              
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <CheckoutForm 
+                  clientSecret={clientSecret} 
+                  orderDetails={{
+                    ...formData,
+                    productType,
+                    totalPrice: `$${totalPrice.toFixed(2)}`
+                  }}
+                  onSuccess={handlePaymentSuccess}
+                />
+              </Elements>
+            </div>
           </div>
         </div>
       </section>
@@ -311,11 +462,42 @@ const CTASection = () => {
             <div className="p-8 md:p-12 flex flex-col justify-center">
               <div className="max-w-md">
                 <h3 className="text-2xl font-bold mb-4">
-                  Claim Your FREE Copy Now
+                  Select Your Preferred Format
                 </h3>
-                <p className="text-brand-black/70 mb-6">
-                  Just Cover Shipping & Handling
-                </p>
+                
+                <div className="mb-6 space-y-4">
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="physical"
+                      name="productType"
+                      value="physical"
+                      checked={productType === 'physical'}
+                      onChange={() => setProductType('physical')}
+                      className="mr-3 h-5 w-5"
+                    />
+                    <label htmlFor="physical" className="flex flex-col">
+                      <span className="font-medium">Physical Book - FREE</span>
+                      <span className="text-sm text-gray-600">Just pay shipping & handling - $9.95</span>
+                    </label>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="digital"
+                      name="productType"
+                      value="digital"
+                      checked={productType === 'digital'}
+                      onChange={() => setProductType('digital')}
+                      className="mr-3 h-5 w-5"
+                    />
+                    <label htmlFor="digital" className="flex flex-col">
+                      <span className="font-medium">Digital Copy - $9.99</span>
+                      <span className="text-sm text-gray-600">Instant download access</span>
+                    </label>
+                  </div>
+                </div>
                 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
@@ -355,53 +537,93 @@ const CTASection = () => {
                     />
                   </div>
                   
-                  <div>
-                    <input
-                      type="text"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      placeholder="Shipping Address"
-                      className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
-                      required
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <input
-                        type="text"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        placeholder="City"
-                        className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="text"
-                        name="state"
-                        value={formData.state}
-                        onChange={handleChange}
-                        placeholder="State"
-                        className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="text"
-                        name="zipCode"
-                        value={formData.zipCode}
-                        onChange={handleChange}
-                        placeholder="ZIP Code"
-                        className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
-                        required
-                      />
-                    </div>
-                  </div>
+                  {productType === 'physical' && (
+                    <>
+                      <div>
+                        <select
+                          name="country"
+                          value={formData.country}
+                          onChange={(e) => setFormData(prev => ({ ...prev, country: e.target.value }))}
+                          className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
+                          required
+                        >
+                          <option value="United States">United States</option>
+                          <option value="Canada">Canada</option>
+                          <option value="United Kingdom">United Kingdom</option>
+                          <option value="France">France</option>
+                          <option value="Germany">Germany</option>
+                          <option value="Italy">Italy</option>
+                          <option value="Spain">Spain</option>
+                        </select>
+                      </div>
+                      <div>
+                        <input
+                          type="text"
+                          name="address1"
+                          value={formData.address1}
+                          onChange={handleChange}
+                          placeholder="Address Line 1"
+                          className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <input
+                          type="text"
+                          name="address2"
+                          value={formData.address2}
+                          onChange={handleChange}
+                          placeholder="Address Line 2 (optional)"
+                          className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <input
+                            type="text"
+                            name="city"
+                            value={formData.city}
+                            onChange={handleChange}
+                            placeholder="City"
+                            className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <input
+                            type="text"
+                            name="zipCode"
+                            value={formData.zipCode}
+                            onChange={handleChange}
+                            placeholder="ZIP Code"
+                            className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
+                            required
+                          />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <input
+                          type="text"
+                          name="state"
+                          value={formData.state}
+                          onChange={handleChange}
+                          placeholder="State/Province"
+                          className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
+                          required
+                        />
+                      </div>
+                      
+                      <div className="text-sm">
+                        <p className="font-medium">Shipping Costs:</p>
+                        <ul className="list-disc pl-5 mt-1 text-gray-600">
+                          <li>USA & Canada: $14.97 (includes handling)</li>
+                          <li>Europe: $14.99 (includes handling)</li>
+                        </ul>
+                      </div>
+                    </>
+                  )}
                   
                   <div className="flex items-center space-x-2 text-sm text-brand-black/70">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -416,25 +638,18 @@ const CTASection = () => {
                     <span>256-bit SSL Encryption</span>
                   </div>
                   
-                  <div className="flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-red mr-2">
-                      <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z"></path>
-                      <path d="M12 8v4"></path>
-                      <path d="M12 16h.01"></path>
-                    </svg>
-                    <span className="text-sm text-brand-black/70">Money-Back Guarantee</span>
-                  </div>
-                  
                   <button
                     type="submit"
                     className="w-full cta-button justify-center"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? 'Processing...' : 'Rush Me A Free Copy Now'}
+                    {isSubmitting ? 'Processing...' : productType === 'physical' ? 'Rush Me A Free Copy Now' : 'Get Digital Access Now'}
                   </button>
                   
                   <p className="text-center text-xs text-brand-black/60">
-                    By clicking above, you agree to pay shipping & handling of $9.95
+                    {productType === 'physical' 
+                      ? 'By clicking above, you agree to pay shipping & handling of $9.95' 
+                      : 'By clicking above, you agree to pay $9.99 for digital access'}
                   </p>
                 </form>
               </div>
@@ -447,7 +662,7 @@ const CTASection = () => {
                     <div className="absolute -inset-1 bg-gradient-to-br from-brand-purple to-brand-red opacity-20 blur-sm rounded-lg"></div>
                     <img 
                       src="555.png" 
-                      alt="Swaggerism, My Religion book" 
+                      alt="Elevate Higher book" 
                       className="relative w-full h-auto shadow-xl rounded-lg" 
                     />
                   </div>
@@ -455,7 +670,7 @@ const CTASection = () => {
                 
                 <h4 className="text-lg font-bold mb-2">Discover the Secrets to Success</h4>
                 <p className="text-brand-black/70 mb-6">
-                  This book will transform your mindset and help you achieve greatness. Grab your FREE copy today—just cover shipping & handling!
+                  This book will transform your mindset and help you achieve greatness. Choose your preferred format and start your journey today!
                 </p>
                 
                 <div className="space-y-3">
@@ -466,8 +681,12 @@ const CTASection = () => {
                       </svg>
                     </div>
                     <div>
-                      <span className="font-medium">Premium Hardcover Edition</span>
-                      <p className="text-sm text-brand-black/60">High-quality print with beautiful design</p>
+                      <span className="font-medium">Premium {productType === 'physical' ? 'Hardcover' : 'Digital'} Edition</span>
+                      <p className="text-sm text-brand-black/60">
+                        {productType === 'physical' 
+                          ? 'High-quality print with beautiful design' 
+                          : 'Instant access with easy navigation'}
+                      </p>
                     </div>
                   </div>
                   

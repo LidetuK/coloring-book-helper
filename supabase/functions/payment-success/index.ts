@@ -39,10 +39,10 @@ serve(async (req) => {
     let responseMessage = "";
     
     if (productType === "digital") {
-      responseMessage = "Your digital book purchase was successful! Check your email for download instructions.";
+      responseMessage = "Your digital book purchase was successful! You'll receive an email with download instructions within the next few minutes.";
       // In a real implementation, you would send an email with download links here
     } else {
-      responseMessage = "Your physical book order was successful! It will be shipped to the address you provided.";
+      responseMessage = "Your physical book order was successful! It will be shipped to the address you provided within 14-25 business days.";
       // In a real implementation, you would save this order to a database for fulfillment
     }
     

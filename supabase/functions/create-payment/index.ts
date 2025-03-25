@@ -20,6 +20,7 @@ interface PaymentRequest {
   customerName: string;
   shippingAddress?: {
     address: string;
+    address2?: string;
     city: string;
     state: string;
     zipCode: string;
@@ -44,14 +45,20 @@ serve(async (req) => {
     }: PaymentRequest = await req.json();
 
     console.log(`Processing ${productType} book payment for ${customerEmail}`);
+    
+    // Set appropriate description based on product type
+    let description = "";
+    if (productType === "digital") {
+      description = "Digital Book - Elevate Higher - Immediate Access";
+    } else {
+      description = "Physical Book - Elevate Higher - Will be shipped";
+    }
 
     // Create payment intent
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Convert to cents
       currency: currency.toLowerCase(),
-      description: productType === "digital" 
-        ? "Digital Book - Immediate Access" 
-        : "Physical Book - Will be shipped",
+      description: description,
       metadata: {
         customerName,
         customerEmail,
