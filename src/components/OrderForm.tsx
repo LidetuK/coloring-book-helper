@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,14 +13,12 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Lock, CreditCard, Shield } from "lucide-react";
+import { Lock, CreditCard, Shield, Mail, Truck } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 
-// Load stripe outside of component rendering to avoid recreating it on each render
 const stripePromise = loadStripe("pk_test_51Gx2sVCNjyaQ14tCaqL6XpRPHLRMtzOK8vjEx6WrqHsA4g6PwjQrMJbjgIkpUCj9Rll9t6wPhYfQt35w0qZ0zvrX003sS4B1yS");
 
-// Country options with shipping rates
 const countries = [
   { value: "us", label: "United States", region: "northAmerica" },
   { value: "ca", label: "Canada", region: "northAmerica" },
@@ -32,13 +29,11 @@ const countries = [
   { value: "es", label: "Spain", region: "europe" },
 ];
 
-// Form validation schema
 const orderFormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address"),
   productType: z.enum(["digital", "physical"]),
-  // Only required for physical books
   address: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
@@ -49,7 +44,6 @@ const orderFormSchema = z.object({
   }),
 });
 
-// Type for form values
 type OrderFormValues = z.infer<typeof orderFormSchema>;
 
 const CheckoutForm = ({ clientSecret, orderDetails, onSuccess }) => {
@@ -83,7 +77,6 @@ const CheckoutForm = ({ clientSecret, orderDetails, onSuccess }) => {
         setErrorMessage(error.message);
         toast.error(error.message);
       } else if (paymentIntent.status === "succeeded") {
-        // Call our success endpoint to handle fulfillment
         const response = await supabase.functions.invoke("payment-success", {
           body: { paymentIntentId: paymentIntent.id },
         });
@@ -154,7 +147,6 @@ const OrderForm = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [showPaymentForm, setShowPaymentForm] = useState(false);
 
-  // Initialize form with react-hook-form
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderFormSchema),
     defaultValues: {
@@ -170,13 +162,11 @@ const OrderForm = () => {
       agreeTerms: false,
     },
   });
-  
-  // Watch for product type changes to update form requirements
+
   const productType = form.watch("productType");
   const country = form.watch("country");
 
   useEffect(() => {
-    // Reset shipping fields when switching to digital
     if (productType === "digital") {
       form.setValue("address", "");
       form.setValue("city", "");
@@ -185,7 +175,6 @@ const OrderForm = () => {
       form.setValue("country", "us");
     }
     
-    // Make shipping fields required for physical books
     if (productType === "physical") {
       orderFormSchema.extend({
         address: z.string().min(1, "Address is required"),
@@ -197,20 +186,16 @@ const OrderForm = () => {
     }
   }, [productType, form]);
 
-  // Calculate price based on product and shipping
   const calculatePrice = () => {
     let basePrice = productType === "digital" ? 9.99 : 29.99;
     let shippingCost = 0;
     
     if (productType === "physical") {
-      // Get selected country
       const selectedCountry = countries.find(c => c.value === country);
       if (selectedCountry) {
         if (selectedCountry.region === "northAmerica") {
-          // USA & Canada: Shipping $11.99 + handling $2.98
           shippingCost = 14.97;
         } else if (selectedCountry.region === "europe") {
-          // Europe: $14.99 shipping
           shippingCost = 14.99;
         }
       }
@@ -227,10 +212,8 @@ const OrderForm = () => {
     setIsLoading(true);
     
     try {
-      // Calculate final price
       const pricing = calculatePrice();
       
-      // Prepare shipping address if physical book
       const shippingAddress = data.productType === "physical" ? {
         address: data.address,
         city: data.city,
@@ -239,7 +222,6 @@ const OrderForm = () => {
         country: data.country
       } : undefined;
       
-      // Create payment intent
       const response = await supabase.functions.invoke("create-payment", {
         body: {
           amount: parseFloat(pricing.totalPrice),
@@ -255,7 +237,6 @@ const OrderForm = () => {
         throw new Error(response.error.message);
       }
       
-      // Save details and show payment form
       setClientSecret(response.data.clientSecret);
       setOrderDetails({
         ...data,
@@ -274,11 +255,9 @@ const OrderForm = () => {
   const handlePaymentSuccess = (data) => {
     setOrderComplete(true);
     setSuccessMessage(data.message);
-    // Reset form
     form.reset();
   };
 
-  // If order is complete, show success message
   if (orderComplete) {
     return (
       <Card className="max-w-md mx-auto mt-8">
@@ -304,6 +283,30 @@ const OrderForm = () => {
               </svg>
             </div>
             <p className="mb-4">{successMessage}</p>
+            {successMessage.includes("digital") && (
+              <div className="mb-4 p-4 bg-blue-50 rounded-md">
+                <div className="flex items-center mb-2">
+                  <Mail className="h-5 w-5 text-blue-500 mr-2" />
+                  <span className="font-medium">Check Your Email</span>
+                </div>
+                <p className="text-sm text-gray-600">
+                  We've sent your download link to the email address you provided. 
+                  Please check your inbox (and spam folder) for instructions on how to download your book.
+                </p>
+              </div>
+            )}
+            {successMessage.includes("physical") && (
+              <div className="mb-4 p-4 bg-blue-50 rounded-md">
+                <div className="flex items-center mb-2">
+                  <Truck className="h-5 w-5 text-blue-500 mr-2" />
+                  <span className="font-medium">Shipping Information</span>
+                </div>
+                <p className="text-sm text-gray-600">
+                  Your book will be shipped to the address you provided within the next 14-25 business days.
+                  You'll receive a shipping confirmation email when your order is dispatched.
+                </p>
+              </div>
+            )}
             <p className="text-sm text-gray-500">
               A confirmation email has been sent to your email address.
             </p>
@@ -318,7 +321,6 @@ const OrderForm = () => {
     );
   }
 
-  // If payment form is showing
   if (showPaymentForm && clientSecret && orderDetails) {
     return (
       <div className="max-w-md mx-auto">
@@ -378,7 +380,6 @@ const OrderForm = () => {
     );
   }
 
-  // Show the initial order form
   return (
     <section id="order" className="py-10 md:py-20 bg-gray-100">
       <div className="max-w-6xl mx-auto px-4">
@@ -658,3 +659,5 @@ const OrderForm = () => {
 };
 
 export default OrderForm;
+
+
