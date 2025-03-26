@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -197,7 +196,7 @@ const OrderForm = () => {
       const selectedCountry = countries.find(c => c.value === country);
       if (selectedCountry) {
         if (selectedCountry.region === "northAmerica") {
-          shippingCost = 14.97;
+          shippingCost = 11.99 + 2.98; // $11.99 + $2.98 handling
         } else if (selectedCountry.region === "europe") {
           shippingCost = 14.99;
         }
@@ -609,7 +608,7 @@ const OrderForm = () => {
                     <div className="text-sm">
                       <p className="font-medium">Shipping Costs:</p>
                       <ul className="list-disc pl-5 mt-1 text-gray-600">
-                        <li>USA & Canada: $14.97 (includes handling)</li>
+                        <li>USA & Canada: $11.99 + $2.98 handling</li>
                         <li>Europe: $14.99 (includes handling)</li>
                       </ul>
                     </div>

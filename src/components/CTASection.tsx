@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,7 +5,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Check, ChevronDown } from "lucide-react";
 
-// Load stripe outside of component rendering to avoid recreating it on each render
 const stripePromise = loadStripe("pk_test_51Gx2sVCNjyaQ14tCaqL6XpRPHLRMtzOK8vjEx6WrqHsA4g6PwjQrMJbjgIkpUCj9Rll9t6wPhYfQt35w0qZ0zvrX003sS4B1yS");
 
 const CheckoutForm = ({ clientSecret, orderDetails, onSuccess }) => {
@@ -42,7 +40,6 @@ const CheckoutForm = ({ clientSecret, orderDetails, onSuccess }) => {
         setErrorMessage(error.message);
         toast.error(error.message);
       } else if (paymentIntent.status === "succeeded") {
-        // Call our success endpoint to handle fulfillment
         const response = await supabase.functions.invoke("payment-success", {
           body: { paymentIntentId: paymentIntent.id },
         });
@@ -194,13 +191,11 @@ const CTASection = () => {
     setIsSubmitting(true);
     
     try {
-      // Calculate price based on product type
       const amount = productType === 'digital' ? 9.99 : 29.99;
       const shippingCost = productType === 'digital' ? 0 : 
                            (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
       const totalAmount = amount + shippingCost;
       
-      // Create payment intent via our edge function
       const response = await supabase.functions.invoke("create-payment", {
         body: {
           amount: totalAmount,
@@ -223,7 +218,6 @@ const CTASection = () => {
         throw new Error(response.error.message);
       }
       
-      // Show Stripe checkout
       setClientSecret(response.data.clientSecret);
       setShowCheckout(true);
       
@@ -239,7 +233,6 @@ const CTASection = () => {
     setOrderComplete(true);
     setSuccessMessage(data.message || "Your order has been received! Check your email for confirmation details.");
     setShowCheckout(false);
-    // Reset form
     setFormData({
       firstName: '',
       lastName: '',
@@ -253,7 +246,6 @@ const CTASection = () => {
     });
   };
 
-  // Countdown timer
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
     minutes: 57,
@@ -270,7 +262,6 @@ const CTASection = () => {
         } else if (prev.hours > 0) {
           return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
         } else {
-          // Reset to 24 hours when it reaches zero
           return { hours: 23, minutes: 59, seconds: 59 };
         }
       });
@@ -279,7 +270,6 @@ const CTASection = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // If order is complete, show success message
   if (orderComplete) {
     return (
       <section id="claim" className="py-20 bg-gradient-to-b from-brand-gray to-white">
@@ -306,7 +296,6 @@ const CTASection = () => {
     );
   }
 
-  // If showing Stripe checkout
   if (showCheckout && clientSecret) {
     const price = productType === 'digital' ? 9.99 : 29.99;
     const shipping = productType === 'digital' ? 0 : 
@@ -317,7 +306,6 @@ const CTASection = () => {
       <section id="claim" className="py-10 bg-gradient-to-b from-brand-gray to-white">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden">
-            {/* Left Panel */}
             <div className="bg-gray-50 p-6 md:w-2/5">
               <div className="flex items-center mb-2 text-sm text-gray-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
@@ -353,7 +341,6 @@ const CTASection = () => {
               </div>
             </div>
             
-            {/* Right Panel - Checkout Form */}
             <div className="p-6 md:w-3/5">
               <div className="mb-6 flex justify-center">
                 <button className="bg-green-500 text-white font-medium py-2 px-4 rounded w-full">
@@ -443,7 +430,7 @@ const CTASection = () => {
         <div className="text-center mb-12 animate-on-scroll">
           <span className="badge badge-primary">LIMITED TIME OFFER</span>
           <h2 className="mt-4 text-3xl md:text-4xl font-display font-bold">
-            Elevate Higher With Your Free Copy<br className="hidden md:block" /> And Exclusive Bonuses!
+            Elevate Higher With Your Copy<br className="hidden md:block" /> And Exclusive Bonuses!
           </h2>
           <div className="mt-4 inline-flex items-center justify-center space-x-2 bg-brand-black/90 text-white px-4 py-2 rounded-md">
             <span className="text-sm">Offer ends in:</span>
@@ -477,8 +464,8 @@ const CTASection = () => {
                       className="mr-3 h-5 w-5"
                     />
                     <label htmlFor="physical" className="flex flex-col">
-                      <span className="font-medium">Physical Book - FREE</span>
-                      <span className="text-sm text-gray-600">Just pay shipping & handling - $9.95</span>
+                      <span className="font-medium">Physical Book - $29.99</span>
+                      <span className="text-sm text-gray-600">Plus shipping & handling</span>
                     </label>
                   </div>
                   
@@ -618,7 +605,7 @@ const CTASection = () => {
                       <div className="text-sm">
                         <p className="font-medium">Shipping Costs:</p>
                         <ul className="list-disc pl-5 mt-1 text-gray-600">
-                          <li>USA & Canada: $14.97 (includes handling)</li>
+                          <li>USA & Canada: $11.99 + $2.98 handling</li>
                           <li>Europe: $14.99 (includes handling)</li>
                         </ul>
                       </div>
@@ -648,7 +635,7 @@ const CTASection = () => {
                   
                   <p className="text-center text-xs text-brand-black/60">
                     {productType === 'physical' 
-                      ? 'By clicking above, you agree to pay shipping & handling of $9.95' 
+                      ? 'By clicking above, you agree to pay $29.99 plus shipping & handling' 
                       : 'By clicking above, you agree to pay $9.99 for digital access'}
                   </p>
                 </form>
@@ -724,3 +711,4 @@ const CTASection = () => {
 };
 
 export default CTASection;
+

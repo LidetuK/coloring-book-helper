@@ -44,9 +44,9 @@ serve(async (req) => {
       try {
         console.log("Attempting to send email to:", customerEmail);
         
-        // Send email with download link
+        // Send email with download link using onboarding@resend.dev domain which is already verified
         const { data, error } = await resend.emails.send({
-          from: "Elevate Higher Book <orders@resend.dev>",
+          from: "Elevate Higher <onboarding@resend.dev>",
           to: customerEmail,
           subject: "Your Digital Book Download Link",
           html: `
