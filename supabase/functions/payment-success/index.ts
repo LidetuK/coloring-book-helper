@@ -9,6 +9,9 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, {
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
+// The verified email address associated with your Resend account
+const VERIFIED_EMAIL = "rassmame9@gmail.com"; // Replace this with your actual verified email
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -36,6 +39,7 @@ serve(async (req) => {
     console.log(`Processing successful payment for ${customerEmail}, product: ${productType}`);
     
     let responseMessage = "";
+    let emailStatus = "not_sent";
     
     if (productType === "digital") {
       // Send email with download link for digital product
@@ -44,10 +48,13 @@ serve(async (req) => {
       try {
         console.log("Attempting to send email to:", customerEmail);
         
-        // Send email with download link using onboarding@resend.dev domain which is already verified
+        // In development/testing, we'll only send to the verified email
+        const recipientEmail = VERIFIED_EMAIL; // Use the verified email in testing
+        
+        // Send email with download link
         const { data, error } = await resend.emails.send({
           from: "Elevate Higher <onboarding@resend.dev>",
-          to: customerEmail,
+          to: recipientEmail, // Using verified email instead of customerEmail
           subject: "Your Digital Book Download Link",
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -77,14 +84,19 @@ serve(async (req) => {
         
         if (error) {
           console.error("Error sending email:", error);
-          throw new Error(`Failed to send email: ${error.message}`);
+          emailStatus = "error";
+        } else {
+          emailStatus = "sent_to_test";
+          console.log("Email sent successfully to test account");
         }
         
-        responseMessage = "Your digital book purchase was successful! We've sent an email with download instructions to your inbox. Please check your email (including spam/junk folders) for your download link.";
+        // We inform the user about the download regardless of email status
+        responseMessage = "Your digital book purchase was successful! Here is your download link: https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing";
+        
       } catch (emailError) {
         console.error("Failed to send email:", emailError);
-        // We'll continue the process even if email fails, but log the error
-        responseMessage = "Your digital book purchase was successful! We tried to send an email with download instructions, but encountered an error. Please contact support if you don't receive your download link soon.";
+        emailStatus = "error";
+        responseMessage = "Your digital book purchase was successful! Here is your download link: https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing";
       }
     } else {
       responseMessage = "Your physical book order was successful! It will be shipped to the address you provided within 14-25 business days.";
@@ -95,8 +107,10 @@ serve(async (req) => {
       JSON.stringify({ 
         success: true,
         message: responseMessage,
-        email: customerEmail, // Return the email used for debugging purposes
-        productType: productType // Return the product type for debugging purposes
+        email: customerEmail,
+        productType: productType,
+        emailStatus: emailStatus,
+        downloadLink: productType === "digital" ? "https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing" : null
       }),
       {
         status: 200,

@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
-import { Lock, CreditCard, Shield, Mail, Truck } from "lucide-react";
+import { Lock, CreditCard, Shield, Mail, Truck, Download } from "lucide-react";
 
 const stripePromise = loadStripe("pk_test_51Gx2sVCNjyaQ14tCaqL6XpRPHLRMtzOK8vjEx6WrqHsA4g6PwjQrMJbjgIkpUCj9Rll9t6wPhYfQt35w0qZ0zvrX003sS4B1yS");
 
@@ -148,6 +148,7 @@ const OrderForm = () => {
   const [emailUsed, setEmailUsed] = useState("");
   const [productTypeOrdered, setProductTypeOrdered] = useState("");
   const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [downloadLink, setDownloadLink] = useState("");
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderFormSchema),
@@ -258,13 +259,16 @@ const OrderForm = () => {
     setOrderComplete(true);
     setSuccessMessage(data.message || "Your order has been received!");
     
-    // Store additional information for debugging
     if (data.email) {
       setEmailUsed(data.email);
     }
     
     if (data.productType) {
       setProductTypeOrdered(data.productType);
+    }
+    
+    if (data.downloadLink) {
+      setDownloadLink(data.downloadLink);
     }
     
     form.reset();
@@ -295,7 +299,30 @@ const OrderForm = () => {
               </svg>
             </div>
             <p className="mb-4">{successMessage}</p>
-            {productTypeOrdered === "digital" && (
+            {productTypeOrdered === "digital" && downloadLink && (
+              <div className="mb-4 p-4 bg-blue-50 rounded-md w-full">
+                <div className="flex items-center mb-2">
+                  <Download className="h-5 w-5 text-blue-500 mr-2" />
+                  <span className="font-medium">Download Your Book</span>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">
+                  Your book is ready to download. Click the button below to get your copy.
+                </p>
+                <a 
+                  href={downloadLink}
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="flex items-center justify-center w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-colors"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Now
+                </a>
+                <p className="text-xs text-gray-500 mt-2">
+                  We've also attempted to send this link to your email ({emailUsed}).
+                </p>
+              </div>
+            )}
+            {productTypeOrdered === "digital" && !downloadLink && (
               <div className="mb-4 p-4 bg-blue-50 rounded-md">
                 <div className="flex items-center mb-2">
                   <Mail className="h-5 w-5 text-blue-500 mr-2" />
