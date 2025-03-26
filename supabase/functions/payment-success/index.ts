@@ -42,49 +42,50 @@ serve(async (req) => {
       const downloadLink = "https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing";
       
       try {
+        console.log("Attempting to send email to:", customerEmail);
+        
         // Send email with download link
-        if (resend) {
-          const { data, error } = await resend.emails.send({
-            from: "Book Downloads <orders@yourdomain.com>",
-            to: customerEmail,
-            subject: "Your Digital Book Download Link",
-            html: `
-              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <h1 style="color: #3b82f6;">Your Book Download is Ready!</h1>
-                <p>Hello ${customerName},</p>
-                <p>Thank you for purchasing the digital copy of "Elevate Higher"!</p>
-                <p>You can download your book by clicking the button below:</p>
-                <div style="text-align: center; margin: 30px 0;">
-                  <a href="${downloadLink}" 
-                     style="background-color: #3b82f6; color: white; padding: 12px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">
-                     Download Your Book
-                  </a>
-                </div>
-                <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
-                <p style="word-break: break-all; color: #4b5563;">${downloadLink}</p>
-                <p>This link will remain active, so you can download your book at any time.</p>
-                <p>If you have any questions or need assistance, please reply to this email.</p>
-                <p>Happy reading!</p>
-                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.875rem;">
-                  <p>© 2025 Your Company. All rights reserved.</p>
-                </div>
+        const { data, error } = await resend.emails.send({
+          from: "Elevate Higher Book <orders@resend.dev>",
+          to: customerEmail,
+          subject: "Your Digital Book Download Link",
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h1 style="color: #3b82f6;">Your Book Download is Ready!</h1>
+              <p>Hello ${customerName},</p>
+              <p>Thank you for purchasing the digital copy of "Elevate Higher"!</p>
+              <p>You can download your book by clicking the button below:</p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${downloadLink}" 
+                   style="background-color: #3b82f6; color: white; padding: 12px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                   Download Your Book
+                </a>
               </div>
-            `,
-          });
-          
-          console.log("Email sending response:", data, error);
-          
-          if (error) {
-            console.error("Error sending email:", error);
-          }
+              <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
+              <p style="word-break: break-all; color: #4b5563;">${downloadLink}</p>
+              <p>This link will remain active, so you can download your book at any time.</p>
+              <p>If you have any questions or need assistance, please reply to this email.</p>
+              <p>Happy reading!</p>
+              <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.875rem;">
+                <p>© 2025 Your Company. All rights reserved.</p>
+              </div>
+            </div>
+          `,
+        });
+        
+        console.log("Email sending response:", data, error);
+        
+        if (error) {
+          console.error("Error sending email:", error);
+          throw new Error(`Failed to send email: ${error.message}`);
         }
+        
+        responseMessage = "Your digital book purchase was successful! We've sent an email with download instructions to your inbox. Please check your email (including spam/junk folders) for your download link.";
       } catch (emailError) {
         console.error("Failed to send email:", emailError);
-        // We'll continue the process even if email fails
+        // We'll continue the process even if email fails, but log the error
+        responseMessage = "Your digital book purchase was successful! We tried to send an email with download instructions, but encountered an error. Please contact support if you don't receive your download link soon.";
       }
-      
-      responseMessage = "Your digital book purchase was successful! We've sent an email with download instructions to your inbox. Please check your email (including spam/junk folders) for your download link.";
-      
     } else {
       responseMessage = "Your physical book order was successful! It will be shipped to the address you provided within 14-25 business days.";
       // In a real implementation, you would save this order to a database for fulfillment
@@ -93,7 +94,9 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: responseMessage
+        message: responseMessage,
+        email: customerEmail, // Return the email used for debugging purposes
+        productType: productType // Return the product type for debugging purposes
       }),
       {
         status: 200,

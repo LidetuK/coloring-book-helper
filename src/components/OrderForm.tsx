@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,9 +14,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Lock, CreditCard, Shield, Mail, Truck } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
+import { Lock, CreditCard, Shield, Mail, Truck } from "lucide-react";
 
 const stripePromise = loadStripe("pk_test_51Gx2sVCNjyaQ14tCaqL6XpRPHLRMtzOK8vjEx6WrqHsA4g6PwjQrMJbjgIkpUCj9Rll9t6wPhYfQt35w0qZ0zvrX003sS4B1yS");
 
@@ -145,6 +146,8 @@ const OrderForm = () => {
   const [orderDetails, setOrderDetails] = useState(null);
   const [orderComplete, setOrderComplete] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [emailUsed, setEmailUsed] = useState("");
+  const [productTypeOrdered, setProductTypeOrdered] = useState("");
   const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   const form = useForm<OrderFormValues>({
@@ -254,7 +257,17 @@ const OrderForm = () => {
 
   const handlePaymentSuccess = (data) => {
     setOrderComplete(true);
-    setSuccessMessage(data.message);
+    setSuccessMessage(data.message || "Your order has been received!");
+    
+    // Store additional information for debugging
+    if (data.email) {
+      setEmailUsed(data.email);
+    }
+    
+    if (data.productType) {
+      setProductTypeOrdered(data.productType);
+    }
+    
     form.reset();
   };
 
@@ -283,19 +296,19 @@ const OrderForm = () => {
               </svg>
             </div>
             <p className="mb-4">{successMessage}</p>
-            {successMessage.includes("digital") && (
+            {productTypeOrdered === "digital" && (
               <div className="mb-4 p-4 bg-blue-50 rounded-md">
                 <div className="flex items-center mb-2">
                   <Mail className="h-5 w-5 text-blue-500 mr-2" />
                   <span className="font-medium">Check Your Email</span>
                 </div>
                 <p className="text-sm text-gray-600">
-                  We've sent your download link to the email address you provided. 
-                  Please check your inbox (and spam folder) for instructions on how to download your book.
+                  We've sent your download link to <strong>{emailUsed}</strong>. 
+                  Please check your inbox (and spam/junk folder) for instructions on how to download your book.
                 </p>
               </div>
             )}
-            {successMessage.includes("physical") && (
+            {productTypeOrdered === "physical" && (
               <div className="mb-4 p-4 bg-blue-50 rounded-md">
                 <div className="flex items-center mb-2">
                   <Truck className="h-5 w-5 text-blue-500 mr-2" />
@@ -659,5 +672,3 @@ const OrderForm = () => {
 };
 
 export default OrderForm;
-
-
