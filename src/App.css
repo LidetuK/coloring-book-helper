@@ -55,7 +55,66 @@
   color: #888;
 }
 
-/* New color-related styles */
+/* Animation keyframes */
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeSlideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(154, 27, 179, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(154, 27, 179, 0.8);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Gradient text styles */
 .text-gradient-purple {
   background: linear-gradient(135deg, #9b87f5 0%, #6E59A5 100%);
   -webkit-background-clip: text;
@@ -70,10 +129,51 @@
   background-clip: text;
 }
 
+/* Shadow styles */
 .shadow-purple {
   box-shadow: 0 4px 14px rgba(126, 105, 171, 0.4);
 }
 
 .shadow-pink {
   box-shadow: 0 4px 14px rgba(255, 113, 154, 0.4);
+}
+
+/* Animation classes */
+.animate-scroll-left {
+  animation: scrollLeft 80s linear infinite;
+}
+
+.animate-scroll-right {
+  animation: scrollRight 80s linear infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* Pause animation on hover */
+.group:hover .animate-scroll-left,
+.group:hover .animate-scroll-right {
+  animation-play-state: paused;
+}
+
+/* Gradient backgrounds */
+.bg-purple-gradient {
+  background: linear-gradient(135deg, #9b87f5 0%, #7E69AB 100%);
+}
+
+.bg-pink-gradient {
+  background: linear-gradient(135deg, #FF719A 0%, #FFDEE2 100%);
+}
+
+.bg-multi-gradient {
+  background: linear-gradient(to right, #6E59A5, #9b87f5, #FF719A, #FFDEE2);
+  background-size: 300% 100%;
+  animation: shimmer 10s infinite;
 }

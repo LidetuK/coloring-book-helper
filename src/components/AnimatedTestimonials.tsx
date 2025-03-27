@@ -36,7 +36,7 @@ const AnimatedTestimonials = () => {
   }, [isMobile]);
 
   return (
-    <div className="w-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-8 md:py-16 overflow-hidden">
+    <div className="w-full bg-gradient-to-br from-theme-purple-darkest via-black to-theme-purple-dark py-8 md:py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 md:mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-2">What People Are Saying</h2>
         <p className="text-center text-gray-400 mb-4 md:mb-8 text-sm md:text-base">Hear from readers who have transformed their lives with Elevate Higher</p>
@@ -44,38 +44,46 @@ const AnimatedTestimonials = () => {
 
       {Object.entries(testimonialSections).map(([sectionName, testimonials], sectionIndex) => {
         // Create a continuous loop by duplicating testimonials multiple times
-        // This ensures there's never an empty space in the scroll
         const repeatedTestimonials = [
           ...testimonials, 
           ...testimonials, 
           ...testimonials, 
-          ...testimonials, 
-          ...testimonials,
-          ...testimonials,
-          ...testimonials,
           ...testimonials
         ];
+        
+        const direction = sectionIndex % 2 === 0 ? 'animate-scroll-left' : 'animate-scroll-right';
+        const gradientColors = sectionIndex % 2 === 0 
+          ? 'bg-gradient-to-r from-theme-purple-light via-theme-purple-medium to-theme-purple-darkest'
+          : 'bg-gradient-to-r from-theme-pink-light via-theme-pink-DEFAULT to-theme-pink-dark';
         
         return (
           <div key={sectionName} className="mb-4 md:mb-8 last:mb-0">
             <div className="group relative overflow-hidden w-full">
-              <div className="marquee-container overflow-hidden w-full">
+              <div className={`marquee-container overflow-hidden w-full ${gradientColors} bg-opacity-10`}>
                 <div 
-                  className="flex space-x-2 md:space-x-4 animate-scroll-left group-hover:pause"
+                  className={`flex space-x-2 md:space-x-4 ${direction} group-hover:pause`}
                   style={{ 
                     width: "fit-content",
-                    animation: "scrollLeft 120s linear infinite" // Slowed down even more
+                    animation: `${sectionIndex % 2 === 0 ? 'scrollLeft' : 'scrollRight'} 80s linear infinite`
                   }}
                 >
                   {repeatedTestimonials.map((testimonial, idx) => (
                     <div
                       key={`${testimonial.name}-${idx}`}
-                      className={`w-[${width}px] flex-shrink-0 backdrop-blur-lg bg-white/5 rounded-xl p-3 md:p-5 border border-white/10 hover:bg-white/10 transition-colors`}
+                      className={`w-[${width}px] flex-shrink-0 backdrop-blur-lg ${
+                        sectionIndex % 2 === 0 ? 'bg-theme-purple-DEFAULT/10' : 'bg-theme-pink-DEFAULT/10'
+                      } rounded-xl p-3 md:p-5 border ${
+                        sectionIndex % 2 === 0 ? 'border-theme-purple-light/30' : 'border-theme-pink-light/30'
+                      } hover:${
+                        sectionIndex % 2 === 0 ? 'bg-theme-purple-DEFAULT/20' : 'bg-theme-pink-DEFAULT/20'
+                      } transition-colors duration-300 transform hover:scale-105`}
                       style={{ width: `${width}px` }}
                     >
                       <div className="flex mb-1 md:mb-2">
                         {Array.from({ length: testimonial.rating }).map((_, i) => (
-                          <Star key={i} size={isMobile ? 12 : 14} className="text-amber-400 fill-amber-400" />
+                          <Star key={i} size={isMobile ? 12 : 14} className={`${
+                            sectionIndex % 2 === 0 ? 'text-theme-purple-light' : 'text-theme-pink-light'
+                          } fill-current`} />
                         ))}
                       </div>
                       <h3 className="text-base md:text-lg font-semibold text-white mb-1 md:mb-2">
@@ -85,7 +93,9 @@ const AnimatedTestimonials = () => {
                         {testimonial.text}
                       </p>
                       <div className="pt-1 md:pt-2 border-t border-white/10">
-                        <p className="text-gray-400 text-xs md:text-sm">{testimonial.name}</p>
+                        <p className={`${
+                          sectionIndex % 2 === 0 ? 'text-theme-purple-light' : 'text-theme-pink-light'
+                        } text-xs md:text-sm font-medium`}>{testimonial.name}</p>
                       </div>
                     </div>
                   ))}
