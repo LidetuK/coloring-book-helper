@@ -35,13 +35,37 @@ const BookShow = () => {
           {/* Ordering Options */}
           <div className="mt-8">
             <p className="text-lg">
-              As a special offer, this book is available to you <strong>for free</strong>. 
-              All I ask is that you cover the shipping and handling costs, and we will send it to you anywhere in the world.
+              Choose from multiple options:
             </p>
-            <p className="mt-4 text-lg">
-              If you prefer to listen to the audiobook or read it on your Kindle, iBooks, or as a PDF, these digital versions are also available for a small fee. 
-              Simply enter your details below to access these options.
-            </p>
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="text-xl font-bold mb-2">Digital Version</h3>
+                <p className="mb-2">Instant access to the e-book</p>
+                <div className="flex items-baseline">
+                  <span className="line-through text-gray-500 mr-2">$14.99</span>
+                  <span className="text-2xl font-bold text-red-600">$9.99</span>
+                </div>
+              </div>
+              
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="text-xl font-bold mb-2">Physical Copy</h3>
+                <p className="mb-2">Shipped to your doorstep</p>
+                <div className="flex items-baseline">
+                  <span className="line-through text-gray-500 mr-2">$39.99</span>
+                  <span className="text-2xl font-bold text-red-600">$29.99</span>
+                  <span className="text-sm ml-2">+ shipping</span>
+                </div>
+              </div>
+              
+              <div className="bg-white p-6 rounded-lg shadow-md border-2 border-green-500">
+                <div className="absolute -top-3 right-4 bg-green-500 text-white text-xs px-2 py-1 rounded">BEST VALUE</div>
+                <h3 className="text-xl font-bold mb-2">Bundle Deal</h3>
+                <p className="mb-2">Get both digital & physical</p>
+                <div className="flex items-baseline">
+                  <span className="text-2xl font-bold text-green-600">Save 5%</span>
+                </div>
+              </div>
+            </div>
   
             {/* Button */}
             <button
@@ -50,7 +74,7 @@ const BookShow = () => {
                 document.getElementById("order")?.scrollIntoView({ behavior: "smooth" })
               }
             >
-              Claim Your Free Copy
+              Claim Your Copy
             </button>
           </div>
   
@@ -73,4 +97,3 @@ const BookShow = () => {
   };
   
   export default BookShow;
-  

@@ -152,7 +152,7 @@ const CTASection = () => {
     zipCode: '',
     country: 'United States'
   });
-  const [productType, setProductType] = useState('physical'); // 'digital' or 'physical'
+  const [productType, setProductType] = useState('physical'); // 'digital', 'physical', or 'bundle'
   const [showCheckout, setShowCheckout] = useState(false);
   const [clientSecret, setClientSecret] = useState('');
   const [orderComplete, setOrderComplete] = useState(false);
@@ -191,10 +191,18 @@ const CTASection = () => {
     setIsSubmitting(true);
     
     try {
-      const amount = productType === 'digital' ? 9.99 : 29.99;
-      const shippingCost = productType === 'digital' ? 0 : 
+      let amount = 0;
+      if (productType === 'digital') {
+        amount = 9.99;
+      } else if (productType === 'physical') {
+        amount = 29.99;
+      } else if (productType === 'bundle') {
+        amount = (9.99 + 29.99) * 0.95;
+      }
+      
+      const shippingCost = (productType === 'digital') ? 0 : 
                            (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
-      const totalAmount = amount + shippingCost;
+      const totalAmount = amount + ((productType === 'digital') ? 0 : shippingCost);
       
       const response = await supabase.functions.invoke("create-payment", {
         body: {
@@ -203,7 +211,7 @@ const CTASection = () => {
           productType: productType,
           customerEmail: formData.email,
           customerName: `${formData.firstName} ${formData.lastName}`,
-          shippingAddress: productType === 'physical' ? {
+          shippingAddress: productType !== 'digital' ? {
             address: formData.address1,
             address2: formData.address2,
             city: formData.city,
@@ -297,8 +305,16 @@ const CTASection = () => {
   }
 
   if (showCheckout && clientSecret) {
-    const price = productType === 'digital' ? 9.99 : 29.99;
-    const shipping = productType === 'digital' ? 0 : 
+    let price = 0;
+    if (productType === 'digital') {
+      price = 9.99;
+    } else if (productType === 'physical') {
+      price = 29.99;
+    } else if (productType === 'bundle') {
+      price = (9.99 + 29.99) * 0.95;
+    }
+    
+    const shipping = (productType === 'digital') ? 0 : 
                     (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
     const totalPrice = price + shipping;
 
@@ -320,15 +336,19 @@ const CTASection = () => {
                 <span className="text-2xl font-bold">${totalPrice.toFixed(2)}</span>
               </div>
               <p className="text-sm text-gray-600 mb-4">
-                {productType === 'digital' ? 'Digital copy - instant access' : 'Your FREE copy - just pay shipping & handling'}
+                {productType === 'digital' ? 'Digital copy - instant access' : 
+                 productType === 'physical' ? 'Your FREE copy - just pay shipping & handling' :
+                 'Digital + Physical Bundle - 5% discount!'}
               </p>
               
               <div className="border-t border-gray-200 pt-4 mt-4">
                 <div className="flex justify-between text-sm mb-2">
-                  <span>{productType === 'digital' ? 'Digital Book:' : 'Book:'}</span>
+                  <span>{productType === 'digital' ? 'Digital Book:' : 
+                         productType === 'physical' ? 'Physical Book:' :
+                         'Bundle (Digital + Physical):'}</span>
                   <span>${price.toFixed(2)}</span>
                 </div>
-                {productType === 'physical' && (
+                {(productType === 'physical' || productType === 'bundle') && (
                   <div className="flex justify-between text-sm mb-2">
                     <span>Shipping & Handling:</span>
                     <span>${shipping.toFixed(2)}</span>
@@ -464,7 +484,7 @@ const CTASection = () => {
                       className="mr-3 h-5 w-5"
                     />
                     <label htmlFor="physical" className="flex flex-col">
-                      <span className="font-medium">Physical Book - $29.99</span>
+                      <span className="font-medium">Physical Book - <span className="line-through text-gray-500">$39.99</span> $29.99</span>
                       <span className="text-sm text-gray-600">Plus shipping & handling</span>
                     </label>
                   </div>
@@ -480,8 +500,24 @@ const CTASection = () => {
                       className="mr-3 h-5 w-5"
                     />
                     <label htmlFor="digital" className="flex flex-col">
-                      <span className="font-medium">Digital Copy - $9.99</span>
+                      <span className="font-medium">Digital Copy - <span className="line-through text-gray-500">$14.99</span> $9.99</span>
                       <span className="text-sm text-gray-600">Instant download access</span>
+                    </label>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="bundle"
+                      name="productType"
+                      value="bundle"
+                      checked={productType === 'bundle'}
+                      onChange={() => setProductType('bundle')}
+                      className="mr-3 h-5 w-5"
+                    />
+                    <label htmlFor="bundle" className="flex flex-col">
+                      <span className="font-medium">Bundle (Digital + Physical) - <span className="text-green-500 font-bold">Save 5%</span></span>
+                      <span className="text-sm text-gray-600">Get both formats at a special discount!</span>
                     </label>
                   </div>
                 </div>
@@ -630,13 +666,16 @@ const CTASection = () => {
                     className="w-full cta-button justify-center"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? 'Processing...' : productType === 'physical' ? 'Rush Me A Free Copy Now' : 'Get Digital Access Now'}
+                    {isSubmitting ? 'Processing...' : productType === 'physical' ? 'Rush Me A Free Copy Now' : 
+                    productType === 'digital' ? 'Get Digital Access Now' : 'Get Bundle Access Now'}
                   </button>
                   
                   <p className="text-center text-xs text-brand-black/60">
                     {productType === 'physical' 
                       ? 'By clicking above, you agree to pay $29.99 plus shipping & handling' 
-                      : 'By clicking above, you agree to pay $9.99 for digital access'}
+                      : productType === 'digital' 
+                      ? 'By clicking above, you agree to pay $9.99 for digital access'
+                      : 'By clicking above, you agree to pay for the bundle with 5% discount plus shipping'}
                   </p>
                 </form>
               </div>
@@ -668,9 +707,11 @@ const CTASection = () => {
                       </svg>
                     </div>
                     <div>
-                      <span className="font-medium">Premium {productType === 'physical' ? 'Hardcover' : 'Digital'} Edition</span>
+                      <span className="font-medium">Premium {productType === 'bundle' ? 'Bundle' : productType === 'physical' ? 'Hardcover' : 'Digital'} Edition</span>
                       <p className="text-sm text-brand-black/60">
-                        {productType === 'physical' 
+                        {productType === 'bundle' 
+                          ? 'Get both digital and physical editions together'
+                          : productType === 'physical' 
                           ? 'High-quality print with beautiful design' 
                           : 'Instant access with easy navigation'}
                       </p>
@@ -711,4 +752,3 @@ const CTASection = () => {
 };
 
 export default CTASection;
-
