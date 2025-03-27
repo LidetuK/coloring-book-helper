@@ -8,20 +8,20 @@ const Elevate = () => {
     <section className="py-10 md:py-20 bg-white text-black text-center">
       <div className="max-w-4xl mx-auto px-4 md:px-6">
         {/* Heading */}
-        <h2 className="text-2xl md:text-4xl italic font-semibold">
+        <h2 className="text-2xl md:text-4xl italic font-semibold text-theme-purple-dark">
           This book will help you
         </h2>
   
         {/* Divider */}
-        <div className="text-2xl md:text-3xl font-bold mt-2">&gt;</div>
+        <div className="text-2xl md:text-3xl font-bold mt-2 text-theme-purple-medium">&gt;</div>
   
         {/* Subtext */}
-        <p className="uppercase text-xs md:text-sm mt-2 tracking-wide">
+        <p className="uppercase text-xs md:text-sm mt-2 tracking-wide text-theme-purple-dark">
           CHANGE YOUR LIFE. BE GR8R THAN. EARN MORE.
         </p>
   
         {/* Main Title */}
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold mt-4 md:mt-6 leading-none">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold mt-4 md:mt-6 leading-none text-theme-purple-darkest">
           ELEVATE <br /> HIGHER
         </h1>
   
@@ -40,7 +40,7 @@ const Elevate = () => {
         {/* Call to Action Button */}
         <div className="mt-6 md:mt-8">
           <button
-            className="bg-red-600 hover:bg-red-700 text-white text-base sm:text-xl md:text-2xl px-8 sm:px-12 md:px-16 py-4 sm:py-6 md:py-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-110 shadow-xl w-full sm:w-auto"
+            className="bg-theme-pink-DEFAULT hover:bg-theme-pink-medium text-white text-base sm:text-xl md:text-2xl px-8 sm:px-12 md:px-16 py-4 sm:py-6 md:py-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-110 shadow-xl w-full sm:w-auto"
             onClick={() =>
               document.getElementById("order")?.scrollIntoView({ behavior: "smooth" })
             }

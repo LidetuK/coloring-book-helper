@@ -1,10 +1,11 @@
+
 import { useState } from "react";
 
 const LimitedOffer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section className="py-20 bg-gray-900 text-white text-center">
+    <section className="py-20 bg-black text-white text-center">
       <div className="max-w-5xl mx-auto px-6">
         {/* Section Heading */}
         <h1 className="text-3xl md:text-5xl font-extrabold uppercase tracking-wide leading-tight">
@@ -13,7 +14,7 @@ const LimitedOffer = () => {
 
         {/* Content */}
         <div className="mt-8 bg-white text-gray-900 p-8 rounded-lg shadow-lg">
-          <h3 className="text-3xl font-bold text-red-600"></h3>
+          <h3 className="text-3xl font-bold text-theme-pink-DEFAULT"></h3>
           <p className="mt-4 text-lg leading-relaxed">
             Hey there! If you've skipped to the end, here's the scoop:  
             I'm offering you a free physical copy of my 259-page bestselling book,  
@@ -27,7 +28,7 @@ const LimitedOffer = () => {
           </p>
 
           {/* Urgency Section */}
-          <div className="mt-6 p-6 bg-red-600 text-white rounded-lg">
+          <div className="mt-6 p-6 bg-theme-pink-DEFAULT text-white rounded-lg">
             <p className="text-xl font-bold">
               🚨 This is a Limited-Time Offer 🚨
             </p>
@@ -40,7 +41,7 @@ const LimitedOffer = () => {
 
           {/* Trust & Guarantee */}
           <div className="mt-6 text-lg">
-            <h4 className="text-2xl font-bold text-green-600">No Catch. No Tricks. No Risk.</h4>
+            <h4 className="text-2xl font-bold text-theme-purple-dark">No Catch. No Tricks. No Risk.</h4>
             <p className="mt-2">
               No hidden subscriptions. No monthly fees. Just the book, delivered to you.  
             </p>
@@ -50,9 +51,6 @@ const LimitedOffer = () => {
             </p>
           </div>
         </div>
-
-        {/* Call-To-Action Button */}
-        
 
         {/* Modal Popup */}
         {isModalOpen && (

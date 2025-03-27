@@ -5,7 +5,7 @@ const BookOne = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section className="py-20 bg-gray-900 text-white text-center">
+    <section className="py-20 bg-theme-purple-darkest text-white text-center">
       <div className="max-w-5xl mx-auto px-6">
         {/* Section Heading */}
         <h1 className="text-5xl font-extrabold uppercase tracking-wide leading-tight">
@@ -14,7 +14,7 @@ const BookOne = () => {
 
         {/* New Big Content Section */}
         <div className="mt-8 bg-white text-gray-900 p-6 md:p-12 rounded-lg shadow-lg">
-          <h2 className="text-2xl md:text-4xl font-extrabold uppercase tracking-wide text-center">
+          <h2 className="text-2xl md:text-4xl font-extrabold uppercase tracking-wide text-center text-theme-purple-darkest">
             BOOK A ONE-ON-ONE <br />
             VIRTUAL / IN-PERSON CONSULTATION <br />
             TODAY.
@@ -23,7 +23,7 @@ const BookOne = () => {
 
         {/* Call-To-Action Button */}
         <button
-          className="mt-8 bg-yellow-500 hover:bg-yellow-600 text-gray-900 text-lg px-8 md:px-12 py-4 md:py-6 font-bold uppercase rounded-lg transition-all duration-300 hover:scale-105 shadow-lg"
+          className="mt-8 bg-theme-pink-DEFAULT hover:bg-theme-pink-medium text-white text-lg px-8 md:px-12 py-4 md:py-6 font-bold uppercase rounded-lg transition-all duration-300 hover:scale-105 shadow-lg"
           onClick={() => setIsModalOpen(true)}
         >
           Book One-to-One 📞

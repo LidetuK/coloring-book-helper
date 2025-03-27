@@ -66,6 +66,22 @@ export default {
           white: "#FFFFFF",
           gray: "#F5F5F7",
           dark: "#1D1D1F"
+        },
+        // New color palette
+        theme: {
+          purple: {
+            light: "#D6BCFA",
+            DEFAULT: "#9b87f5",
+            medium: "#7E69AB",
+            dark: "#6E59A5",
+            darkest: "#3A0233"
+          },
+          pink: {
+            light: "#FFDEE2",
+            DEFAULT: "#FF719A",
+            medium: "#FF5688",
+            dark: "#E22D39"
+          }
         }
       },
       borderRadius: {

@@ -54,3 +54,26 @@
 .read-the-docs {
   color: #888;
 }
+
+/* New color-related styles */
+.text-gradient-purple {
+  background: linear-gradient(135deg, #9b87f5 0%, #6E59A5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-pink {
+  background: linear-gradient(135deg, #FF719A 0%, #FFDEE2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shadow-purple {
+  box-shadow: 0 4px 14px rgba(126, 105, 171, 0.4);
+}
+
+.shadow-pink {
+  box-shadow: 0 4px 14px rgba(255, 113, 154, 0.4);
+}
