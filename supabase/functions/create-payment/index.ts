@@ -15,7 +15,7 @@ const corsHeaders = {
 interface PaymentRequest {
   amount: number;
   currency: string;
-  productType: "digital" | "physical";
+  productType: "digital" | "physical" | "bundle";
   customerEmail: string;
   customerName: string;
   shippingAddress?: {
@@ -50,8 +50,10 @@ serve(async (req) => {
     let description = "";
     if (productType === "digital") {
       description = "Digital Book - Elevate Higher - Immediate Access";
-    } else {
+    } else if (productType === "physical") {
       description = "Physical Book - Elevate Higher - Will be shipped";
+    } else if (productType === "bundle") {
+      description = "Bundle - Digital + Physical Book - Elevate Higher";
     }
 
     // Create payment intent

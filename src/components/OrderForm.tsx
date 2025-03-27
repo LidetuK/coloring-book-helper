@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,7 +34,7 @@ const orderFormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address"),
-  productType: z.enum(["digital", "physical"]),
+  productType: z.enum(["digital", "physical", "bundle"]),
   address: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
@@ -178,7 +179,7 @@ const OrderForm = () => {
       form.setValue("country", "us");
     }
     
-    if (productType === "physical") {
+    if (productType === "physical" || productType === "bundle") {
       orderFormSchema.extend({
         address: z.string().min(1, "Address is required"),
         city: z.string().min(1, "City is required"),
@@ -190,10 +191,23 @@ const OrderForm = () => {
   }, [productType, form]);
 
   const calculatePrice = () => {
-    let basePrice = productType === "digital" ? 9.99 : 29.99;
+    const originalPrices = {
+      digital: 14.99,
+      physical: 39.99,
+      bundle: 54.98 // sum of original prices
+    };
+    
+    const discountedPrices = {
+      digital: 9.99,
+      physical: 29.99,
+      bundle: (9.99 + 29.99) * 0.95 // 5% discount on bundle
+    };
+    
+    let basePrice = discountedPrices[productType];
+    let originalPrice = originalPrices[productType];
     let shippingCost = 0;
     
-    if (productType === "physical") {
+    if (productType === "physical" || productType === "bundle") {
       const selectedCountry = countries.find(c => c.value === country);
       if (selectedCountry) {
         if (selectedCountry.region === "northAmerica") {
@@ -206,6 +220,7 @@ const OrderForm = () => {
     
     return {
       basePrice,
+      originalPrice,
       shippingCost,
       totalPrice: (basePrice + shippingCost).toFixed(2)
     };
@@ -217,7 +232,7 @@ const OrderForm = () => {
     try {
       const pricing = calculatePrice();
       
-      const shippingAddress = data.productType === "physical" ? {
+      const shippingAddress = (data.productType === "physical" || data.productType === "bundle") ? {
         address: data.address,
         city: data.city,
         state: data.state,
@@ -299,7 +314,7 @@ const OrderForm = () => {
               </svg>
             </div>
             <p className="mb-4">{successMessage}</p>
-            {productTypeOrdered === "digital" && downloadLink && (
+            {(productTypeOrdered === "digital" || productTypeOrdered === "bundle") && downloadLink && (
               <div className="mb-4 p-4 bg-blue-50 rounded-md w-full">
                 <div className="flex items-center mb-2">
                   <Download className="h-5 w-5 text-blue-500 mr-2" />
@@ -322,19 +337,7 @@ const OrderForm = () => {
                 </p>
               </div>
             )}
-            {productTypeOrdered === "digital" && !downloadLink && (
-              <div className="mb-4 p-4 bg-blue-50 rounded-md">
-                <div className="flex items-center mb-2">
-                  <Mail className="h-5 w-5 text-blue-500 mr-2" />
-                  <span className="font-medium">Check Your Email</span>
-                </div>
-                <p className="text-sm text-gray-600">
-                  We've sent your download link to <strong>{emailUsed}</strong>. 
-                  Please check your inbox (and spam/junk folder) for instructions on how to download your book.
-                </p>
-              </div>
-            )}
-            {productTypeOrdered === "physical" && (
+            {(productTypeOrdered === "physical" || productTypeOrdered === "bundle") && (
               <div className="mb-4 p-4 bg-blue-50 rounded-md">
                 <div className="flex items-center mb-2">
                   <Truck className="h-5 w-5 text-blue-500 mr-2" />
@@ -369,7 +372,9 @@ const OrderForm = () => {
             <CardDescription>
               {orderDetails.productType === "digital" 
                 ? "Digital Book - $9.99" 
-                : `Physical Book - $29.99 + ${orderDetails.shippingCost.toFixed(2)} shipping`}
+                : orderDetails.productType === "physical"
+                ? `Physical Book - $29.99 + ${orderDetails.shippingCost.toFixed(2)} shipping`
+                : `Bundle (Digital + Physical) - $${orderDetails.basePrice.toFixed(2)} + ${orderDetails.shippingCost.toFixed(2)} shipping`}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -378,13 +383,24 @@ const OrderForm = () => {
               <div className="mt-2 space-y-1 text-sm">
                 <div className="flex justify-between">
                   <span>Product:</span>
-                  <span>{orderDetails.productType === "digital" ? "Digital Book" : "Physical Book"}</span>
+                  <span>
+                    {orderDetails.productType === "digital" 
+                      ? "Digital Book" 
+                      : orderDetails.productType === "physical"
+                      ? "Physical Book"
+                      : "Digital + Physical Bundle (5% discount)"}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Price:</span>
-                  <span>${orderDetails.basePrice.toFixed(2)}</span>
+                  <span>
+                    {orderDetails.productType === "bundle" 
+                      ? <span>${orderDetails.basePrice.toFixed(2)} <span className="text-xs text-gray-500">(5% discount applied)</span></span>
+                      : <span>${orderDetails.basePrice.toFixed(2)}</span>
+                    }
+                  </span>
                 </div>
-                {orderDetails.productType === "physical" && (
+                {(orderDetails.productType === "physical" || orderDetails.productType === "bundle") && (
                   <div className="flex justify-between">
                     <span>Shipping & Handling:</span>
                     <span>${orderDetails.shippingCost.toFixed(2)}</span>
@@ -437,20 +453,27 @@ const OrderForm = () => {
             </p>
             
             <div className="mt-6 bg-white p-4 rounded-lg shadow-sm">
-              <h4 className="font-semibold mb-2">Two Options Available:</h4>
+              <h4 className="font-semibold mb-2">Three Options Available:</h4>
               <div className="space-y-2 text-left">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 h-5 w-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">1</div>
                   <div className="ml-2">
-                    <span className="font-medium">Digital Copy: $9.99</span>
+                    <span className="font-medium">Digital Copy: <span className="line-through text-gray-500">$14.99</span> $9.99</span>
                     <p className="text-sm text-gray-600">Instant access via email</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="flex-shrink-0 h-5 w-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">2</div>
                   <div className="ml-2">
-                    <span className="font-medium">Physical Copy: $29.99 + Shipping</span>
+                    <span className="font-medium">Physical Copy: <span className="line-through text-gray-500">$39.99</span> $29.99 + Shipping</span>
                     <p className="text-sm text-gray-600">Delivered to your doorstep</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 h-5 w-5 bg-green-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">3</div>
+                  <div className="ml-2">
+                    <span className="font-medium">Bundle (Digital + Physical): <span className="text-green-500 font-bold">Save 5%</span></span>
+                    <p className="text-sm text-gray-600">Get both formats at a special discount</p>
                   </div>
                 </div>
               </div>
@@ -524,7 +547,7 @@ const OrderForm = () => {
                               <RadioGroupItem value="digital" />
                             </FormControl>
                             <FormLabel className="font-normal">
-                              Digital Copy - $9.99
+                              Digital Copy - <span className="line-through text-gray-500">$14.99</span> $9.99
                             </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3 space-y-0">
@@ -532,7 +555,15 @@ const OrderForm = () => {
                               <RadioGroupItem value="physical" />
                             </FormControl>
                             <FormLabel className="font-normal">
-                              Physical Copy - $29.99 + Shipping
+                              Physical Copy - <span className="line-through text-gray-500">$39.99</span> $29.99 + Shipping
+                            </FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="bundle" />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              Bundle (Digital + Physical) - <span className="text-green-500 font-bold">Save 5%</span>
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -542,7 +573,7 @@ const OrderForm = () => {
                   )}
                 />
 
-                {productType === "physical" && (
+                {(productType === "physical" || productType === "bundle") && (
                   <div className="space-y-4 border p-4 rounded-md bg-gray-50">
                     <h3 className="font-medium">Shipping Information</h3>
                     

@@ -40,8 +40,9 @@ serve(async (req) => {
     
     let responseMessage = "";
     let emailStatus = "not_sent";
+    let isDigital = productType === "digital" || productType === "bundle";
     
-    if (productType === "digital") {
+    if (isDigital) {
       // Send email with download link for digital product
       const downloadLink = "https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing";
       
@@ -98,8 +99,18 @@ serve(async (req) => {
         emailStatus = "error";
         responseMessage = "Your digital book purchase was successful! Here is your download link: https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing";
       }
-    } else {
-      responseMessage = "Your physical book order was successful! It will be shipped to the address you provided within 14-25 business days.";
+    }
+    
+    // Handle physical component of the order if applicable
+    if (productType === "physical" || productType === "bundle") {
+      const physicalMessage = "Your physical book order was successful! It will be shipped to the address you provided within 14-25 business days.";
+      
+      // For bundle orders, combine both messages
+      if (productType === "bundle") {
+        responseMessage = `${responseMessage} Additionally, ${physicalMessage.toLowerCase()}`;
+      } else {
+        responseMessage = physicalMessage;
+      }
       // In a real implementation, you would save this order to a database for fulfillment
     }
     
@@ -110,7 +121,7 @@ serve(async (req) => {
         email: customerEmail,
         productType: productType,
         emailStatus: emailStatus,
-        downloadLink: productType === "digital" ? "https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing" : null
+        downloadLink: isDigital ? "https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing" : null
       }),
       {
         status: 200,
