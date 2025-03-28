@@ -65,7 +65,7 @@ const BookShow = () => {
               <h3 className="text-lg md:text-xl font-bold mb-2 text-theme-purple-dark">Bundle Deal</h3>
               <p className="mb-2 text-gray-700">Get both digital & physical</p>
               <div className="flex items-baseline">
-                <span className="text-lg md:text-xl font-bold text-theme-pink-DEFAULT">Save 5%</span>
+                <span className="mb-2 text-gray-700">Save 5%</span>
               </div>
             </div>
           </div>
@@ -87,7 +87,7 @@ const BookShow = () => {
         </p>
 
         <p className="mt-4 md:mt-6 text-base md:text-lg font-bold">Warm regards,</p>
-        <p className="text-lg md:text-xl font-bold text-theme-pink-light">RQ</p>
+        <p className="text-lg md:text-xl font-bold text-theme-pink-light">Resk'Que</p>
         <img 
           src="/lovable-uploads/Screenshot_2025-02-28_231038-removebg-preview.png" 
           alt="Signature" 
