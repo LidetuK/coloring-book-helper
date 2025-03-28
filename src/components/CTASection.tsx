@@ -642,7 +642,7 @@ const CTASection = () => {
                         <p className="font-medium">Shipping Costs:</p>
                         <ul className="list-disc pl-5 mt-1 text-gray-600">
                           <li>USA & Canada: $11.99 + $2.98 handling</li>
-                          <li>Europe: $14.99 (includes handling)</li>
+                          <li>Europe: $14.99+ $3.98 handling</li>
                         </ul>
                       </div>
                     </>

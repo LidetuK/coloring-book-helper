@@ -39,19 +39,17 @@ const BookPopup = () => {
         {/* Content */}
         <div className="p-8 md:p-10 text-center">
           <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6">
-            WAIT! BEFORE YOU GO...
+          ELEVATE HIGHER: Unlock Your Potential
           </h2>
           
           <p className="text-lg md:text-xl text-gray-700 mb-8">
-            Send me your address and I'll rush a FREE copy of my brand 
-            new physical book to your doorstep, ASAP! And if you don't love 
-            it I'll refund you the cost of shipping and handling.
+          Grab a copy of Elevate Higher! This book is designed to help you expand your mindset and achieve greater success. It’s the perfect complement to your journey. Get it now, and if you’re not completely satisfied, I’ll refund the cost of shipping and handling. Elevate your future today!
           </p>
           
           {/* Book Images */}
           <div className="flex justify-center items-center my-8">
             <img 
-              src="/lovable-uploads/b62a853b-3f6b-4c2f-b142-3e002008d964.png" 
+              src="/download (2).png" 
               alt="Elevate Higher Book" 
               className="max-w-full h-auto"
             />
