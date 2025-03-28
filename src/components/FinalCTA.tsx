@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Clock, Fire } from "lucide-react";
+import { ArrowRight, CheckCircle, Clock, Flame } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
 
@@ -64,7 +64,7 @@ const FinalCTA = () => {
         <div className="mt-6 mb-8 bg-black p-4 rounded-lg animate-pulse-glow">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             <div className="flex items-center">
-              <Fire className="w-6 h-6 text-red-500 mr-2" />
+              <Flame className="w-6 h-6 text-red-500 mr-2" />
               <span className="text-xl font-bold text-white">FLASH SALE</span>
             </div>
             <div className="flex items-center">
