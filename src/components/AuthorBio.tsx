@@ -4,7 +4,7 @@ const AuthorBio = () => {
         <div className="max-w-5xl mx-auto px-4 text-center">
           {/* Bold, Eye-Catching Quote */}
           <h2 className="text-2xl md:text-5xl font-extrabold leading-tight uppercase text-red-600">
-    "…See why this book is unlike any other and how it can transform your career, your business, and life, just as it transformed mine…"
+    "Discover why Swaggerism isn’t just a book—it’s a movement. This mindset unlocked my success, transformed my hustle, and elevated my entire life. Now, it’s your turn."
   </h2>
   
   
@@ -12,7 +12,7 @@ const AuthorBio = () => {
           <div className="relative flex justify-center mt-10">
             {/* Book Image */}
             <img
-              src="/lovable-uploads/111.png"
+              src="/555.png"
               alt="Elevate Higher"
               className="rounded-lg shadow-2xl w-full max-w-5xl mx-auto"
             />
