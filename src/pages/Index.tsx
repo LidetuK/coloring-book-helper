@@ -2,8 +2,6 @@
 import { useEffect } from 'react';
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import BookShowcase from "@/components/BookShowcase";
-import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import Benefits from "@/components/Benefits";
 import CTASection from "@/components/CTASection";
@@ -24,6 +22,7 @@ import LimitedOffer from '@/components/LimitedOffer';
 import FinalCTA from '@/components/FinalCTA';
 import BookPopup from '@/components/BookPopup';
 import Animated from '@/components/Animated';
+import DualBookOffer from '@/components/DualBookOffer';
 
 const Index = () => {
   useEffect(() => {
@@ -63,6 +62,7 @@ const Index = () => {
       <CallToAction/>
       <Animated/>
       <AnimatedTestimonials/>
+      <DualBookOffer /> {/* New component for dual book offer */}
       <BookShow/>
       <Review/>
       <Testimonial/>
