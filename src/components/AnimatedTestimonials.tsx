@@ -35,6 +35,39 @@ const AnimatedTestimonials = () => {
     setWidth(isMobile ? 230 : 280);
   }, [isMobile]);
 
+  // Add animation keyframes to the document
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes scrollLeft {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(calc(-280px * 5 - 1rem * 5)); }
+      }
+      
+      @keyframes scrollRight {
+        0% { transform: translateX(calc(-280px * 5 - 1rem * 5)); }
+        100% { transform: translateX(0); }
+      }
+      
+      .animate-scroll-left {
+        animation: scrollLeft 80s linear infinite;
+      }
+      
+      .animate-scroll-right {
+        animation: scrollRight 80s linear infinite;
+      }
+      
+      .pause {
+        animation-play-state: paused;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
     <div className="w-full bg-gradient-to-br from-theme-purple-darkest via-black to-theme-purple-dark py-8 md:py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 md:mb-8">
@@ -52,9 +85,7 @@ const AnimatedTestimonials = () => {
         ];
         
         const direction = sectionIndex % 2 === 0 ? 'animate-scroll-left' : 'animate-scroll-right';
-        const gradientColors = sectionIndex % 2 === 0 
-          ? 'bg-gradient-to-r from-theme-purple-light via-theme-purple-medium to-theme-purple-darkest'
-          : 'bg-gradient-to-r from-theme-pink-light via-theme-pink-DEFAULT to-theme-pink-dark';
+        const gradientColors = 'bg-gradient-to-r from-theme-purple-light via-theme-purple-medium to-theme-purple-darkest';
         
         return (
           <div key={sectionName} className="mb-4 md:mb-8 last:mb-0">
@@ -70,20 +101,12 @@ const AnimatedTestimonials = () => {
                   {repeatedTestimonials.map((testimonial, idx) => (
                     <div
                       key={`${testimonial.name}-${idx}`}
-                      className={`w-[${width}px] flex-shrink-0 backdrop-blur-lg ${
-                        sectionIndex % 2 === 0 ? 'bg-theme-purple-DEFAULT/10' : 'bg-theme-pink-DEFAULT/10'
-                      } rounded-xl p-3 md:p-5 border ${
-                        sectionIndex % 2 === 0 ? 'border-theme-purple-light/30' : 'border-theme-pink-light/30'
-                      } hover:${
-                        sectionIndex % 2 === 0 ? 'bg-theme-purple-DEFAULT/20' : 'bg-theme-pink-DEFAULT/20'
-                      } transition-colors duration-300 transform hover:scale-105`}
+                      className={`w-[${width}px] flex-shrink-0 backdrop-blur-lg bg-theme-purple-DEFAULT/10 rounded-xl p-3 md:p-5 border border-theme-purple-light/30 hover:bg-theme-purple-DEFAULT/20 transition-colors duration-300 transform hover:scale-105`}
                       style={{ width: `${width}px` }}
                     >
                       <div className="flex mb-1 md:mb-2">
                         {Array.from({ length: testimonial.rating }).map((_, i) => (
-                          <Star key={i} size={isMobile ? 12 : 14} className={`${
-                            sectionIndex % 2 === 0 ? 'text-theme-purple-light' : 'text-theme-pink-light'
-                          } fill-current`} />
+                          <Star key={i} size={isMobile ? 12 : 14} className="text-theme-purple-light fill-current" />
                         ))}
                       </div>
                       <h3 className="text-base md:text-lg font-semibold text-white mb-1 md:mb-2">
@@ -93,9 +116,7 @@ const AnimatedTestimonials = () => {
                         {testimonial.text}
                       </p>
                       <div className="pt-1 md:pt-2 border-t border-white/10">
-                        <p className={`${
-                          sectionIndex % 2 === 0 ? 'text-theme-purple-light' : 'text-theme-pink-light'
-                        } text-xs md:text-sm font-medium`}>{testimonial.name}</p>
+                        <p className="text-theme-purple-light text-xs md:text-sm font-medium">{testimonial.name}</p>
                       </div>
                     </div>
                   ))}

@@ -46,7 +46,7 @@ const BookShow = () => {
               <p className="mb-2 text-gray-700">Instant access to the e-book</p>
               <div className="flex items-baseline">
                 <span className="line-through text-gray-500 mr-2">$14.99</span>
-                <span className="text-xl md:text-2xl font-bold text-theme-pink-dark">$9.99</span>
+                <span className="text-xl md:text-2xl font-bold text-theme-purple-dark">$9.99</span>
               </div>
             </div>
             
@@ -55,13 +55,13 @@ const BookShow = () => {
               <p className="mb-2 text-gray-700">Shipped to your doorstep</p>
               <div className="flex items-baseline">
                 <span className="line-through text-gray-500 mr-2">$39.99</span>
-                <span className="text-xl md:text-2xl font-bold text-theme-pink-dark">$29.99</span>
+                <span className="text-xl md:text-2xl font-bold text-theme-purple-dark">$29.99</span>
                 <span className="text-xs ml-2 text-gray-600">+ shipping</span>
               </div>
             </div>
             
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border-2 border-theme-pink-DEFAULT relative">
-              <div className="absolute -top-3 right-4 bg-theme-pink-DEFAULT text-white text-xs px-2 py-1 rounded">BEST VALUE</div>
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border-2 border-theme-purple-DEFAULT relative">
+              <div className="absolute -top-3 right-4 bg-theme-purple-DEFAULT text-white text-xs px-2 py-1 rounded">BEST VALUE</div>
               <h3 className="text-lg md:text-xl font-bold mb-2 text-theme-purple-dark">Bundle Deal</h3>
               <p className="mb-2 text-gray-700">Get both digital & physical</p>
               <div className="flex items-baseline">
@@ -70,9 +70,9 @@ const BookShow = () => {
             </div>
           </div>
 
-          {/* Button */}
+          {/* Button - Changed to red */}
           <button
-            className="bg-theme-pink-dark hover:bg-theme-pink-medium text-white text-lg md:text-xl px-6 md:px-12 py-4 md:py-6 mt-6 md:mt-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-105 shadow-xl"
+            className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-lg md:text-xl px-6 md:px-12 py-4 md:py-6 mt-6 md:mt-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-105 shadow-xl"
             onClick={() =>
               document.getElementById("order")?.scrollIntoView({ behavior: "smooth" })
             }
@@ -87,13 +87,13 @@ const BookShow = () => {
         </p>
 
         <p className="mt-4 md:mt-6 text-base md:text-lg font-bold">Warm regards,</p>
-        <p className="text-lg md:text-xl font-bold text-theme-pink-light">Resk'Que</p>
+        <p className="text-lg md:text-xl font-bold text-theme-purple-light">Resk'Que</p>
         <img 
           src="/lovable-uploads/Screenshot_2025-02-28_231038-removebg-preview.png" 
           alt="Signature" 
           className="mx-auto" 
         />
-        <h3 className="text-2xl md:text-3xl font-bold text-theme-pink-light">P.S.</h3>
+        <h3 className="text-2xl md:text-3xl font-bold text-theme-purple-light">P.S.</h3>
       </div>
     </section>
   );
