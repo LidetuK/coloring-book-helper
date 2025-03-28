@@ -86,7 +86,7 @@ const DualBookOffer = () => {
             <div className="flex items-center justify-center mb-4">
               <div className="w-32 h-32 md:w-40 md:h-40 relative mr-4">
                 <img 
-                  src="/111.png" 
+                  src="/2-removebg-preview (1).png" 
                   alt="Swaggerism My Religion" 
                   className="w-full h-full object-contain drop-shadow-xl"
                 />
@@ -145,7 +145,7 @@ const DualBookOffer = () => {
               </div>
               
               <button
-                onClick={() => window.location.href = "#order"}
+                onClick={() => window.location.href = "#claim"}
                 className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-lg px-8 py-4 font-bold uppercase rounded-lg flex items-center justify-center w-full md:w-auto transition-all duration-300 hover:scale-105 shadow-xl"
               >
                 Get Both Books
@@ -157,11 +157,12 @@ const DualBookOffer = () => {
               <div className="flex items-center justify-center relative">
                 <img 
                   src="/download (2).png" 
+                   
                   alt="Elevate Higher" 
                   className="w-40 h-auto object-contain drop-shadow-xl transform -rotate-6 absolute -left-4 md:left-8 z-10"
                 />
                 <img 
-                  src="/111.png" 
+                  src="/2-removebg-preview (1).png"
                   alt="Swaggerism My Religion" 
                   className="w-40 h-auto object-contain drop-shadow-xl transform rotate-6 absolute -right-4 md:right-8 z-10"
                 />
