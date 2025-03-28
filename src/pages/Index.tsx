@@ -22,8 +22,7 @@ import BookOne from '@/components/BookOne';
 import BonusSection from '@/components/BonusSection';
 import LimitedOffer from '@/components/LimitedOffer';
 import FinalCTA from '@/components/FinalCTA';
-
-
+import BookPopup from '@/components/BookPopup';
 
 const Index = () => {
   useEffect(() => {
@@ -52,6 +51,7 @@ const Index = () => {
   return (
     <div className="min-h-screen overflow-hidden">
       <Navbar />
+      <BookPopup />
       <Hero />
       <Elevate/>
       <Countdown/>
@@ -67,7 +67,6 @@ const Index = () => {
       <BookOne/>
       <BonusSection/>
       <LimitedOffer/>
-      
       <FinalCTA/>
       <FAQ />
       <ConsultationOffer/>
