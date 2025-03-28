@@ -1,53 +1,102 @@
+
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { ArrowRight, Download, BookOpen } from "lucide-react";
+
 const Animated = () => {
-    return (
-      <section className="py-20 bg-white text-gray-900">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          {/* Bold, Eye-Catching Quote */}
-          <h2 className="text-2xl md:text-7xl font-extrabold leading-tight uppercase text-red-600">
-    ELEVATE HIGHER: Unlock Your Potential
-  </h2>
-  
-  
-          {/* Images Section */}
-          <div className="relative flex justify-center mt-10">
-            {/* Book Image */}
-            <img
-              src="/111.png"
-              alt="Elevate Higher"
-              className="rounded-lg shadow-2xl w-full max-w-5xl mx-auto"
-            />
-           
+  return (
+    <section className="py-16 bg-gradient-to-br from-purple-50 to-white text-gray-900">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
+          {/* Left side - Book image and info */}
+          <div className="relative">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="relative z-10"
+            >
+              <div className="relative">
+                <img
+                  src="/111.png"
+                  alt="Elevate Higher Book"
+                  className="rounded-lg shadow-2xl w-full max-w-md mx-auto transform -rotate-3 hover:rotate-0 transition-all duration-300"
+                />
+                <div className="absolute -top-4 -right-4 md:-top-6 md:-right-6">
+                  <Badge className="bg-theme-purple-dark text-white px-3 py-1.5 text-sm md:text-base font-bold shadow-lg">
+                    BESTSELLER
+                  </Badge>
+                </div>
+              </div>
+            </motion.div>
             
-           
+            <div className="absolute -bottom-8 -left-8 md:-bottom-12 md:-left-12 w-40 h-40 md:w-64 md:h-64 bg-gradient-to-br from-theme-purple-light to-theme-purple-dark rounded-full opacity-20 blur-3xl -z-10"></div>
+            <div className="absolute -top-8 -right-8 md:-top-12 md:-right-12 w-40 h-40 md:w-64 md:h-64 bg-gradient-to-br from-pink-400 to-red-500 rounded-full opacity-10 blur-3xl -z-10"></div>
           </div>
-  
-          {/* Content Section */}
-          <div className="text-left text-xl leading-relaxed mt-12 max-w-3xl mx-auto">
-            <p className="mt-4 font-semibold text-gray-900">
-              <span className="block text-2xl font-bold text-gray-800 mb-4">Discover the Key Benefits:</span>
-              <span className="block mt-3">🔥 <strong>Spiritual Growth:</strong> Deepen your spiritual connection and find inner peace for a more fulfilling life.</span>
-              <span className="block mt-3">💪 <strong>Wellness Enhancement:</strong> Improve your physical and mental health to boost overall well-being.</span>
-              <span className="block mt-3">📚 <strong>Knowledge Expansion:</strong> Gain valuable insights to make informed decisions and foster continuous growth.</span>
-              <span className="block mt-3">❤️ <strong>Relationship Building:</strong> Master the principles of strong, healthy connections with loved ones and colleagues.</span>
-              <span className="block mt-3">🚀 <strong>Action-Oriented Mindset:</strong> Cultivate a proactive attitude that drives success and fulfillment.</span>
-              <span className="block mt-3">💰 <strong>Financial Mastery:</strong> Learn effective strategies to manage money wisely and achieve financial freedom.</span>
-              <span className="block mt-3">🌟 <strong>Lifestyle Improvement:</strong> Create a meaningful and enjoyable life tailored to your aspirations.</span>
-              <span className="block mt-3">🔥 <strong>Motivation Ignition:</strong> Develop techniques to stay focused and driven towards your biggest goals.</span>
-              <span className="block mt-3">🛑 <strong>Pattern Breaking:</strong> Identify and break free from negative habits to unlock personal and professional growth.</span>
-              <span className="block mt-3">🌍 <strong>Holistic Development:</strong> Elevate every aspect of your life with a well-rounded self-improvement approach.</span>
+
+          {/* Right side - Book details */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
+            <h2 className="text-3xl md:text-5xl font-extrabold leading-tight text-theme-purple-dark">
+              ELEVATE <span className="text-[#DC2626]">HIGHER</span>
+            </h2>
+            <p className="text-xl md:text-2xl font-medium text-gray-700">
+              Unlock Your Potential and Transform Your Life
             </p>
-            {/* Button - Changed to red */}
-            <button
-  className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-lg md:text-xl px-6 md:px-12 py-4 md:py-6 mt-6 md:mt-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-105 shadow-xl"
-  onClick={() => window.location.href = "https://books.reskque.com/empowerment/self-development-guide/elevate-higher-the-book/"}
->
-  Claim Your Copy
-</button>
-          </div>
+            
+            <div className="space-y-4 mt-6">
+              <div className="flex items-start space-x-3">
+                <div className="h-6 w-6 rounded-full bg-theme-purple-light flex items-center justify-center text-white flex-shrink-0 mt-1">
+                  <BookOpen className="h-3 w-3" />
+                </div>
+                <p className="text-gray-700">Discover powerful frameworks to enhance every area of your life</p>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="h-6 w-6 rounded-full bg-theme-purple-light flex items-center justify-center text-white flex-shrink-0 mt-1">
+                  <BookOpen className="h-3 w-3" />
+                </div>
+                <p className="text-gray-700">Practical action steps for immediate results</p>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="h-6 w-6 rounded-full bg-theme-purple-light flex items-center justify-center text-white flex-shrink-0 mt-1">
+                  <BookOpen className="h-3 w-3" />
+                </div>
+                <p className="text-gray-700">Transform your mindset and achieve your biggest goals</p>
+              </div>
+            </div>
+            
+            <div className="pt-6">
+              <div className="flex flex-wrap items-center gap-3 mb-6">
+                <span className="text-3xl font-bold text-[#DC2626]">$29.99</span>
+                <span className="text-lg text-gray-500 line-through">$39.99</span>
+                <span className="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded">25% OFF</span>
+              </div>
+              
+              <Button
+                className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-lg px-8 py-6 font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-xl"
+                onClick={() => window.location.href = "https://books.reskque.com/empowerment/self-development-guide/elevate-higher-the-book/"}
+              >
+                Claim Your Copy
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              
+              <p className="text-sm text-gray-500 mt-4">
+                <Download className="inline-block h-4 w-4 mr-1" />
+                Digital version included with every purchase
+              </p>
+            </div>
+          </motion.div>
         </div>
-      </section>
-    );
-  };
-  
-  export default Animated;
-  
+      </div>
+    </section>
+  );
+};
+
+export default Animated;

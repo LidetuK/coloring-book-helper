@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
-import { Lock, CreditCard, Shield, Mail, Truck, Download } from "lucide-react";
+import { Lock, CreditCard, Shield, Mail, Truck, Download, Calendar, Gift } from "lucide-react";
 
 const stripePromise = loadStripe("pk_test_51Gx2sVCNjyaQ14tCaqL6XpRPHLRMtzOK8vjEx6WrqHsA4g6PwjQrMJbjgIkpUCj9Rll9t6wPhYfQt35w0qZ0zvrX003sS4B1yS");
 
@@ -55,7 +55,7 @@ const orderFormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address"),
-  productType: z.enum(["digital", "physical", "bundle"]),
+  productType: z.enum(["elevate_digital", "elevate_physical", "swaggerism_physical_preorder", "both_digital", "both_physical", "both_mix"]),
   address: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
@@ -178,7 +178,7 @@ const OrderForm = () => {
       firstName: "",
       lastName: "",
       email: "",
-      productType: "digital",
+      productType: "elevate_digital",
       address: "",
       city: "",
       state: "",
@@ -191,8 +191,14 @@ const OrderForm = () => {
   const productType = form.watch("productType");
   const country = form.watch("country");
 
+  const needsShipping = 
+    productType === "elevate_physical" || 
+    productType === "swaggerism_physical_preorder" || 
+    productType === "both_physical" || 
+    productType === "both_mix";
+
   useEffect(() => {
-    if (productType === "digital") {
+    if (!needsShipping) {
       form.setValue("address", "");
       form.setValue("city", "");
       form.setValue("state", "");
@@ -200,7 +206,7 @@ const OrderForm = () => {
       form.setValue("country", "us");
     }
     
-    if (productType === "physical" || productType === "bundle") {
+    if (needsShipping) {
       orderFormSchema.extend({
         address: z.string().min(1, "Address is required"),
         city: z.string().min(1, "City is required"),
@@ -209,32 +215,44 @@ const OrderForm = () => {
         country: z.string().min(1, "Country is required"),
       });
     }
-  }, [productType, form]);
+  }, [productType, form, needsShipping]);
 
   const calculatePrice = () => {
+    const prices = {
+      elevate_digital: 9.99,
+      elevate_physical: 29.99,
+      swaggerism_physical_preorder: 29.99,
+      both_digital: 18.99,
+      both_physical: 50.99,
+      both_mix: 35.99,
+    };
+    
     const originalPrices = {
-      digital: 14.99,
-      physical: 39.99,
-      bundle: 54.98 // sum of original prices
+      elevate_digital: 14.99,
+      elevate_physical: 39.99,
+      swaggerism_physical_preorder: 39.99,
+      both_digital: 29.98,
+      both_physical: 79.98,
+      both_mix: 54.98,
     };
     
-    const discountedPrices = {
-      digital: 9.99,
-      physical: 29.99,
-      bundle: (9.99 + 29.99) * 0.95 // 5% discount on bundle
-    };
-    
-    let basePrice = discountedPrices[productType];
+    let basePrice = prices[productType];
     let originalPrice = originalPrices[productType];
     let shippingCost = 0;
     
-    if (productType === "physical" || productType === "bundle") {
-      const selectedCountry = countries.find(c => c.value === country);
-      if (selectedCountry) {
-        if (selectedCountry.region === "northAmerica") {
-          shippingCost = 11.99 + 2.98; // $11.99 + $2.98 handling
-        } else if (selectedCountry.region === "europe") {
-          shippingCost = 14.99 + 3.98; // $14.99 + $3.98 handling for Europe
+    if (needsShipping) {
+      const isFreeShipping = 
+        productType === "swaggerism_physical_preorder" || 
+        (productType === "both_physical" || productType === "both_mix");
+      
+      if (!isFreeShipping) {
+        const selectedCountry = countries.find(c => c.value === country);
+        if (selectedCountry) {
+          if (selectedCountry.region === "northAmerica") {
+            shippingCost = 11.99 + 2.98;
+          } else if (selectedCountry.region === "europe") {
+            shippingCost = 14.99 + 3.98;
+          }
         }
       }
     }
@@ -253,7 +271,7 @@ const OrderForm = () => {
     try {
       const pricing = calculatePrice();
       
-      const shippingAddress = (data.productType === "physical" || data.productType === "bundle") ? {
+      const shippingAddress = (data.productType === "elevate_physical" || data.productType === "swaggerism_physical_preorder" || data.productType === "both_physical" || data.productType === "both_mix") ? {
         address: data.address,
         city: data.city,
         state: data.state,
@@ -454,45 +472,107 @@ const OrderForm = () => {
     );
   }
 
+  const getProductLabel = (type: string) => {
+    switch(type) {
+      case "elevate_digital": return "Elevate Higher - Digital";
+      case "elevate_physical": return "Elevate Higher - Physical";
+      case "swaggerism_physical_preorder": return "Swaggerism My Religion - Physical (Pre-order)";
+      case "both_digital": return "Both Books - Digital Bundle";
+      case "both_physical": return "Both Books - Physical Bundle";
+      case "both_mix": return "Both Books - Digital + Physical Mix";
+      default: return type;
+    }
+  };
+
   return (
     <section id="order" className="py-10 md:py-20 bg-gray-100">
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start">
           <div className="text-center md:text-left">
-            <img 
-              src="/lovable-uploads/Elevate Higher Book Mockup 5.jpg" 
-              alt="Your Book Title" 
-              className="mx-auto md:mx-0 w-full max-w-md h-auto shadow-lg rounded-lg"
-            />
+            <div className="flex flex-col md:flex-row gap-4 justify-center md:justify-start mb-6">
+              <img 
+                src="/download (2).png" 
+                alt="Elevate Higher" 
+                className="w-32 h-auto object-contain mx-auto md:mx-0"
+              />
+              <img 
+                src="/2-removebg-preview (1).png" 
+                alt="Swaggerism My Religion" 
+                className="w-32 h-auto object-contain mx-auto md:mx-0"
+              />
+            </div>
+            
             <h3 className="text-xl md:text-2xl font-semibold mt-4 md:mt-6">
-              Discover the Secrets to <span className="text-primary">Success</span>
+              Choose Your <span className="text-primary">Transformation</span> Package
             </h3>
             <p className="text-gray-600 mt-2 md:mt-4 text-sm md:text-base">
-              This book will transform your mindset and help you achieve greatness.
+              Select one book or get both for maximum impact and savings.
             </p>
             
             <div className="mt-6 bg-white p-4 rounded-lg shadow-sm">
-              <h4 className="font-semibold mb-2">Three Options Available:</h4>
-              <div className="space-y-2 text-left">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 h-5 w-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">1</div>
-                  <div className="ml-2">
-                    <span className="font-medium">Digital Copy: <span className="line-through text-gray-500">$14.99</span> $9.99</span>
-                    <p className="text-sm text-gray-600">Instant access via email</p>
+              <h4 className="font-semibold mb-4">Available Options:</h4>
+              
+              <div className="space-y-4 text-left">
+                <div className="border-b pb-4">
+                  <h5 className="font-medium text-theme-purple-dark mb-2">Elevate Higher</h5>
+                  <div className="space-y-2">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0 h-5 w-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">1</div>
+                      <div className="ml-2">
+                        <span className="font-medium">Digital: <span className="line-through text-gray-500">$14.99</span> $9.99</span>
+                        <p className="text-sm text-gray-600">Instant access via email</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0 h-5 w-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">2</div>
+                      <div className="ml-2">
+                        <span className="font-medium">Physical: <span className="line-through text-gray-500">$39.99</span> $29.99 + Shipping</span>
+                        <p className="text-sm text-gray-600">Delivered to your doorstep</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 h-5 w-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">2</div>
-                  <div className="ml-2">
-                    <span className="font-medium">Physical Copy: <span className="line-through text-gray-500">$39.99</span> $29.99 + Shipping</span>
-                    <p className="text-sm text-gray-600">Delivered to your doorstep</p>
+                
+                <div className="border-b pb-4">
+                  <h5 className="font-medium text-theme-purple-dark mb-2">Swaggerism My Religion</h5>
+                  <div className="space-y-2">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0 h-5 w-5 bg-rose-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">3</div>
+                      <div className="ml-2">
+                        <span className="font-medium">Physical (Pre-order): <span className="line-through text-gray-500">$39.99</span> $29.99</span>
+                        <div className="flex items-center mt-1">
+                          <Calendar className="h-4 w-4 text-gray-500 mr-1" />
+                          <p className="text-sm text-gray-600">Launches July 15th - FREE shipping for pre-orders!</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 h-5 w-5 bg-green-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">3</div>
-                  <div className="ml-2">
-                    <span className="font-medium">Bundle (Digital + Physical): <span className="text-green-500 font-bold">Save 5%</span></span>
-                    <p className="text-sm text-gray-600">Get both formats at a special discount</p>
+                
+                <div>
+                  <h5 className="font-medium text-green-600 mb-2">Bundle Options (Best Value)</h5>
+                  <div className="space-y-2">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0 h-5 w-5 bg-green-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">4</div>
+                      <div className="ml-2">
+                        <span className="font-medium">Both Digital: <span className="text-green-500 font-bold">Save 5%</span></span>
+                        <p className="text-sm text-gray-600">Get both books in digital format</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0 h-5 w-5 bg-green-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">5</div>
+                      <div className="ml-2">
+                        <span className="font-medium">Both Physical: <span className="text-green-500 font-bold">Save 15%</span></span>
+                        <p className="text-sm text-gray-600">Get both physical books with FREE shipping on Swaggerism</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0 h-5 w-5 bg-green-500 rounded-full flex items-center justify-center text-white text-xs mt-0.5">6</div>
+                      <div className="ml-2">
+                        <span className="font-medium">Mix (Digital + Physical): <span className="text-green-500 font-bold">Save 10%</span></span>
+                        <p className="text-sm text-gray-600">Get Elevate digital + Swaggerism physical</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -501,7 +581,7 @@ const OrderForm = () => {
 
           <div className="bg-white shadow-xl rounded-lg p-6">
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
-              Order Your Copy Now
+              Order Your Books Now
             </h2>
 
             <Form {...form}>
@@ -554,37 +634,83 @@ const OrderForm = () => {
                   name="productType"
                   render={({ field }) => (
                     <FormItem className="space-y-3">
-                      <FormLabel>Book Format</FormLabel>
+                      <FormLabel>Book Selection</FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
                           defaultValue={field.value}
-                          className="flex flex-col space-y-1"
+                          className="flex flex-col space-y-2"
                         >
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="digital" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              Digital Copy - <span className="line-through text-gray-500">$14.99</span> $9.99
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="physical" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              Physical Copy - <span className="line-through text-gray-500">$39.99</span> $29.99 + Shipping
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="bundle" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              Bundle (Digital + Physical) - <span className="text-green-500 font-bold">Save 5%</span>
-                            </FormLabel>
-                          </FormItem>
+                          <div className="p-4 border rounded-md">
+                            <h4 className="font-medium text-theme-purple-dark mb-2">Elevate Higher</h4>
+                            <div className="space-y-2">
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="elevate_digital" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  Digital - <span className="line-through text-gray-500">$14.99</span> $9.99
+                                </FormLabel>
+                              </FormItem>
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="elevate_physical" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  Physical - <span className="line-through text-gray-500">$39.99</span> $29.99 + Shipping
+                                </FormLabel>
+                              </FormItem>
+                            </div>
+                          </div>
+                          
+                          <div className="p-4 border rounded-md">
+                            <h4 className="font-medium text-theme-purple-dark mb-2">Swaggerism My Religion</h4>
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="swaggerism_physical_preorder" />
+                              </FormControl>
+                              <div>
+                                <FormLabel className="font-normal">
+                                  Physical (Pre-order) - <span className="line-through text-gray-500">$39.99</span> $29.99
+                                </FormLabel>
+                                <p className="text-xs text-green-600 flex items-center mt-1">
+                                  <Calendar className="h-3 w-3 mr-1" />
+                                  FREE shipping on pre-orders before July 15!
+                                </p>
+                              </div>
+                            </FormItem>
+                          </div>
+                          
+                          <div className="p-4 border rounded-md bg-green-50">
+                            <div className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full w-fit mb-2">BEST VALUE</div>
+                            <h4 className="font-medium text-green-700 mb-2">Bundle Options</h4>
+                            <div className="space-y-2">
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="both_digital" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  Both Digital - <span className="text-green-600 font-medium">$18.99</span> (Save 5%)
+                                </FormLabel>
+                              </FormItem>
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="both_physical" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  Both Physical - <span className="text-green-600 font-medium">$50.99</span> (Save 15%)
+                                </FormLabel>
+                              </FormItem>
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="both_mix" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  Mix (Digital + Physical) - <span className="text-green-600 font-medium">$35.99</span> (Save 10%)
+                                </FormLabel>
+                              </FormItem>
+                            </div>
+                          </div>
                         </RadioGroup>
                       </FormControl>
                       <FormMessage />
@@ -592,7 +718,7 @@ const OrderForm = () => {
                   )}
                 />
 
-                {(productType === "physical" || productType === "bundle") && (
+                {needsShipping && (
                   <div className="space-y-4 border p-4 rounded-md bg-gray-50">
                     <h3 className="font-medium">Shipping Information</h3>
                     
@@ -658,93 +784,4 @@ const OrderForm = () => {
                         name="country"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Country</FormLabel>
-                            <Select 
-                              onValueChange={field.onChange} 
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select Country" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {countries.map((country) => (
-                                  <SelectItem key={country.value} value={country.value}>
-                                    {country.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <div className="text-sm">
-                      <p className="font-medium">Shipping Costs:</p>
-                      <ul className="list-disc pl-5 mt-1 text-gray-600">
-                        <li>USA: $11.99 + $2.98 handling</li>
-                        <li>Europe: $14.99 + $3.98 handling</li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-                
-                <FormField
-                  control={form.control}
-                  name="agreeTerms"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 py-2">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          I agree to the terms and conditions
-                        </FormLabel>
-                        <FormDescription>
-                          By checking this box, you agree to our Terms of Service and Privacy Policy.
-                        </FormDescription>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <div className="flex items-center justify-between text-sm text-gray-500 py-2">
-                  <div className="flex items-center space-x-1">
-                    <Lock className="h-4 w-4" />
-                    <span>Secure Checkout</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <CreditCard className="h-4 w-4" />
-                    <span>Major Cards Accepted</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Shield className="h-4 w-4" />
-                    <span>SSL Encrypted</span>
-                  </div>
-                </div>
-
-                <Button 
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-3 text-lg font-bold"
-                >
-                  {isLoading ? "Processing..." : "Continue to Payment"}
-                </Button>
-              </form>
-            </Form>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default OrderForm;
+                            <FormLabel

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ArrowRight, Check, Package, BookOpen, Gift } from 'lucide-react';
+import { ArrowRight, Check, Package, BookOpen, Gift, Calendar } from 'lucide-react';
 
 const DualBookOffer = () => {
   const isMobile = useIsMobile();
@@ -42,17 +42,28 @@ const DualBookOffer = () => {
     >
       <div className="max-w-6xl mx-auto px-4 md:px-8">
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-4 text-white">
-            ULTIMATE TRANSFORMATION BUNDLE
-          </h2>
-          <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-            Get both bestselling books and save! Experience the power of combined wisdom and double your growth potential.
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-4 text-white">
+              ULTIMATE TRANSFORMATION BUNDLE
+            </h2>
+            <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
+              Get both bestselling books and save! Experience the power of combined wisdom and double your growth potential.
+            </p>
+          </motion.div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           {/* Book 1: Elevate Higher */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-white/20 h-full flex flex-col">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={isVisible ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-white/20 h-full flex flex-col"
+          >
             <div className="flex items-center justify-center mb-4">
               <div className="w-32 h-32 md:w-40 md:h-40 relative mr-4">
                 <img 
@@ -79,10 +90,15 @@ const DualBookOffer = () => {
                 </li>
               </ul>
             </div>
-          </div>
+          </motion.div>
 
           {/* Book 2: Swaggerism My Religion */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-white/20 h-full flex flex-col">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={isVisible ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-white/20 h-full flex flex-col"
+          >
             <div className="flex items-center justify-center mb-4">
               <div className="w-32 h-32 md:w-40 md:h-40 relative mr-4">
                 <img 
@@ -95,6 +111,10 @@ const DualBookOffer = () => {
                 <h3 className="text-xl md:text-2xl font-bold mb-2">Swaggerism My Religion</h3>
                 <p className="text-white/80 text-sm md:text-base">Discover the art of confidence and authentic self-expression to transform your life.</p>
                 <div className="mt-2 text-white/70 text-sm">Individual price: <span className="line-through">$39.99</span> <span className="text-white font-bold">$29.99</span></div>
+                <div className="mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#DC2626] text-white">
+                  <Calendar className="h-3 w-3 mr-1" />
+                  PRE-ORDER (Launches July 15)
+                </div>
               </div>
             </div>
             <div className="mt-auto pt-4">
@@ -107,13 +127,22 @@ const DualBookOffer = () => {
                   <Check className="h-5 w-5 mr-2 text-green-400 flex-shrink-0 mt-0.5" />
                   <span className="text-sm">Master authentic self-expression</span>
                 </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 mr-2 text-green-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">Pre-order now for FREE shipping!</span>
+                </li>
               </ul>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Bundle Box */}
-        <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 md:p-8 shadow-2xl border border-white/30 relative overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="bg-white/20 backdrop-blur-md rounded-xl p-6 md:p-8 shadow-2xl border border-white/30 relative overflow-hidden"
+        >
           <div className="absolute top-0 right-0 bg-[#DC2626] text-white py-1 px-4 font-bold text-sm">
             BEST VALUE
           </div>
@@ -142,6 +171,10 @@ const DualBookOffer = () => {
                   <Package className="inline h-4 w-4 mr-1" /> 
                   Physical copies + <BookOpen className="inline h-4 w-4 mx-1" /> digital versions included
                 </p>
+                <p className="text-sm text-white/80 mt-1 font-medium">
+                  <Check className="inline h-4 w-4 mr-1 text-green-400" /> 
+                  FREE shipping on Swaggerism pre-orders before July 15!
+                </p>
               </div>
               
               <button
@@ -157,7 +190,6 @@ const DualBookOffer = () => {
               <div className="flex items-center justify-center relative">
                 <img 
                   src="/download (2).png" 
-                   
                   alt="Elevate Higher" 
                   className="w-40 h-auto object-contain drop-shadow-xl transform -rotate-6 absolute -left-4 md:left-8 z-10"
                 />
@@ -172,7 +204,7 @@ const DualBookOffer = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
