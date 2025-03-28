@@ -49,13 +49,16 @@ serve(async (req) => {
       try {
         console.log("Attempting to send email to:", customerEmail);
         
-        // In development/testing, we'll only send to the verified email
-        const recipientEmail = VERIFIED_EMAIL; // Use the verified email in testing
+        // In a production environment, we would send to the actual customer email
+        // For testing, we'll send to the verified email
+        const recipientEmail = Deno.env.get("ENVIRONMENT") === "production" 
+          ? customerEmail
+          : VERIFIED_EMAIL;
         
         // Send email with download link
         const { data, error } = await resend.emails.send({
           from: "Elevate Higher <onboarding@resend.dev>",
-          to: recipientEmail, // Using verified email instead of customerEmail
+          to: recipientEmail,
           subject: "Your Digital Book Download Link",
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -87,8 +90,8 @@ serve(async (req) => {
           console.error("Error sending email:", error);
           emailStatus = "error";
         } else {
-          emailStatus = "sent_to_test";
-          console.log("Email sent successfully to test account");
+          emailStatus = Deno.env.get("ENVIRONMENT") === "production" ? "sent" : "sent_to_test";
+          console.log("Email sent successfully");
         }
         
         // We inform the user about the download regardless of email status

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,12 +21,34 @@ const stripePromise = loadStripe("pk_test_51Gx2sVCNjyaQ14tCaqL6XpRPHLRMtzOK8vjEx
 
 const countries = [
   { value: "us", label: "United States", region: "northAmerica" },
-  { value: "ca", label: "Canada", region: "northAmerica" },
   { value: "gb", label: "United Kingdom", region: "europe" },
   { value: "fr", label: "France", region: "europe" },
   { value: "de", label: "Germany", region: "europe" },
   { value: "it", label: "Italy", region: "europe" },
   { value: "es", label: "Spain", region: "europe" },
+  { value: "pt", label: "Portugal", region: "europe" },
+  { value: "be", label: "Belgium", region: "europe" },
+  { value: "nl", label: "Netherlands", region: "europe" },
+  { value: "lu", label: "Luxembourg", region: "europe" },
+  { value: "ch", label: "Switzerland", region: "europe" },
+  { value: "at", label: "Austria", region: "europe" },
+  { value: "se", label: "Sweden", region: "europe" },
+  { value: "no", label: "Norway", region: "europe" },
+  { value: "dk", label: "Denmark", region: "europe" },
+  { value: "fi", label: "Finland", region: "europe" },
+  { value: "ie", label: "Ireland", region: "europe" },
+  { value: "pl", label: "Poland", region: "europe" },
+  { value: "cz", label: "Czech Republic", region: "europe" },
+  { value: "sk", label: "Slovakia", region: "europe" },
+  { value: "hu", label: "Hungary", region: "europe" },
+  { value: "ro", label: "Romania", region: "europe" },
+  { value: "bg", label: "Bulgaria", region: "europe" },
+  { value: "hr", label: "Croatia", region: "europe" },
+  { value: "si", label: "Slovenia", region: "europe" },
+  { value: "gr", label: "Greece", region: "europe" },
+  { value: "ee", label: "Estonia", region: "europe" },
+  { value: "lv", label: "Latvia", region: "europe" },
+  { value: "lt", label: "Lithuania", region: "europe" },
 ];
 
 const orderFormSchema = z.object({
@@ -213,7 +234,7 @@ const OrderForm = () => {
         if (selectedCountry.region === "northAmerica") {
           shippingCost = 11.99 + 2.98; // $11.99 + $2.98 handling
         } else if (selectedCountry.region === "europe") {
-          shippingCost = 14.99;
+          shippingCost = 14.99 + 3.98; // $14.99 + $3.98 handling for Europe
         }
       }
     }
@@ -322,6 +343,7 @@ const OrderForm = () => {
                 </div>
                 <p className="text-sm text-gray-600 mb-3">
                   Your book is ready to download. Click the button below to get your copy.
+                  We've also sent the download link to your email ({emailUsed}).
                 </p>
                 <a 
                   href={downloadLink}
@@ -332,9 +354,6 @@ const OrderForm = () => {
                   <Download className="h-4 w-4 mr-2" />
                   Download Now
                 </a>
-                <p className="text-xs text-gray-500 mt-2">
-                  We've also attempted to send this link to your email ({emailUsed}).
-                </p>
               </div>
             )}
             {(productTypeOrdered === "physical" || productTypeOrdered === "bundle") && (
@@ -666,8 +685,8 @@ const OrderForm = () => {
                     <div className="text-sm">
                       <p className="font-medium">Shipping Costs:</p>
                       <ul className="list-disc pl-5 mt-1 text-gray-600">
-                        <li>USA & Canada: $11.99 + $2.98 handling</li>
-                        <li>Europe: $14.99 (includes handling)</li>
+                        <li>USA: $11.99 + $2.98 handling</li>
+                        <li>Europe: $14.99 + $3.98 handling</li>
                       </ul>
                     </div>
                   </div>
