@@ -687,7 +687,7 @@ const CTASection = () => {
                   <div className="relative w-64">
                     <div className="absolute -inset-1 bg-gradient-to-br from-brand-purple to-brand-red opacity-20 blur-sm rounded-lg"></div>
                     <img 
-                      src="555.png" 
+                      src="8a6f75eb-74a5-4c36-bcf1-eaaa47514ad5 (1).png" 
                       alt="Elevate Higher book" 
                       className="relative w-full h-auto shadow-xl rounded-lg" 
                     />

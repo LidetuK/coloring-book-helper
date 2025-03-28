@@ -53,14 +53,13 @@ const Hero = () => {
         </div>
 
         <Button 
-          size="lg"
-          className="bg-red-600 hover:bg-red-700 text-white text-lg md:text-2xl px-4 md:px-16 py-6 md:py-8 mt-6 md:mt-8 font-bold uppercase rounded-lg transform transition-all duration-300 hover:scale-105 shadow-lg w-full md:w-auto"
-          onClick={() => document.getElementById("order")?.scrollIntoView({ behavior: "smooth" })}
-        >
-          RUSH ME A FREE COPY
-          <ArrowRight className="ml-2 h-5 w-5 md:h-6 md:w-6" />
-        </Button>
-
+  size="lg"
+  className="bg-red-600 hover:bg-red-700 text-white text-lg md:text-2xl px-4 md:px-16 py-6 md:py-8 mt-6 md:mt-8 font-bold uppercase rounded-lg transform transition-all duration-300 hover:scale-105 shadow-lg w-full md:w-auto"
+  onClick={() => document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })}
+>
+  RUSH ME A FREE COPY
+  <ArrowRight className="ml-2 h-5 w-5 md:h-6 md:w-6" />
+</Button>
         <p className="mt-4 text-xs md:text-sm opacity-80 font-bold">
           HURRY! STOCK OF THIS BOOK AS OF FEBRUARY 21 IS LOW
         </p>

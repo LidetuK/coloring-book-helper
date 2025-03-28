@@ -31,13 +31,14 @@ const FinalCTA = () => {
         </div>
 
         <button
-          className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-base sm:text-xl md:text-2xl px-6 sm:px-10 md:px-16 py-4 sm:py-6 md:py-8 mt-6 md:mt-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-110 shadow-xl w-full sm:w-auto"
-          onClick={() =>
-            document.getElementById("order")?.scrollIntoView({ behavior: "smooth" })
-          }
-        >
-          Claim Your Free Copy
-        </button>
+  className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-base sm:text-xl md:text-2xl px-6 sm:px-10 md:px-16 py-4 sm:py-6 md:py-8 mt-6 md:mt-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-110 shadow-xl w-full sm:w-auto"
+  onClick={() =>
+    document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })
+  }
+>
+  Claim Your Free Copy
+</button>
+
 
         <p className="mt-4 md:mt-6 text-base md:text-lg opacity-90 text-white">
           Limited Time Offer - Act Now While Supplies Last!

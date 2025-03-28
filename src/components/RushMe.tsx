@@ -17,15 +17,16 @@ const RushMe = () => {
 
         {/* Call to Action Button - Changed to red */}
         <div className="mt-8">
-          <button
-            className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-base sm:text-xl md:text-2xl px-8 sm:px-12 md:px-16 py-4 sm:py-6 md:py-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-110 shadow-xl w-full sm:w-auto"
-            onClick={() =>
-              document.getElementById("order")?.scrollIntoView({ behavior: "smooth" })
-            }
-          >
-            <span className="relative z-10">RUSH ME A FREE COPY NOW</span>
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></span>
-          </button>
+        <button
+  className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-base sm:text-xl md:text-2xl px-8 sm:px-12 md:px-16 py-4 sm:py-6 md:py-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-110 shadow-xl w-full sm:w-auto relative overflow-hidden"
+  onClick={() =>
+    document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })
+  }
+>
+  <span className="relative z-10">RUSH ME A FREE COPY NOW</span>
+  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></span>
+</button>
+
         </div>
       </div>
     </section>

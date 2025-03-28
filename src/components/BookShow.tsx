@@ -72,13 +72,14 @@ const BookShow = () => {
 
           {/* Button - Changed to red */}
           <button
-            className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-lg md:text-xl px-6 md:px-12 py-4 md:py-6 mt-6 md:mt-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-105 shadow-xl"
-            onClick={() =>
-              document.getElementById("order")?.scrollIntoView({ behavior: "smooth" })
-            }
-          >
-            Claim Your Copy
-          </button>
+  className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-lg md:text-xl px-6 md:px-12 py-4 md:py-6 mt-6 md:mt-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-105 shadow-xl"
+  onClick={() =>
+    document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })
+  }
+>
+  Claim Your Copy
+</button>
+
         </div>
 
         {/* Closing Message */}
@@ -89,7 +90,7 @@ const BookShow = () => {
         <p className="mt-4 md:mt-6 text-base md:text-lg font-bold">Warm regards,</p>
         <p className="text-lg md:text-xl font-bold text-theme-purple-light">Resk'Que</p>
         <img 
-          src="/lovable-uploads/Screenshot_2025-02-28_231038-removebg-preview.png" 
+          src="/Screenshot_2025-02-28_231038-removebg-preview.png" 
           alt="Signature" 
           className="mx-auto" 
         />
