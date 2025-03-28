@@ -23,6 +23,7 @@ import BonusSection from '@/components/BonusSection';
 import LimitedOffer from '@/components/LimitedOffer';
 import FinalCTA from '@/components/FinalCTA';
 import BookPopup from '@/components/BookPopup';
+import Animated from '@/components/Animated';
 
 const Index = () => {
   useEffect(() => {
@@ -60,6 +61,7 @@ const Index = () => {
       <RushMe/>
       <CTASection />
       <CallToAction/>
+      <Animated/>
       <AnimatedTestimonials/>
       <BookShow/>
       <Review/>
