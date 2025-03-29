@@ -64,15 +64,15 @@ const DualBookOffer = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-white/20 h-full flex flex-col"
           >
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-32 h-32 md:w-40 md:h-40 relative mr-4">
+            <div className="flex flex-col items-center mb-4">
+              <div className="w-48 h-48 md:w-64 md:h-64 relative mb-6">
                 <img 
                   src="/download (2).png" 
                   alt="Elevate Higher" 
-                  className="w-full h-full object-contain drop-shadow-xl"
+                  className="w-full h-full object-contain drop-shadow-xl transform hover:scale-105 transition-all duration-300"
                 />
               </div>
-              <div className="flex-1">
+              <div className="text-center">
                 <h3 className="text-xl md:text-2xl font-bold mb-2">Elevate Higher</h3>
                 <p className="text-white/80 text-sm md:text-base">Unlock your potential and achieve greater success with proven strategies for personal growth.</p>
                 <div className="mt-2 text-white/70 text-sm">Individual price: <span className="line-through">$39.99</span> <span className="text-white font-bold">$29.99</span></div>
@@ -99,15 +99,15 @@ const DualBookOffer = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-white/20 h-full flex flex-col"
           >
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-32 h-32 md:w-40 md:h-40 relative mr-4">
+            <div className="flex flex-col items-center mb-4">
+              <div className="w-48 h-48 md:w-64 md:h-64 relative mb-6">
                 <img 
                   src="/2-removebg-preview (1).png" 
                   alt="Swaggerism My Religion" 
-                  className="w-full h-full object-contain drop-shadow-xl"
+                  className="w-full h-full object-contain drop-shadow-xl transform hover:scale-105 transition-all duration-300"
                 />
               </div>
-              <div className="flex-1">
+              <div className="text-center">
                 <h3 className="text-xl md:text-2xl font-bold mb-2">Swaggerism My Religion</h3>
                 <p className="text-white/80 text-sm md:text-base">Discover the art of confidence and authentic self-expression to transform your life.</p>
                 <div className="mt-2 text-white/70 text-sm">Individual price: <span className="line-through">$39.99</span> <span className="text-white font-bold">$29.99</span></div>
@@ -191,15 +191,15 @@ const DualBookOffer = () => {
                 <img 
                   src="/download (2).png" 
                   alt="Elevate Higher" 
-                  className="w-40 h-auto object-contain drop-shadow-xl transform -rotate-6 absolute -left-4 md:left-8 z-10"
+                  className="w-56 h-auto object-contain drop-shadow-xl transform -rotate-6 absolute -left-10 md:left-4 z-10 hover:scale-110 transition-all duration-300"
                 />
                 <img 
                   src="/2-removebg-preview (1).png"
                   alt="Swaggerism My Religion" 
-                  className="w-40 h-auto object-contain drop-shadow-xl transform rotate-6 absolute -right-4 md:right-8 z-10"
+                  className="w-56 h-auto object-contain drop-shadow-xl transform rotate-6 absolute -right-10 md:right-4 z-10 hover:scale-110 transition-all duration-300"
                 />
-                <div className="w-60 h-60 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center">
-                  <Gift className="h-16 w-16 text-white animate-pulse" />
+                <div className="w-72 h-72 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center">
+                  <Gift className="h-20 w-20 text-white animate-pulse" />
                 </div>
               </div>
             </div>
