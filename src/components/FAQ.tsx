@@ -10,43 +10,43 @@ interface FAQItem {
 const faqs: FAQItem[] = [
   {
     question: "Who is this for?",
-    answer: "This book is for anyone looking to elevate their life, career, or personal growth. Whether you're an entrepreneur, professional, or someone seeking personal development, the principles in this book will help you reach your full potential."
+    answer: "This is for the bold. The fearless. The ones who refuse to settle. If you’re ready to elevate your mindset, amplify your presence, and dominate every arena of life, then Swaggerism is your new religion."
   },
   {
     question: "Will this work for me?",
-    answer: "Yes! The principles and strategies in this book have been carefully developed and tested to work for people from all walks of life. The actionable advice is designed to be implemented by anyone regardless of their starting point."
+    answer: "If you have swagger in your DNA—yes. If you’re willing to break free from limits and embrace unstoppable confidence and abundance—absolutely. Swaggerism isn’t for doubters. It’s for doers."
   },
   {
     question: "Is there a digital or audiobook version available?",
-    answer: "Currently, we're offering the physical version with the special shipping-only promotion. Digital and audiobook versions will be available soon, and purchasers of the physical copy will receive special access."
+    answer: "Yes! Swagger has no limits, and neither should your access to it. A digital and audiobook version will be available soon—stay tuned!"
   },
   {
     question: "How is this different from other products?",
-    answer: "Unlike many self-help books that offer generic advice, Swaggerism, My Religion provides practical, actionable strategies backed by real-world experience. Each chapter contains implementable techniques you can start using immediately."
+    answer: "Most books tell you what to do. Swaggerism transforms who you ARE. This isn’t a self-help guide—it’s a mindset revolution. It’s not about following the rules. It’s about rewriting them."
   },
   {
     question: "What exactly am I getting?",
-    answer: "You're receiving a premium hardcover copy of 'Swaggerism, My Religion' with over 200 pages of life-changing content, covering the 7 key areas to transform your life: Spiritual, Wellness, Knowledge, Relationship, Action, Financial, and Lifestyle."
+    answer: "You're getting the blueprint to an unshakable life. Inside, you’ll find the 7 Secret Strategies that separate the mediocre from the masters. This is swagger in its purest form—unfiltered, unapologetic, and unstoppable."
   },
   {
     question: "Do you have any success stories?",
-    answer: "Absolutely! Thousands of readers have transformed their lives using the principles in this book. From entrepreneurs who've scaled their businesses to individuals who've overcome personal challenges, the success stories are numerous and inspiring."
+    answer: "Thousands of people have unlocked their inner swagger and transformed their lives using these principles. Entrepreneurs, creatives, high achievers—all of them proving that Swaggerism works. You could be next."
   },
   {
     question: "When will my book arrive?",
-    answer: "Books typically ship within 1-2 business days. Delivery times vary based on your location, but most readers receive their copy within 5-7 business days in the US, and 10-14 business days internationally."
+    answer: "Swagger doesn’t wait—but shipping does. Expect your book to arrive within [X] business days based on your location. We move fast. So should you."
   },
   {
     question: "Is this covered by a 100% money-back guarantee?",
-    answer: "Yes! We're so confident in the value of this book that we offer a 60-day, no-questions-asked, 100% money-back guarantee. If you're not completely satisfied, we'll refund your shipping cost in full."
+    answer: "No refunds—because there’s nothing to refund. Swaggerism is priceless. The only risk is not claiming your copy."
   },
   {
     question: "How much does shipping and handling cost?",
-    answer: "Shipping and handling costs just $9.95 for US orders and $19.95 for international orders. This covers the cost of packaging, processing, and delivery to your doorstep."
+    answer: "Shipping costs vary based on location, but we’re covering the book—you just cover the delivery. A small price for a lifetime of unstoppable swagger."
   },
   {
     question: "Can I get a bulk order for my team or organization?",
-    answer: "Yes! We offer special bulk pricing for orders of 10+ copies. Please contact our support team for more information about bulk orders for your team, organization, or event."
+    answer: "Absolutely. Swagger spreads best in numbers. If you want to upgrade your squad, your company, or your crew, bulk orders are available. Reach out for exclusive deals."
   }
 ];
 
@@ -143,7 +143,7 @@ const FAQ = () => {
             Still have questions? We're here to help!
           </p>
           <a href="#claim" className="cta-button">
-            Claim Your Free Copy Now
+          Embrace Your Swaggerism <br/>
           </a>
         </div>
       </div>

@@ -93,6 +93,9 @@ const BookShow = () => {
           className="mx-auto" 
         />
         <h3 className="text-2xl md:text-3xl font-bold text-theme-purple-light">P.S.</h3>
+        <p className="mt-8 md:mt-12 italic opacity-80 text-base md:text-lg">
+        I promise you one thing, just taking action to receive this gift from me, I'll be happy to invite. you to my next event free of charge and also autograph a copy of your book when you share how this book impact your thoughts or life on any of your social media platforms and tag me on it.
+        </p>
       </div>
     </section>
   );

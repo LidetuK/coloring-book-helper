@@ -20,12 +20,12 @@ const audience = [
         <div className="max-w-6xl mx-auto px-4">
           {/* Title */}
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-theme-pink-DEFAULT mb-2 md:mb-4">
-          WHO NEEDS SWAGGERISM?
+          Tired of Conformity?
           </h2>
   
           {/* Subtitle */}
           <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-semibold text-theme-purple-dark mb-4 md:mb-8 px-2">
-          7 SWAGGER-FUELED STRATEGIES TO UNLEASH LIMITLESS ABUNDANCE IN YOUR LIFE
+          Embrace Swaggerism and Live Life to Your Full Potential, Learn how to navigate a world of conformity without being conformed. Resk 'Que, lifestyle magnate, shares his guidance, wisdom, and life experiences to help you define and embody your own 'Swaggerism.' 
           </h3>
   
           {/* Image */}

@@ -27,6 +27,8 @@ const Elevate = () => {
   
         {/* 7 Areas Section */}
         <p className="mt-4 md:mt-6 text-base md:text-lg font-semibold">
+        You. Yes, YOU! Holding this book (or device). This is for you. 'Swaggerism: My Religion' isn't just a book; it's a movement.  It's about living authentically, expressing your unique style, and reaching your highest potential. Resk 'Que is here to guide you on this journey of self-discovery and empowerment…
+
         Rise above, stand out, and elevate every aspect of your life with Swaggerism.
         </p>
   
@@ -45,7 +47,7 @@ const Elevate = () => {
     document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })
   }
 >
-  RUSH ME A FREE COPY NOW
+Define Your Religion - <br/>Order 'Swaggerism' Today
 </button>
 
 

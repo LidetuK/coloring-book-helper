@@ -1,35 +1,36 @@
 const testimonials = [
-    [
-      { user: "@k****", text: "Reading your book now. I'm mind-blown by it! It's literally an exact blueprint for digital marketing, which is exactly what I needed..." },
-      { user: "@tom****", text: "Hey, I've finished reading your book about a week ago, and can honestly say it's the best book I've read. I smashed through it in 3 days because I didn't want to stop reading..." },
-      { user: "@nik****", text: "Much respect, man! Keep killing it 🔥" }
-    ],
-    [
-      { user: "@jane_doe", text: "This book changed the way I look at sales and marketing. It's packed with actionable strategies!" },
-      { user: "@mark_89", text: "I applied the techniques from the book, and my business saw immediate results. It's a game-changer!" },
-      { user: "@sarah_biz", text: "Finally, a marketing book that's actually useful and doesn't just repeat the same old advice." }
-    ],
-    [
-      { user: "@entrepreneur_x", text: "If you run a business and haven't read this book, you're missing out on massive growth opportunities!" },
-      { user: "@growth_guru", text: "The best investment I've made in my business. The strategies are next-level!" },
-      { user: "@startupqueen", text: "I've read dozens of marketing books, but this one is by far the most practical and results-driven." }
-    ],
-    [
-      { user: "@bizhustler", text: "ELEVATE HIGH’ER is the ultimate marketing guide. Highly recommend!" },
-      { user: "@ads_master", text: "Every business owner should read this. Period." },
-      { user: "@scalingsuccess", text: "From struggling to scaling—this book made it possible!" }
-    ],
-    [
-      { user: "@ceo_life", text: "This book literally changed my approach to business. I feel more confident than ever!" },
-      { user: "@sales_pro", text: "Tried the methods in this book and my revenue doubled in just a few weeks!" },
-      { user: "@marketing_genius", text: "ELEVATE HIGH’ER is the best book on business I’ve ever read!" }
-    ],
-    [
-      { user: "@hustle_king", text: "Pure gold! Every chapter is packed with real strategies that work." },
-      { user: "@founder_x", text: "A must-read for any entrepreneur who wants to scale fast." },
-      { user: "@success_mindset", text: "The only book you need to take your business to the next level." }
-    ]
-  ];
+  [
+    { user: "@k****", text: "Reading 'Swaggerism My Religion' now. I'm mind-blown by it! It's literally an exact blueprint for confidence and success, which is exactly what I needed..." },
+    { user: "@tom****", text: "Hey, I've finished reading 'Swaggerism My Religion' about a week ago, and can honestly say it's the best book I've read. I smashed through it in 3 days because I didn't want to stop reading..." },
+    { user: "@nik****", text: "Much respect, man! Keep killing it 🔥" }
+  ],
+  [
+    { user: "@jane_doe", text: "This book changed the way I look at self-confidence and personal growth. It's packed with actionable strategies!" },
+    { user: "@mark_89", text: "I applied the techniques from 'Swaggerism My Religion,' and my mindset shifted instantly. It's a game-changer!" },
+    { user: "@sarah_biz", text: "Finally, a book on swagger that’s actually useful and doesn’t just repeat the same old advice." }
+  ],
+  [
+    { user: "@entrepreneur_x", text: "If you want to level up your life and haven’t read 'Swaggerism My Religion,' you're missing out on massive growth opportunities!" },
+    { user: "@growth_guru", text: "The best investment I've made in myself. The strategies are next-level!" },
+    { user: "@startupqueen", text: "I've read dozens of self-improvement books, but this one is by far the most practical and results-driven." }
+  ],
+  [
+    { user: "@bizhustler", text: "'Swaggerism My Religion' is the ultimate guide to owning your confidence. Highly recommend!" },
+    { user: "@ads_master", text: "Every entrepreneur should read this. Period." },
+    { user: "@scalingsuccess", text: "From struggling to unstoppable—this book made it possible!" }
+  ],
+  [
+    { user: "@ceo_life", text: "This book literally changed my approach to success. I feel more confident than ever!" },
+    { user: "@sales_pro", text: "Tried the methods in 'Swaggerism My Religion,' and my mindset shifted in just a few weeks!" },
+    { user: "@marketing_genius", text: "'Swaggerism My Religion' is the best book on personal growth I’ve ever read!" }
+  ],
+  [
+    { user: "@hustle_king", text: "Pure gold! Every chapter is packed with real strategies that work." },
+    { user: "@founder_x", text: "A must-read for anyone who wants to level up fast." },
+    { user: "@success_mindset", text: "The only book you need to take your confidence to the next level." }
+  ]
+];
+
   
   const Review = () => {
     return (

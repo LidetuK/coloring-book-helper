@@ -4,27 +4,27 @@ import { Gift, Zap, Target, Users } from "lucide-react";
 const bonuses = [
   {
     icon: <Gift className="w-8 h-8 md:w-12 md:h-12 text-theme-pink-DEFAULT" />,
-    title: "The Elevation Mindset Blueprint",
-    value: "$1,997 VALUE",
-    description: "Unlock the secrets to developing a success-driven mindset and achieving your full potential."
+    title: "🔥 The Swagger Mindset",
+    value: "$2,499 VALUE",
+    description: "Unleash the mindset of the elite. Learn the inner codes of power, confidence, and limitless success that separate legends from the average."
   },
   {
     icon: <Zap className="w-8 h-8 md:w-12 md:h-12 text-theme-pink-DEFAULT" />,
-    title: "Peak Performance Habits",
-    value: "$1,497 VALUE",
-    description: "Master daily routines and habits that empower you to stay focused, productive, and motivated."
+    title: "🔥 High-Performance Swagger",
+    value: "$1,999 VALUE",
+    description: "Dominate every day. Master the rituals, routines, and habits that keep top performers at the peak—no off days, no excuses."
   },
   {
     icon: <Target className="w-8 h-8 md:w-12 md:h-12 text-theme-pink-DEFAULT" />,
-    title: "The Growth Acceleration Guide",
-    value: "$1,697 VALUE",
-    description: "Discover proven strategies to accelerate personal and professional growth for lasting success."
+    title: "🔥 The Swagger Acceleration",
+    value: "$2,499 VALUE",
+    description: "Success isn’t slow—it’s engineered. Get the blueprint to hyper-growth in business, influence, and personal power."
   },
   {
     icon: <Users className="w-8 h-8 md:w-12 md:h-12 text-theme-pink-DEFAULT" />,
-    title: "Confidence & Resilience Masterclass",
-    value: "$1,997 VALUE",
-    description: "Build unshakable confidence and resilience to overcome setbacks and reach new heights in life."
+    title: "🔥 The Supreme Confidence",
+    value: "$2,999 VALUE",
+    description: "Swagger isn’t given—it’s built. Step into unshakable confidence, bulletproof resilience, and an unstoppable presence."
   }
 ];
 
@@ -34,10 +34,10 @@ const BonusSection = () => {
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 text-white">
-            FREE Bonuses (Worth $7,188)
+          FREE Swagger Bonuses (Worth $9,997!)
           </h2>
           <p className="text-lg md:text-xl text-white/80">
-            Order today and get instant access to these exclusive bonuses!
+          Order today and unlock instant access to these exclusive power-ups—because Swaggerism is more than a book, it’s a lifestyle upgrade.
           </p>
         </div>
         

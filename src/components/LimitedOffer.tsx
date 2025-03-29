@@ -9,22 +9,43 @@ const LimitedOffer = () => {
       <div className="max-w-5xl mx-auto px-6">
         {/* Section Heading */}
         <h1 className="text-3xl md:text-5xl font-extrabold uppercase tracking-wide leading-tight">
-          🎁 Don't Miss This Opportunity <br /> to Transform Your Business
+          🎁 Who Needs This Book:
         </h1>
 
         {/* Content */}
         <div className="mt-8 bg-white text-gray-900 p-8 rounded-lg shadow-lg">
           <h3 className="text-3xl font-bold text-theme-pink-DEFAULT"></h3>
           <p className="mt-4 text-lg leading-relaxed">
-            Hey there! If you've skipped to the end, here's the scoop:  
-            I'm offering you a free physical copy of my 259-page bestselling book,  
-            <span className="font-bold"> ELEVATE HIGH'ER.</span>  
-            This book outlines the principles and actionable steps to transform your life.
+          Individuals Seeking Authenticity: Those who want to break free from societal expectations and live true to themselves.  
+            
+          </p>
+          <p className="mt-4 text-lg leading-relaxed">
+          Style Enthusiasts: People passionate about fashion and self-expression who want to elevate their personal style.
+
+            <span className="font-bold"> Creative Souls:</span>  
+             Artists, musicians, writers, and other creatives looking to unleash their unique talents.
+
+          </p>
+          <p className="mt-4 text-lg leading-relaxed">
+          Young Adults: Those navigating the challenges of self-discovery and identity formation.
+
+            <span className="font-bold"> Anyone Feeling Lost or Uninspired:</span>  
+            Individuals seeking direction, motivation, and a renewed sense of purpose.
+
+
+          </p>
+          <p className="mt-4 text-lg leading-relaxed">
+          Entrepreneurs and Leaders: Those who want to stand out from the crowd and build a distinctive personal brand.
+
+
+            <span className="font-bold"> People Who Value Individuality:</span>  
+            Those who believe in the power of self-expression and celebrating differences.
+
+
           </p>
 
           <p className="mt-6 text-lg">
-            All I ask is that you cover the small shipping and handling fee.  
-            Why free? Because I'm confident you'll love it and be eager to support my future books.
+          Anyone Seeking Personal Empowerment: Individuals ready to take control of their lives and unlock their full potential.
           </p>
 
           {/* Urgency Section */}
@@ -33,21 +54,19 @@ const LimitedOffer = () => {
               🚨 This is a Limited-Time Offer 🚨
             </p>
             <p className="mt-2">
-              I've only printed a few thousand copies, and once they're gone,  
-              it might take a while before we print more.
+       
             </p>
-            <p className="mt-2 font-bold uppercase">So don't wait—hit the order button now! 🚀</p>
+            <p className="mt-2 font-bold uppercase"></p>
           </div>
 
           {/* Trust & Guarantee */}
           <div className="mt-6 text-lg">
-            <h4 className="text-2xl font-bold text-theme-purple-dark">No Catch. No Tricks. No Risk.</h4>
+            <h4 className="text-2xl font-bold text-theme-purple-dark"></h4>
             <p className="mt-2">
-              No hidden subscriptions. No monthly fees. Just the book, delivered to you.  
+           
             </p>
             <p className="mt-2">
-              And if for any reason you don't love it, I'll refund your shipping cost—no questions asked.  
-              You don't even have to return the book. That's how confident I am!
+              
             </p>
           </div>
         </div>

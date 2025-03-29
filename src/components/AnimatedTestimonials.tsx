@@ -5,25 +5,75 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 const testimonialSections = {
   "Marketing": [
-    { name: "Nacima", rating: 5, title: "All in One", text: "Elevate Higher gave me a complete roadmap for marketing success. The strategies are practical and easy to apply." },
-    { name: "Steve R.", rating: 5, title: "A Fresh Look at Marketing", text: "This book changed my approach to marketing. The case studies were particularly insightful." },
-    { name: "Abdul A.", rating: 5, title: "Mastering Modern Marketing", text: "The book covers everything, from branding to conversion. A must-read for serious marketers." },
-    { name: "Lisa G.", rating: 5, title: "Marketing Made Simple", text: "The best marketing book I've read in years. Clear, concise, and effective strategies." },
-    { name: "Tom B.", rating: 5, title: "Next-Level Marketing", text: "This book helped me take my campaigns to the next level with data-driven insights." },
+    { "name": "Malik J.", "rating": 5, "title": "The Ultimate Swagger Guide", "text": "Swaggerism, My Religion unlocked a new level of confidence and success for me. Every principle is powerful and life-changing." },
+    { "name": "Sophia R.", "rating": 5, "title": "A Game-Changer", "text": "This book completely shifted my mindset. Resk’Que’s wisdom is exactly what I needed to break limits and level up." },
+    { "name": "Darnell T.", "rating": 5, "title": "Unstoppable Energy", "text": "Every page fuels ambition and confidence. Swaggerism, My Religion is more than a book—it’s a movement!" },
+    { "name": "Jasmine L.", "rating": 5, "title": "Swagger for Life", "text": "Resk’Que’s words pushed me to embrace my power unapologetically. This book is a must-read for anyone ready to step up." },
+    { "name": "Carlos M.", "rating": 5, "title": "Success on My Terms", "text": "Swaggerism is the blueprint for commanding success. The strategies are bold, real, and designed for winners." },
   ],
   "Personal Success": [
-    { name: "Carly", rating: 5, title: "Life-Changing", text: "Elevate Higher helped me find purpose in my work and achieve greater success." },
-    { name: "Inna", rating: 5, title: "A Book for Achievers", text: "I feel more motivated than ever! The principles are transformative." },
-    { name: "Marek", rating: 5, title: "Step-by-Step Success", text: "Practical steps that actually work. I've seen remarkable progress." },
-    { name: "David W.", rating: 5, title: "A Must-Read", text: "This book provided the mindset shift I needed to reach my goals faster." },
-    { name: "Samantha L.", rating: 5, title: "Practical & Inspiring", text: "Unlike other self-help books, this one gives actionable steps that truly make a difference." },
+    {
+      "name": "Jordan M.",
+      "rating": 5,
+      "title": "A Confidence Game-Changer",
+      "text": "Swaggerism, My Religion helped me tap into my power and redefine success on my own terms. This book is next level!"
+  },
+  {
+      "name": "Tasha B.",
+      "rating": 5,
+      "title": "A Must-Have for Go-Getters",
+      "text": "The mindset shift this book provides is unmatched. I feel more driven, focused, and ready to take on the world."
+  },
+  {
+      "name": "Elijah R.",
+      "rating": 5,
+      "title": "Blueprint for Unstoppable Success",
+      "text": "The principles in this book are real and powerful. Every chapter is packed with insights that push you toward greatness."
+  },
+  {
+      "name": "Derrick S.",
+      "rating": 5,
+      "title": "Next-Level Mentality",
+      "text": "Swaggerism, My Religion gave me the confidence and mindset shift I needed to break barriers and level up in every aspect of my life."
+  },
+  {
+      "name": "Vanessa K.",
+      "rating": 5,
+      "title": "Actionable & Life-Changing",
+      "text": "This isn’t just another motivational book—it’s a movement. Every lesson comes with practical steps that make a real difference."
+  },
   ],
   "Business Growth": [
-    { name: "James K.", rating: 5, title: "Exceptional Value", text: "This transformed how I approach business strategy. The ROI has been incredible." },
-    { name: "Sarah M.", rating: 5, title: "Revolutionary Approach", text: "The business insights are gold. My company has grown 300% since implementing these strategies." },
-    { name: "Michael P.", rating: 5, title: "Business Essential", text: "Every entrepreneur needs this. The frameworks for scaling are invaluable." },
-    { name: "Olivia R.", rating: 5, title: "Game-Changer", text: "The strategies in this book helped us streamline operations and maximize profits." },
-    { name: "Daniel T.", rating: 5, title: "Strategic Success", text: "If you're serious about business growth, this book is a must-have resource." },
+    {
+      "name": "Malik J.",
+      "rating": 5,
+      "title": "The Ultimate Confidence Boost",
+      "text": "Swaggerism, My Religion unlocked a whole new level of self-belief and success for me. Every principle is bold, transformative, and designed to elevate your game."
+  },
+  {
+      "name": "Sophia R.",
+      "rating": 5,
+      "title": "A Mindset Revolution",
+      "text": "This book reshaped the way I think and move in life. Resk’Que’s wisdom was the breakthrough I needed to break barriers and reach new heights."
+  },
+  {
+      "name": "Darnell T.",
+      "rating": 5,
+      "title": "Fuel for Ambition",
+      "text": "Every page ignites confidence and drive. Swaggerism, My Religion isn’t just a book—it’s a lifestyle, a movement, and the key to unstoppable energy."
+  },
+  {
+      "name": "Jasmine L.",
+      "rating": 5,
+      "title": "Owning My Power",
+      "text": "Resk’Que’s words pushed me to embrace my power without hesitation. This is a must-read for anyone ready to level up and live unapologetically."
+  },
+  {
+      "name": "Carlos M.",
+      "rating": 5,
+      "title": "Blueprint for Success",
+      "text": "Swaggerism, My Religion lays out the exact steps to command success. The strategies are real, powerful, and designed for those who refuse to settle."
+  },
   ]
 };
 
@@ -72,7 +122,7 @@ const AnimatedTestimonials = () => {
     <div className="w-full bg-gradient-to-br from-theme-purple-darkest via-black to-theme-purple-dark py-8 md:py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 md:mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-2">What People Are Saying</h2>
-        <p className="text-center text-gray-400 mb-4 md:mb-8 text-sm md:text-base">Hear from readers who have transformed their lives with Elevate Higher</p>
+        <p className="text-center text-gray-400 mb-4 md:mb-8 text-sm md:text-base">See what readers are saying about 'Swaggerism: My Religion'...</p>
       </div>
 
       {Object.entries(testimonialSections).map(([sectionName, testimonials], sectionIndex) => {

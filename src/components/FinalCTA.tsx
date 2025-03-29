@@ -98,7 +98,7 @@ const FinalCTA = () => {
             document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })
           }
         >
-          Claim Your Free Copy
+          Define Your Religion <br /> Order 'Swaggerism' Today"
         </button>
 
         <p className="mt-4 md:mt-6 text-base md:text-lg opacity-90 text-white">

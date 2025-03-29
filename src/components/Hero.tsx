@@ -6,41 +6,41 @@ const Hero = () => {
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-[#3A0233] pt-10 md:pt-16 px-4 text-white overflow-hidden">
       <div className="max-w-6xl mx-auto text-center">
         <p className="text-xs md:text-sm uppercase tracking-widest text-[#ffffff]">
-          A renowned serial entrepreneur, business investor, life guru,
+        A trailblazing entrepreneur, high-stakes investor, life architect,
         </p>
         <p className="text-xs md:text-sm mt-2 uppercase tracking-wider italic">
-          style maverick, humanitarian, and philanthropist is generously 
+        style icon, and unapologetic force of nature is
         </p>
 
         <div className="space-y-1 md:space-y-2 mt-4">
           <p className="text-3xl sm:text-4xl md:text-7xl font-bold leading-[1.1] md:leading-[1.3]">
-            GIVING AWAY 10,000 COPIES
+          GIVING AWAY 10,000 COPIES 
           </p>
           <p className="text-3xl sm:text-4xl md:text-7xl font-bold leading-[1.1] md:leading-[1.3]">
-            OF HIS #1 BESTSELLING BOOK
+          of his #1 bestselling book!
           </p>
         </div>
 
         <div className="space-y-1 md:space-y-2 mt-4 md:mt-6">
           <p className="text-lg sm:text-xl md:text-5xl font-bold leading-[1.2] md:leading-[1.3]">
-            This Gesture Aims To Demonstrate The 
+          Why? Because Swaggerism isn’t just a mindset—it’s a movement. And to prove it,
           </p>
           <p className="text-lg sm:text-xl md:text-5xl font-bold leading-[1.2] md:leading-[1.3]">
-            Effectiveness of his '7 Secret Strategies
+           he’s revealing his 7 Secret Strategies
           </p>
           <p className="text-lg sm:text-xl md:text-5xl font-bold leading-[1.2] md:leading-[1.3]">
-            To Achieve Unprecedented Abundance 
+          for unlocking unstoppable success, limitless abundance, and ultimate swagger. 
           </p>
           <p className="text-lg sm:text-xl md:text-5xl font-bold leading-[1.2] md:leading-[1.3]">
             in Your Life' Simply to Prove His Point
           </p>
           <p className="text-lg sm:text-xl md:text-5xl font-bold leading-[1.2] md:leading-[1.3]">
-            That These Strategies WORK!
+          This isn’t charity. This is proof that Swaggerism works.
           </p>
         </div>
 
         <div className="absolute top-4 right-4 md:top-8 md:right-8 bg-white text-red-600 px-3 py-2 rounded-lg font-bold text-sm md:text-base shadow-lg">
-          Limited Time Offer
+        Are you ready to claim yours?
         </div>
 
         {/* Image Section with Adjusted Size */}
@@ -57,7 +57,7 @@ const Hero = () => {
   className="bg-red-600 hover:bg-red-700 text-white text-lg md:text-2xl px-4 md:px-16 py-6 md:py-8 mt-6 md:mt-8 font-bold uppercase rounded-lg transform transition-all duration-300 hover:scale-105 shadow-lg w-full md:w-auto"
   onClick={() => document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })}
 >
-  RUSH ME A FREE COPY
+Embrace Your Swaggerism- Get Your Copy Now!
   <ArrowRight className="ml-2 h-5 w-5 md:h-6 md:w-6" />
 </Button>
         <p className="mt-4 text-xs md:text-sm opacity-80 font-bold">

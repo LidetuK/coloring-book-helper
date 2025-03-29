@@ -13,7 +13,7 @@ const CallToAction = () => {
         
         {/* Section Title */}
         <h1 className="text-2xl sm:text-3xl md:text-6xl font-extrabold uppercase tracking-wide leading-tight text-white relative z-10 animate-pulse-glow">
-          ELEVATE HIGHER WITH YOUR FREE COPY AND EXCLUSIVE BONUSES!
+        Embrace Your Swaggerism - Get Your Copy Now!
         </h1>
   
         {/* Call to Action Button - Red with animation */}
@@ -24,7 +24,7 @@ const CallToAction = () => {
               document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })
             }
           >
-            <span className="relative z-10">RUSH ME A FREE COPY NOW</span>
+            <span className="relative z-10">Unleash Your Authentic Self <br />  Buy Now</span>
             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></span>
           </button>
         </div>
