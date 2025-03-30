@@ -4,13 +4,24 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 const Countdown = () => {
   const isMobile = useIsMobile();
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 23,
-    minutes: 59,
-    seconds: 59
+  const [timeLeft, setTimeLeft] = useState(() => {
+    // Try to get saved time from localStorage, otherwise start with default values
+    const savedTime = localStorage.getItem('countdownTime');
+    if (savedTime) {
+      const parsedTime = JSON.parse(savedTime);
+      return parsedTime;
+    }
+    return {
+      hours: 23,
+      minutes: 59,
+      seconds: 59
+    };
   });
 
   useEffect(() => {
+    // Save current time to localStorage whenever it changes
+    localStorage.setItem('countdownTime', JSON.stringify(timeLeft));
+    
     const timer = setInterval(() => {
       setTimeLeft(current => {
         if (current.seconds > 0) {
@@ -22,12 +33,13 @@ const Countdown = () => {
         if (current.hours > 0) {
           return { hours: current.hours - 1, minutes: 59, seconds: 59 };
         }
+        // Reset when it reaches zero
         return { hours: 23, minutes: 59, seconds: 59 };
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [timeLeft]);
 
   return (
     <div className={`fixed bottom-2 md:bottom-4 right-2 md:right-4 glass-card p-3 md:p-4 rounded-lg shadow-lg z-40 bg-white/95 ${isMobile ? 'max-w-[150px]' : ''}`}>

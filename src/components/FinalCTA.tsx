@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Clock, Flame } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -13,15 +12,23 @@ const benefits = [
 
 const FinalCTA = () => {
   const isMobile = useIsMobile();
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 3,
-    minutes: 59,
-    seconds: 59
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const savedTime = localStorage.getItem('finalCtaTime');
+    if (savedTime) {
+      const parsedTime = JSON.parse(savedTime);
+      return parsedTime;
+    }
+    return {
+      hours: 3,
+      minutes: 59,
+      seconds: 59
+    };
   });
   const [copiesLeft, setCopiesLeft] = useState(37);
   
-  // Countdown timer effect
   useEffect(() => {
+    localStorage.setItem('finalCtaTime', JSON.stringify(timeLeft));
+    
     const interval = setInterval(() => {
       setTimeLeft(prev => {
         if (prev.seconds > 0) {
@@ -31,14 +38,13 @@ const FinalCTA = () => {
         } else if (prev.hours > 0) {
           return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
         }
-        return prev;
+        return { hours: 3, minutes: 59, seconds: 59 };
       });
     }, 1000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [timeLeft]);
   
-  // Random decrease in copies
   useEffect(() => {
     const decreaseCopies = () => {
       if (copiesLeft > 5) {
@@ -60,7 +66,6 @@ const FinalCTA = () => {
           Get My Bestselling Book For Free!
         </h1>
 
-        {/* Flash Sale Banner */}
         <div className="mt-6 mb-8 bg-black p-4 rounded-lg animate-pulse-glow">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             <div className="flex items-center">
