@@ -12,7 +12,7 @@ const RushMe = () => {
       <div className="max-w-4xl mx-auto px-6 relative z-10">
         {/* Section Title */}
         <h1 className="text-3xl md:text-6xl font-extrabold uppercase tracking-wide leading-tight text-white mb-8">
-        Swaggerism: My Religion <span className="text-theme-purple-light">Unlock Your Ultimate Self-Expression:</span>, Discover Swaggerism,  <span className="text-theme-purple-light">Your New Religion</span>.
+        Swaggerism: My Religion <span className="text-theme-purple-light">Unlock Your Ultimate Self-Expression, Discover Swaggerism</span>.
         </h1>
 
         {/* Call to Action Button - Red with animation */}

@@ -67,7 +67,7 @@ const DualBookOffer = () => {
             <div className="flex flex-col items-center mb-4">
               <div className="w-48 h-48 md:w-64 md:h-64 relative mb-6">
                 <img 
-                  src="/download (2).png" 
+                  src="/1111.png" 
                   alt="Elevate Higher" 
                   className="w-full h-full object-contain drop-shadow-xl transform hover:scale-105 transition-all duration-300"
                 />
@@ -102,7 +102,7 @@ const DualBookOffer = () => {
             <div className="flex flex-col items-center mb-4">
               <div className="w-48 h-48 md:w-64 md:h-64 relative mb-6">
                 <img 
-                  src="/2-removebg-preview (1).png" 
+                  src="/2222222222.png" 
                   alt="Swaggerism My Religion" 
                   className="w-full h-full object-contain drop-shadow-xl transform hover:scale-105 transition-all duration-300"
                 />
@@ -189,12 +189,12 @@ const DualBookOffer = () => {
             <div className="relative">
               <div className="flex items-center justify-center relative">
                 <img 
-                  src="/download (2).png" 
+                  src="/1111.png" 
                   alt="Elevate Higher" 
                   className="w-56 h-auto object-contain drop-shadow-xl transform -rotate-6 absolute -left-10 md:left-4 z-10 hover:scale-110 transition-all duration-300"
                 />
                 <img 
-                  src="/2-removebg-preview (1).png"
+                  src="/2222222222.png"
                   alt="Swaggerism My Religion" 
                   className="w-56 h-auto object-contain drop-shadow-xl transform rotate-6 absolute -right-10 md:right-4 z-10 hover:scale-110 transition-all duration-300"
                 />

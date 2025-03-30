@@ -3,13 +3,15 @@ const AuthorBio = () => {
       <section className="py-20 bg-white text-gray-900">
         <div className="max-w-5xl mx-auto px-4 text-center">
           {/* Bold, Eye-Catching Quote */}
-          <h2 className="text-2xl md:text-5xl font-extrabold leading-tight uppercase text-red-600">
-    "See why this book is unlike any other…"
-    <p className="mt-4 font-semibold text-gray-900">
-              <span className="block text-2xl font-bold text-gray-800 mb-4">This isn't just about looking good; it's about feeling good from the inside out. 'Swaggerism: my religion' is your roadmap to a life lived on your own terms. It's about owning your power, expressing your truth, and leaving your mark on the world.</span>
-              </p>
-  </h2>
-  
+          <h2 className="text-5xl md:text-7xl font-extrabold leading-tight uppercase text-red-600">
+  SEE WHY THIS BOOK IS UNLIKE ANY OTHER…
+</h2>
+<p className="mt-4 font-semibold text-black">
+  <span className="block text-2xl font-bold text-black mb-4">
+    This isn't just about looking good; it's about feeling good from the inside out. <strong>'Swaggerism: My Religion'</strong> is your roadmap to a life lived on your own terms. It's about owning your power, expressing your truth, and leaving your mark on the world.
+  </span>
+</p>
+
   
           {/* Images Section */}
           <div className="relative flex justify-center mt-10">

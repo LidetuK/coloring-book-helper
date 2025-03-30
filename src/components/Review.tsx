@@ -36,8 +36,9 @@ const testimonials = [
     return (
       <section className="py-10 md:py-20 bg-white text-center px-4">
         {/* Headline */}
-        <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight uppercase text-center mb-6 md:mb-10" style={{ color: '#3A0233' }}>
-  See Why Thousands of People <br className="hidden md:block" /> Are Raving About This Book...
+       
+<h2 className="text-5xl md:text-7xl font-extrabold leading-tight uppercase text-red-600">
+See Why Thousands of People <br className="hidden md:block" /> Are Raving About This Book...
 </h2>
 
   

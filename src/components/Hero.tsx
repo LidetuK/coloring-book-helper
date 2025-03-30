@@ -21,27 +21,24 @@ const Hero = () => {
           </p>
         </div>
 
-        <div className="space-y-1 md:space-y-2 mt-4 md:mt-6">
-          <p className="text-lg sm:text-xl md:text-5xl font-bold leading-[1.2] md:leading-[1.3]">
-          Why? Because Swaggerism isn’t just a mindset—it’s a movement. And to prove it,
-          </p>
-          <p className="text-lg sm:text-xl md:text-5xl font-bold leading-[1.2] md:leading-[1.3]">
-           he’s revealing his 7 Secret Strategies
-          </p>
-          <p className="text-lg sm:text-xl md:text-5xl font-bold leading-[1.2] md:leading-[1.3]">
-          for unlocking unstoppable success, limitless abundance, and ultimate swagger. 
-          </p>
-          <p className="text-lg sm:text-xl md:text-5xl font-bold leading-[1.2] md:leading-[1.3]">
-            in Your Life' Simply to Prove His Point
-          </p>
-          <p className="text-lg sm:text-xl md:text-5xl font-bold leading-[1.2] md:leading-[1.3]">
-          This isn’t charity. This is proof that Swaggerism works.
-          </p>
-        </div>
-
-        <div className="absolute top-4 right-4 md:top-8 md:right-8 bg-white text-red-600 px-3 py-2 rounded-lg font-bold text-sm md:text-base shadow-lg">
-        Are you ready to claim yours?
-        </div>
+        <div className="text-[#ffffff] uppercase tracking-widest space-x-4">
+ 
+  <span className="block md:inline text-4xl font-bold leading-tight">
+    Why? Because Swaggerism isn’t just a mindset
+  </span>
+  <span className="block md:inline text-xl font-bold">
+  —it’s a movement. And to prove it, he’s revealing his 7 Secret Strategies
+  </span>
+  <span className="block md:inline text-xl font-bold">
+    for unlocking unstoppable success, limitless abundance, and ultimate swagger. 
+  </span>
+  <span className="block md:inline text-xl font-bold">
+    in Your Life. Simply to Prove His Point. 
+  </span>
+  <span className="block md:inline text-xl font-bold">
+    This isn’t charity. This is proof that Swaggerism works.
+  </span>
+</div>
 
         {/* Image Section with Adjusted Size */}
         <div className="relative flex items-center justify-center mt-4 md:mt-6 w-full">

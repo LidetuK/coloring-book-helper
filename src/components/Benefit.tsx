@@ -69,17 +69,15 @@ const Benefit = () => {
     <section className="py-20 bg-purple-gradient text-center">
       <div className="max-w-6xl mx-auto px-4">
         {/* Title */}
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-[#DC2626] mb-2 md:mb-4">
-          TIRED OF CONFORMITY?
-        </h2>
+        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold text-[#DC2626] mb-2 md:mb-4 whitespace-nowrap">
+  TIRED OF CONFORMITY?
+</h2>
 
         {/* Subtitle */}
-        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-semibold text-white mb-4 md:mb-8 px-2">
-          Embrace Swaggerism and live life to your full potential.
-          <span className="block mt-2">
-            Resk 'Que, lifestyle magnate, shares his guidance, wisdom, and life experiences to help you define and embody your own 'Swaggerism.'
-          </span>
-        </h3>
+        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold text-black mb-4 md:mb-8 px-2">
+  Embrace Swaggerism and live life to your full potential. 
+  Resk 'Que, lifestyle magnate, shares his guidance, wisdom, and life experiences to help you define and embody your own 'Swaggerism.'
+</h3>
   
         {/* Image */}
         <div className="flex justify-center mb-8 md:mb-16">
