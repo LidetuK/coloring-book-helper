@@ -23,6 +23,7 @@ import FinalCTA from '@/components/FinalCTA';
 import BookPopup from '@/components/BookPopup';
 import Animated from '@/components/Animated';
 import DualBookOffer from '@/components/DualBookOffer';
+import Limit from '@/components/limit';
 
 const Index = () => {
   useEffect(() => {
@@ -58,6 +59,7 @@ const Index = () => {
       <Benefit/>
       <AuthorBio/>
       <RushMe/>
+      <Limit />
       <CTASection />
       <CallToAction/>
       <Animated/>

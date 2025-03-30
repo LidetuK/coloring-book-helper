@@ -450,7 +450,7 @@ const CTASection = () => {
         <div className="text-center mb-12 animate-on-scroll">
           <span className="badge badge-primary">LIMITED TIME OFFER</span>
           <h2 className="mt-4 text-3xl md:text-4xl font-display font-bold">
-            Elevate Higher With Your Copy<br className="hidden md:block" /> And Exclusive Bonuses!
+          Swaggerism My Religion: Get Your Copy<br className="hidden md:block" /> And Exclusive Bonuses!
           </h2>
           <div className="mt-4 inline-flex items-center justify-center space-x-2 bg-brand-black/90 text-white px-4 py-2 rounded-md">
             <span className="text-sm">Offer ends in:</span>
@@ -685,12 +685,13 @@ const CTASection = () => {
               <div>
                 <div className="mb-8 flex justify-center">
                   <div className="relative w-64">
-                    <div className="absolute -inset-1 bg-gradient-to-br from-brand-purple to-brand-red opacity-20 blur-sm rounded-lg"></div>
-                    <img 
-                      src="8a6f75eb-74a5-4c36-bcf1-eaaa47514ad5 (1).png" 
-                      alt="Elevate Higher book" 
-                      className="relative w-full h-auto shadow-xl rounded-lg" 
-                    />
+                  <div className="absolute -inset-1 bg-gradient-to-br from-brand-purple to-brand-red opacity-20 blur-sm rounded-lg"></div>
+                  <img 
+  src="2222222222.png" 
+  alt="Elevate Higher book" 
+  className="relative max-w-full h-[400px] shadow-xl rounded-lg" 
+  
+/>
                   </div>
                 </div>
                 

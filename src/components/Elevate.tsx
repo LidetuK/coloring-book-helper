@@ -8,13 +8,7 @@ const Elevate = () => {
     <section className="py-10 md:py-20 bg-white text-black text-center">
       <div className="max-w-4xl mx-auto px-4 md:px-6">
         {/* Heading */}
-        <h2 className="text-2xl md:text-4xl italic font-semibold text-theme-purple-dark">
-        This book will guide you to
-        </h2>
-  
-        {/* Divider */}
-        <div className="text-2xl md:text-3xl font-bold mt-2 text-theme-purple-medium">&gt;</div>
-  
+      
         {/* Subtext */}
         <p className="uppercase text-xs md:text-sm mt-2 tracking-wide text-theme-purple-dark">
            EMBRACE YOUR SWAG. BE UNSTOPPABLE. LIVE LIMITLESS.
@@ -27,12 +21,11 @@ const Elevate = () => {
   
         {/* 7 Areas Section */}
         <p className="mt-4 md:mt-6 text-base md:text-lg font-semibold">
-  Welcome, Reader! As you hold this book (or device) in your hands, a journey awaits you—one that delves deep into the heart of authenticity and self-expression. 
-  'Swaggerism: My Religion' goes beyond mere words; it embodies a philosophy that inspires you to embrace your individuality and strive for your highest potential.
-  This movement, crafted by Resk 'Que, is designed to empower you on your path of self-discovery. 
-  Here, you will find guidance and insights that encourage you to rise above the ordinary, stand out from the crowd, and elevate every facet of your life with boldness and creativity. 
-  Join us as we embark on this transformative journey together—where swagger is not just an attitude, but a way of life.
-</p>
+        You. Yes, YOU! Holding this book (or device). This is for you. 'Swaggerism: My Religion' isn't just a book; it's a movement.  It's about living authentically, expressing your unique style, and reaching your highest potential. Resk 'Que is here to guide you on this journey of self-discovery and empowerment…
+
+        Rise above, stand out, and elevate every aspect of your life with Swaggerism.
+        </p>
+  
         <p className="text-xs md:text-md mt-2 uppercase font-medium tracking-wide">
        
         </p>
