@@ -13,6 +13,22 @@ const BookShow = () => {
     setSelectedOption(option);
   };
 
+  // Calculate price based on selected option
+  const getPrice = () => {
+    switch (selectedOption) {
+      case 'digital':
+        return '$9.99';
+      case 'physical':
+        return '$29.99';
+      case 'bundle':
+        // 5% off combined price
+        const digitalPrice = 9.99;
+        const physicalPrice = 29.99;
+        const bundlePrice = (digitalPrice + physicalPrice) * 0.95;
+        return `$${bundlePrice.toFixed(2)}`;
+    }
+  };
+
   return (
     <section className="py-12 md:py-20 bg-theme-purple-medium text-white text-center">
       <div className="max-w-4xl mx-auto px-4 md:px-6">
@@ -104,7 +120,7 @@ const BookShow = () => {
               document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })
             }
           >
-            Claim Your Copy - {selectedOption === 'digital' ? '$9.99' : selectedOption === 'physical' ? '$29.99' : 'Bundle'}
+            Claim Your Copy - {getPrice()}
           </button>
         </div>
 
