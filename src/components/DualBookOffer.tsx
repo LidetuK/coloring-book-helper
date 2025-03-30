@@ -65,7 +65,7 @@ const DualBookOffer = () => {
             className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-white/20 h-full flex flex-col"
           >
             <div className="flex flex-col items-center mb-4">
-              <div className="w-48 h-48 md:w-64 md:h-64 relative mb-6">
+              <div className="w-64 h-64 md:w-96 md:h-96 relative mb-6">
                 <img 
                   src="/download (2).png" 
                   alt="Elevate Higher" 
@@ -100,9 +100,9 @@ const DualBookOffer = () => {
             className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-white/20 h-full flex flex-col"
           >
             <div className="flex flex-col items-center mb-4">
-              <div className="w-48 h-48 md:w-64 md:h-64 relative mb-6">
+              <div className="w-64 h-64 md:w-96 md:h-96 relative mb-6">
                 <img 
-                  src="/2-removebg-preview (1).png" 
+                  src="/2-removebg-preview (1).png"
                   alt="Swaggerism My Religion" 
                   className="w-full h-full object-contain drop-shadow-xl transform hover:scale-105 transition-all duration-300"
                 />
@@ -129,7 +129,7 @@ const DualBookOffer = () => {
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 mr-2 text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm">Pre-order now for FREE shipping!</span>
+                  <span className="text-sm">FREE shipping when pre-ordered before July 15!</span>
                 </li>
               </ul>
             </div>
@@ -187,19 +187,19 @@ const DualBookOffer = () => {
             </div>
             
             <div className="relative">
-              <div className="flex items-center justify-center relative">
+              <div className="flex items-center justify-center relative h-80 md:h-96">
                 <img 
                   src="/download (2).png" 
                   alt="Elevate Higher" 
-                  className="w-56 h-auto object-contain drop-shadow-xl transform -rotate-6 absolute -left-10 md:left-4 z-10 hover:scale-110 transition-all duration-300"
+                  className="w-72 md:w-80 h-auto object-contain drop-shadow-xl transform -rotate-6 absolute -left-10 md:left-0 z-10 hover:scale-110 transition-all duration-300"
                 />
                 <img 
                   src="/2-removebg-preview (1).png"
                   alt="Swaggerism My Religion" 
-                  className="w-56 h-auto object-contain drop-shadow-xl transform rotate-6 absolute -right-10 md:right-4 z-10 hover:scale-110 transition-all duration-300"
+                  className="w-72 md:w-80 h-auto object-contain drop-shadow-xl transform rotate-6 absolute -right-10 md:right-0 z-10 hover:scale-110 transition-all duration-300"
                 />
-                <div className="w-72 h-72 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center">
-                  <Gift className="h-20 w-20 text-white animate-pulse" />
+                <div className="w-80 h-80 md:w-96 md:h-96 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center">
+                  <Gift className="h-24 w-24 text-white animate-pulse" />
                 </div>
               </div>
             </div>

@@ -1,8 +1,17 @@
 
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useState } from 'react';
+import { Check } from 'lucide-react';
+
+type BookOption = 'digital' | 'physical' | 'bundle';
 
 const BookShow = () => {
   const isMobile = useIsMobile();
+  const [selectedOption, setSelectedOption] = useState<BookOption>('digital');
+
+  const handleOptionSelect = (option: BookOption) => {
+    setSelectedOption(option);
+  };
 
   return (
     <section className="py-12 md:py-20 bg-theme-purple-medium text-white text-center">
@@ -14,13 +23,12 @@ const BookShow = () => {
 
         {/* Book Introduction */}
         <p className="mt-4 md:mt-6 text-base md:text-lg leading-relaxed">
-        I’m excited to introduce my book, Swaggerism My Religion: Live Bold, Hustle Smart, Rule Your World.,{" "}
+          I'm excited to introduce my book, Swaggerism My Religion: Live Bold, Hustle Smart, Rule Your World.,{" "}
           <span className="font-bold uppercase">
-          This book is your blueprint for mastering the art of confidence, success, and influence. It focuses on seven essential pillars of Swaggerism—Mindset, Style, Hustle, Influence, Wealth, Legacy, and Freedom—
+            This book is your blueprint for mastering the art of confidence, success, and influence. It focuses on seven essential pillars of Swaggerism—Mindset, Style, Hustle, Influence, Wealth, Legacy, and Freedom—
           </span>{" "}
           empowering you to command every room, elevate your game, and build a life that speaks power. If you're ready to embrace the mindset of greatness, this is your guide.:{" "}
           <strong></strong> 
-       
         </p>
 
         {/* Availability Notice */}
@@ -37,12 +45,20 @@ const BookShow = () => {
 
         {/* Ordering Options */}
         <div className="mt-6 md:mt-8">
-          <p className="text-base md:text-lg">
-            Choose from multiple options:
+          <p className="text-base md:text-lg mb-4">
+            Choose your preferred option:
           </p>
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
-              <h3 className="text-lg md:text-xl font-bold mb-2 text-theme-purple-dark">Digital Version</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Digital Version */}
+            <div 
+              className={`bg-white p-4 md:p-6 rounded-lg shadow-md cursor-pointer transition-all duration-300 ${selectedOption === 'digital' ? 'ring-4 ring-theme-pink-DEFAULT transform scale-105' : 'hover:shadow-lg'}`}
+              onClick={() => handleOptionSelect('digital')}
+            >
+              <div className="flex justify-between items-start mb-3">
+                <h3 className="text-lg md:text-xl font-bold text-theme-purple-dark">Digital Version</h3>
+                {selectedOption === 'digital' && <Check className="h-5 w-5 text-theme-pink-DEFAULT" />}
+              </div>
               <p className="mb-2 text-gray-700">Instant access to the e-book</p>
               <div className="flex items-baseline">
                 <span className="line-through text-gray-500 mr-2">$14.99</span>
@@ -50,8 +66,15 @@ const BookShow = () => {
               </div>
             </div>
             
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
-              <h3 className="text-lg md:text-xl font-bold mb-2 text-theme-purple-dark">Physical Copy</h3>
+            {/* Physical Copy */}
+            <div 
+              className={`bg-white p-4 md:p-6 rounded-lg shadow-md cursor-pointer transition-all duration-300 ${selectedOption === 'physical' ? 'ring-4 ring-theme-pink-DEFAULT transform scale-105' : 'hover:shadow-lg'}`}
+              onClick={() => handleOptionSelect('physical')}
+            >
+              <div className="flex justify-between items-start mb-3">
+                <h3 className="text-lg md:text-xl font-bold text-theme-purple-dark">Physical Copy</h3>
+                {selectedOption === 'physical' && <Check className="h-5 w-5 text-theme-pink-DEFAULT" />}
+              </div>
               <p className="mb-2 text-gray-700">Shipped to your doorstep</p>
               <div className="flex items-baseline">
                 <span className="line-through text-gray-500 mr-2">$39.99</span>
@@ -60,13 +83,18 @@ const BookShow = () => {
               </div>
             </div>
             
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border-2 border-theme-purple-DEFAULT relative">
+            {/* Bundle Deal */}
+            <div 
+              className={`bg-white p-4 md:p-6 rounded-lg border-2 border-theme-purple-DEFAULT relative cursor-pointer transition-all duration-300 ${selectedOption === 'bundle' ? 'ring-4 ring-theme-pink-DEFAULT transform scale-105' : 'hover:shadow-lg'}`}
+              onClick={() => handleOptionSelect('bundle')}
+            >
               <div className="absolute -top-3 right-4 bg-theme-purple-DEFAULT text-white text-xs px-2 py-1 rounded">BEST VALUE</div>
-              <h3 className="text-lg md:text-xl font-bold mb-2 text-theme-purple-dark">Bundle Deal</h3>
-              <p className="mb-2 text-gray-700">Get both digital & physical</p>
-              <div className="flex items-baseline">
-                <span className="mb-2 text-gray-700">Save 5%</span>
+              <div className="flex justify-between items-start mb-3">
+                <h3 className="text-lg md:text-xl font-bold text-theme-purple-dark">Bundle Deal</h3>
+                {selectedOption === 'bundle' && <Check className="h-5 w-5 text-theme-pink-DEFAULT" />}
               </div>
+              <p className="mb-2 text-gray-700">Get both digital & physical</p>
+              <p className="font-bold text-theme-purple-dark">Save 5%</p>
             </div>
           </div>
 
@@ -76,9 +104,17 @@ const BookShow = () => {
               document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })
             }
           >
-            Claim Your Copy
+            Claim Your Copy - {selectedOption === 'digital' ? '$9.99' : selectedOption === 'physical' ? '$29.99' : 'Bundle'}
           </button>
         </div>
+
+        {/* Free Shipping Notice for Physical & Bundle */}
+        {(selectedOption === 'physical' || selectedOption === 'bundle') && (
+          <div className="mt-4 bg-green-100 text-green-800 p-3 rounded-lg inline-block">
+            <Check className="inline-block h-4 w-4 mr-1" />
+            FREE shipping when pre-ordered before July 15!
+          </div>
+        )}
 
         {/* Closing Message */}
         <p className="mt-8 md:mt-12 italic opacity-80 text-base md:text-lg">
@@ -94,7 +130,7 @@ const BookShow = () => {
         />
         <h3 className="text-2xl md:text-3xl font-bold text-theme-purple-light">P.S.</h3>
         <p className="mt-8 md:mt-12 italic opacity-80 text-base md:text-lg">
-        I promise you one thing, just taking action to receive this gift from me, I'll be happy to invite. you to my next event free of charge and also autograph a copy of your book when you share how this book impact your thoughts or life on any of your social media platforms and tag me on it.
+          I promise you one thing, just taking action to receive this gift from me, I'll be happy to invite you to my next event free of charge and also autograph a copy of your book when you share how this book impact your thoughts or life on any of your social media platforms and tag me on it.
         </p>
       </div>
     </section>

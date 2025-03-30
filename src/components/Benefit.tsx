@@ -1,57 +1,116 @@
 
+import { Check, Target, Users, Award, Zap, Gift, Sparkles } from "lucide-react";
+
 const audience = [
-    "Future Tycoons: Visionaries ready to build their empire, dominate their industry, and turn big ideas into unstoppable success.",
-    "Career Hustlers: Professionals looking to level up, break limits, and own their career path with confidence and skill.",
-    "Self-Mastery Seekers: Individuals dedicated to personal growth, mindset shifts, and unlocking their fullest potential.",
-    "Next-Gen Leaders: Students and graduates preparing to step into greatness, navigate their path, and build a future of impact.",
-    "Wellness Warriors: Those committed to mastering their physical and mental well-being for peak performance in all aspects of life.",
-    "Spiritual Alchemists: Seekers looking to connect deeply, align their energy, and elevate their spiritual journey.",
-    "Money Mavericks: Hustlers ready to take charge of their finances, master wealth-building, and secure financial freedom.",
-    "Connection Architects: Individuals focused on building unshakable relationships, both personally and professionally.",
-    "Ambition Fuelers: Dream chasers looking for the fire, strategies, and mindset to conquer their goals with swagger.",
-    "Life Designers: Creators of their own reality, crafting a life that blends success, fulfillment, and undeniable style.",
-    "Business Builders: Entrepreneurs looking to scale, sustain, and transform their ventures into legacy businesses.",
-    "Creators and Innovators: Digital storytellers, content creators, and innovators pushing boundaries and making an impact."
-  ];
+  {
+    icon: <Target className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Future Tycoons",
+    description: "Visionaries ready to build their empire, dominate their industry, and turn big ideas into unstoppable success."
+  },
+  {
+    icon: <Zap className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Career Hustlers",
+    description: "Professionals looking to level up, break limits, and own their career path with confidence and skill."
+  },
+  {
+    icon: <Users className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Self-Mastery Seekers",
+    description: "Individuals dedicated to personal growth, mindset shifts, and unlocking their fullest potential."
+  },
+  {
+    icon: <Award className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Next-Gen Leaders", 
+    description: "Students and graduates preparing to step into greatness, navigate their path, and build a future of impact."
+  },
+  {
+    icon: <Gift className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Wellness Warriors",
+    description: "Those committed to mastering their physical and mental well-being for peak performance in all aspects of life."
+  },
+  {
+    icon: <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Spiritual Alchemists",
+    description: "Seekers looking to connect deeply, align their energy, and elevate their spiritual journey."
+  },
+  {
+    icon: <Target className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Money Mavericks",
+    description: "Hustlers ready to take charge of their finances, master wealth-building, and secure financial freedom."
+  },
+  {
+    icon: <Users className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Connection Architects",
+    description: "Individuals focused on building unshakable relationships, both personally and professionally."
+  },
+  {
+    icon: <Zap className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Ambition Fuelers",
+    description: "Dream chasers looking for the fire, strategies, and mindset to conquer their goals with swagger."
+  },
+  {
+    icon: <Award className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Life Designers",
+    description: "Creators of their own reality, crafting a life that blends success, fulfillment, and undeniable style."
+  },
+  {
+    icon: <Gift className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Business Builders",
+    description: "Entrepreneurs looking to scale, sustain, and transform their ventures into legacy businesses."
+  },
+  {
+    icon: <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-theme-pink-DEFAULT" />,
+    title: "Creators and Innovators",
+    description: "Digital storytellers, content creators, and innovators pushing boundaries and making an impact."
+  }
+];
   
-  const Benefit = () => {
-    return (
-      <section className="py-20 bg-theme-purple-light/20 text-center">
-        <div className="max-w-6xl mx-auto px-4">
-          {/* Title */}
-<h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-[#DC2626] mb-2 md:mb-4">
-  TIRED OF CONFORMITY?
-</h2>
+const Benefit = () => {
+  return (
+    <section className="py-20 bg-purple-gradient text-center">
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Title */}
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-[#DC2626] mb-2 md:mb-4">
+          TIRED OF CONFORMITY?
+        </h2>
 
-{/* Subtitle */}
-<h3 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-semibold text-black mb-4 md:mb-8 px-2">
-  Embrace Swaggerism and live life to your full potential.  
-  Learn how to navigate a world of conformity without being conformed.  
-  <span className="block mt-2">
-    Resk 'Que, lifestyle magnate, shares his guidance, wisdom, and life experiences to help you define and embody your own 'Swaggerism.'
-  </span>
-</h3>
-
+        {/* Subtitle */}
+        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-semibold text-white mb-4 md:mb-8 px-2">
+          Embrace Swaggerism and live life to your full potential.
+          <span className="block mt-2">
+            Resk 'Que, lifestyle magnate, shares his guidance, wisdom, and life experiences to help you define and embody your own 'Swaggerism.'
+          </span>
+        </h3>
   
-          {/* Image */}
-          <div className="flex justify-center mb-8 md:mb-16">
-            <img src="/ques.png" alt="Who Needs This?" className="w-auto max-w-full h-auto" />
-          </div>
-  
-          {/* Audience List */}
-          <div className="grid md:grid-cols-2 gap-4 md:gap-8">
-            {audience.map((item, idx) => (
-              <div 
-                key={idx} 
-                className="bg-white p-4 md:p-8 rounded-lg shadow-md transition duration-300 hover:shadow-xl hover:scale-105 md:hover:scale-110 flex items-center text-base md:text-xl font-semibold border-l-4 border-theme-pink-DEFAULT">
-                <span className="text-theme-pink-DEFAULT text-xl md:text-3xl mr-2 md:mr-4 flex-shrink-0">✔️</span>
-                <p className="text-theme-purple-darkest flex-1 text-left">{item}</p>
-              </div>
-            ))}
-          </div>
+        {/* Image */}
+        <div className="flex justify-center mb-8 md:mb-16">
+          <img src="/ques.png" alt="Who Needs This?" className="w-auto max-w-full h-auto" />
         </div>
-      </section>
-    );
-  };
   
-  export default Benefit;
+        {/* Audience List */}
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 text-white">
+            WHO NEEDS THIS BOOK?
+          </h2>
+          <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto">
+            Find your tribe and unlock your full potential with guidance tailored to your journey.
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+          {audience.map((item, idx) => (
+            <div 
+              key={idx}
+              className="bg-white p-6 md:p-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
+            >
+              <div className="mb-3 md:mb-4 flex justify-center">{item.icon}</div>
+              <h3 className="text-xl md:text-2xl font-bold mb-2 text-theme-purple-dark">{item.title}</h3>
+              <p className="text-gray-600 text-sm md:text-base">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+  
+export default Benefit;
