@@ -14,13 +14,13 @@ const BookShow = () => {
 
         {/* Book Introduction */}
         <p className="mt-4 md:mt-6 text-base md:text-lg leading-relaxed">
-          I am thrilled to introduce you to my book,{" "}
+        I’m excited to introduce my book, Swaggerism My Religion: Live Bold, Hustle Smart, Rule Your World.,{" "}
           <span className="font-bold uppercase">
-            ELEVATE HIGHER: CHANGE YOUR LIFE. BE GR8R THAN. EARN MORE.
+          This book is your blueprint for mastering the art of confidence, success, and influence. It focuses on seven essential pillars of Swaggerism—Mindset, Style, Hustle, Influence, Wealth, Legacy, and Freedom—
           </span>{" "}
-          This book is designed to help you enhance seven key areas of your life:{" "}
-          <strong>Spiritual, Wellness, Knowledge, Relationship, Actions, Financial, and Lifestyle.</strong> 
-          By focusing on these areas, you can achieve more abundance and fulfillment than ever before.
+          empowering you to command every room, elevate your game, and build a life that speaks power. If you're ready to embrace the mindset of greatness, this is your guide.:{" "}
+          <strong></strong> 
+       
         </p>
 
         {/* Availability Notice */}

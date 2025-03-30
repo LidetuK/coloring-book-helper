@@ -6,42 +6,42 @@ const testimonial = [
       role: "BUSINESS INFLUENCER",
       followers: "21K Followers",
       text: "🔥This book isn’t just motivation—it’s a power move. Resk’Que’s Swaggerism philosophy rewired my thinking and showed me how to command success on my terms. Every page fuels ambition, confidence, and the relentless drive to win. This is next-level game!🔥",
-      image: "/110.png"
+      image: "/DeWatermark.ai_1743319350620.png"
     },
     {
       name: "Jordan R.",
       role: "8 FIGURE ENTREPRENEUR",
       followers: "12.5K Followers",
       text: "🔥Swaggerism is the mindset revolution I didn’t know I needed. Resk’Que’s raw, unapologetic wisdom unlocked my confidence and dominance. His principles helped me break barriers, embrace challenges, and own my success without limits. This book is pure power!🔥",
-      image: "/115.png"
+      image: "/DeWatermark.ai_1743319505564.png"
     },
     {
       name: "Serena L.",
       role: "CEO AND FOUNDER OF SKINNYME TEA",
       followers: "205K Followers",
       text: "🔥Swaggerism is a mindset upgrade. Resk’Que’s words pushed me to step into my power, level up my confidence, and dominate every space I enter. Every chapter is a game plan for clarity, strength, and resilience. This book is straight fire!🔥",
-      image: "/112.png"
+      image: "/DeWatermark.ai_1743318892093.png"
     },
     {
       name: "Damien T.",
       role: "CEO of Johnson Tech Innovations",
       followers: "189K Followers",
       text: "🔥This book is a game-changer. Resk’Que’s strategies completely transformed my mindset, elevated my confidence, and made me take fearless action. Swaggerism isn’t just a book—it’s a blueprint for unstoppable success. This will change lives!🔥",
-      image: "/113.png"
+      image: "/DeWatermark.ai_1743319576672.png"
     },
     {
       name: "Maya S.",
       role: "BESTSELLING AUTHOR",
       followers: "175K Followers",
       text: "🔥Swaggerism is pure power! Resk’Que’s storytelling and wisdom expanded my vision, unlocked my potential, and challenged me to think bigger. Every lesson fuels growth, resilience, and confidence. If you’re ready to level up, this is it!🔥",
-      image: "/114.png"
+      image: "/DeWatermark.ai_1743319042099.png"
     },
     {
       name: "Xavier K.",
       role: "CEO OF FOUNDR MAGAZINE",
       followers: "19K Followers",
       text: "🔥This book didn’t just motivate me—it forced me to level up. Resk’Que’s principles made me realize who I truly am and what I’m truly capable of. Every page is a lesson in resilience, confidence, and unstoppable swagger. No excuses, just results!🔥",
-      image: "/10.jpg"
+      image: "/DeWatermark.ai_1743319422766.png"
     },
   ];
   

@@ -33,7 +33,7 @@ const Elevate = () => {
         </p>
   
         <p className="text-xs md:text-md mt-2 uppercase font-medium tracking-wide">
-        Spirituality | Health | Wisdom | Relationships | Hustle | Wealth | Lifestyle
+       
         </p>
   
         {/* Author */}
