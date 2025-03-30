@@ -32,6 +32,7 @@ const DualBookOffer = () => {
     "Complementary methodologies that reinforce each other",
     "Save money with bundle pricing (10% off individual prices)",
     "One unified shipping cost for both physical books",
+    "FREE shipping and handling included",
     "Immediate access to both digital versions"
   ];
 
@@ -65,7 +66,7 @@ const DualBookOffer = () => {
             className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-white/20 h-full flex flex-col"
           >
             <div className="flex flex-col items-center mb-4">
-              <div className="w-48 h-48 md:w-64 md:h-64 relative mb-6">
+              <div className="w-64 h-64 md:w-80 md:h-80 relative mb-6">
                 <img 
                   src="/1111.png" 
                   alt="Elevate Higher" 
@@ -100,7 +101,7 @@ const DualBookOffer = () => {
             className="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl border border-white/20 h-full flex flex-col"
           >
             <div className="flex flex-col items-center mb-4">
-              <div className="w-48 h-48 md:w-64 md:h-64 relative mb-6">
+              <div className="w-64 h-64 md:w-80 md:h-80 relative mb-6">
                 <img 
                   src="/2222222222.png" 
                   alt="Swaggerism My Religion" 
@@ -150,7 +151,7 @@ const DualBookOffer = () => {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold mb-4">Complete Bundle</h3>
-              <p className="text-white/90 mb-4">Get both books and transform every aspect of your life. Save 15% compared to buying separately!</p>
+              <p className="text-white/90 mb-4">Get both books and transform every aspect of your life. Save 10% compared to buying separately!</p>
               
               <div className="space-y-3 mb-6">
                 {bookBenefits.map((benefit, index) => (
@@ -173,7 +174,7 @@ const DualBookOffer = () => {
                 </p>
                 <p className="text-sm text-white/80 mt-1 font-medium">
                   <Check className="inline h-4 w-4 mr-1 text-green-400" /> 
-                  FREE shipping on Swaggerism pre-orders before July 15!
+                  FREE shipping and handling included!
                 </p>
               </div>
               
@@ -191,15 +192,15 @@ const DualBookOffer = () => {
                 <img 
                   src="/1111.png" 
                   alt="Elevate Higher" 
-                  className="w-56 h-auto object-contain drop-shadow-xl transform -rotate-6 absolute -left-10 md:left-4 z-10 hover:scale-110 transition-all duration-300"
+                  className="w-64 h-auto object-contain drop-shadow-xl transform -rotate-6 absolute -left-10 md:left-4 z-10 hover:scale-110 transition-all duration-300"
                 />
                 <img 
                   src="/2222222222.png"
                   alt="Swaggerism My Religion" 
-                  className="w-56 h-auto object-contain drop-shadow-xl transform rotate-6 absolute -right-10 md:right-4 z-10 hover:scale-110 transition-all duration-300"
+                  className="w-64 h-auto object-contain drop-shadow-xl transform rotate-6 absolute -right-10 md:right-4 z-10 hover:scale-110 transition-all duration-300"
                 />
-                <div className="w-72 h-72 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center">
-                  <Gift className="h-20 w-20 text-white animate-pulse" />
+                <div className="w-80 h-80 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center">
+                  <Gift className="h-24 w-24 text-white animate-pulse" />
                 </div>
               </div>
             </div>
