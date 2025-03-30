@@ -30,7 +30,7 @@ const DualBookOffer = () => {
   const bookBenefits = [
     "Personal growth strategies from two powerful perspectives",
     "Complementary methodologies that reinforce each other",
-    "Save money with bundle pricing (15% off individual prices)",
+    "Save money with bundle pricing (10% off individual prices)",
     "One unified shipping cost for both physical books",
     "Immediate access to both digital versions"
   ];
@@ -164,8 +164,8 @@ const DualBookOffer = () => {
               <div className="mb-6">
                 <div className="flex items-baseline mb-2">
                   <span className="text-xl">Bundle Price:</span>
-                  <span className="text-3xl font-bold ml-2">$50.99</span>
-                  <span className="ml-2 text-sm bg-green-500 text-white px-2 py-1 rounded">SAVE 15%</span>
+                  <span className="text-3xl font-bold ml-2">$53.98</span>
+                  <span className="ml-2 text-sm bg-green-500 text-white px-2 py-1 rounded">SAVE 10%</span>
                 </div>
                 <p className="text-sm text-white/80">
                   <Package className="inline h-4 w-4 mr-1" /> 
