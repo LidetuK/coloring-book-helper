@@ -23,13 +23,13 @@ const BookPopup = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-3xl p-0 border-0 overflow-hidden rounded-lg w-[90vw] md:w-auto bg-gradient-to-br from-theme-purple-DEFAULT via-theme-purple-dark to-theme-purple-darkest">
+      <DialogContent className="max-w-3xl p-0 border-0 overflow-hidden rounded-lg w-[90vw] md:w-auto bg-gradient-to-br from-theme-purple-light via-theme-purple-DEFAULT to-theme-purple-dark">
         {/* Progress Bar */}
         <div className="w-full h-2 bg-gray-700">
           <div className="h-full bg-gradient-to-r from-theme-pink-DEFAULT to-theme-purple-light w-1/2 animate-pulse"></div>
         </div>
         
-        {/* Close Button - Only one X button */}
+        {/* Close Button */}
         <button 
           onClick={() => setIsOpen(false)} 
           className="absolute right-4 top-4 text-white hover:text-gray-200 z-10 transition-colors"

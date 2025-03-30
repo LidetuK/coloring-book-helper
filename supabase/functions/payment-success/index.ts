@@ -44,7 +44,7 @@ serve(async (req) => {
     
     if (isDigital) {
       // Send email with download link for digital product
-      const downloadLink = "https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing";
+      const downloadLink = "https://drive.google.com/drive/folders/1f8_D9Avm0oMT9NkhLB7Wo3jZF6Hv4kNr?usp=drive_link";
       
       try {
         console.log("Attempting to send email to:", customerEmail);
@@ -95,12 +95,12 @@ serve(async (req) => {
         }
         
         // We inform the user about the download regardless of email status
-        responseMessage = "Your digital book purchase was successful! Here is your download link: https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing";
+        responseMessage = "Your digital book purchase was successful! Here is your download link: https://drive.google.com/drive/folders/1f8_D9Avm0oMT9NkhLB7Wo3jZF6Hv4kNr?usp=drive_link";
         
       } catch (emailError) {
         console.error("Failed to send email:", emailError);
         emailStatus = "error";
-        responseMessage = "Your digital book purchase was successful! Here is your download link: https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing";
+        responseMessage = "Your digital book purchase was successful! Here is your download link: https://drive.google.com/drive/folders/1f8_D9Avm0oMT9NkhLB7Wo3jZF6Hv4kNr?usp=drive_link";
       }
     }
     
@@ -124,7 +124,7 @@ serve(async (req) => {
         email: customerEmail,
         productType: productType,
         emailStatus: emailStatus,
-        downloadLink: isDigital ? "https://drive.google.com/file/d/1D8jRMfIN4RjKpDFUZ4zqULWdKt6aBcV7/view?usp=sharing" : null
+        downloadLink: isDigital ? "https://drive.google.com/drive/folders/1f8_D9Avm0oMT9NkhLB7Wo3jZF6Hv4kNr?usp=drive_link" : null
       }),
       {
         status: 200,
