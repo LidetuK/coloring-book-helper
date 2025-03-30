@@ -27,7 +27,7 @@ const Hero = () => {
     Why? Because Swaggerism isn’t just a mindset
   </span>
   <span className="block md:inline text-xl font-bold">
-  —it’s a movement. And to prove it, he’s revealing his 7 Secret Strategies
+  —it’s a movement. And to prove it, he’s revealing his 11 Secret Strategies
   </span>
   <span className="block md:inline text-xl font-bold">
     for unlocking unstoppable success, limitless abundance, and ultimate swagger. 
