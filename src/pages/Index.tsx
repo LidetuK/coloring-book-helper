@@ -23,7 +23,7 @@ import FinalCTA from '@/components/FinalCTA';
 import BookPopup from '@/components/BookPopup';
 import Animated from '@/components/Animated';
 import DualBookOffer from '@/components/DualBookOffer';
-import Limit from '@/components/limit';
+import Limit from '@/components/Limit'; // Fixed the case: 'limit' -> 'Limit'
 
 const Index = () => {
   useEffect(() => {
@@ -64,7 +64,7 @@ const Index = () => {
       <CallToAction/>
       <Animated/>
       <AnimatedTestimonials/>
-      <DualBookOffer /> {/* New component for dual book offer */}
+      <DualBookOffer />
       <BookShow/>
       <Review/>
       <Testimonial/>
