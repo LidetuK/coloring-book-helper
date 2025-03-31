@@ -105,8 +105,14 @@ serve(async (req) => {
     }
     
     // Handle physical component of the order if applicable
-    if (productType === "physical" || productType === "bundle") {
-      const physicalMessage = "Your physical book order was successful! It will be shipped to the address you provided within 14-25 business days.";
+    if (productType === "physical" || productType === "bundle" || productType === "dual-books") {
+      let physicalMessage = "";
+      
+      if (productType === "dual-books") {
+        physicalMessage = "Your order for both physical books 'Elevate Higher' and 'Swaggerism My Religion' was successful! They will be shipped to the address you provided within 14-25 business days with FREE shipping.";
+      } else {
+        physicalMessage = "Your physical book order was successful! It will be shipped to the address you provided within 14-25 business days.";
+      }
       
       // For bundle orders, combine both messages
       if (productType === "bundle") {

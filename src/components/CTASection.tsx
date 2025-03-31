@@ -152,7 +152,7 @@ const CTASection = () => {
     zipCode: '',
     country: 'United States'
   });
-  const [productType, setProductType] = useState('physical'); // 'digital', 'physical', or 'bundle'
+  const [productType, setProductType] = useState('physical'); // 'digital', 'physical', 'bundle' or 'dual-books'
   const [showCheckout, setShowCheckout] = useState(false);
   const [clientSecret, setClientSecret] = useState('');
   const [orderComplete, setOrderComplete] = useState(false);
@@ -198,11 +198,14 @@ const CTASection = () => {
         amount = 29.99;
       } else if (productType === 'bundle') {
         amount = (9.99 + 29.99) * 0.95;
+      } else if (productType === 'dual-books') {
+        amount = 53.98; // Fixed price for both books bundle
       }
       
       const shippingCost = (productType === 'digital') ? 0 : 
-                           (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
-      const totalAmount = amount + ((productType === 'digital') ? 0 : shippingCost);
+                          (productType === 'dual-books') ? 0 : // Free shipping for dual books bundle
+                          (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
+      const totalAmount = amount + ((productType === 'digital' || productType === 'dual-books') ? 0 : shippingCost);
       
       const response = await supabase.functions.invoke("create-payment", {
         body: {
@@ -312,9 +315,11 @@ const CTASection = () => {
       price = 29.99;
     } else if (productType === 'bundle') {
       price = (9.99 + 29.99) * 0.95;
+    } else if (productType === 'dual-books') {
+      price = 53.98;
     }
     
-    const shipping = (productType === 'digital') ? 0 : 
+    const shipping = (productType === 'digital' || productType === 'dual-books') ? 0 : 
                     (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
     const totalPrice = price + shipping;
 
@@ -520,6 +525,28 @@ const CTASection = () => {
                       <span className="text-sm text-gray-600">Get both formats at a special discount!</span>
                     </label>
                   </div>
+                  
+                  <div className="flex items-center relative">
+                    <input
+                      type="radio"
+                      id="dual-books"
+                      name="productType"
+                      value="dual-books"
+                      checked={productType === 'dual-books'}
+                      onChange={() => setProductType('dual-books')}
+                      className="mr-3 h-5 w-5"
+                    />
+                    <label htmlFor="dual-books" className="flex flex-col">
+                      <div className="flex items-center">
+                        <span className="font-medium">Both Books Bundle (Elevate Higher + Swaggerism) - <span className="text-green-500 font-bold">$53.98</span></span>
+                        <span className="ml-2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">10% OFF</span>
+                      </div>
+                      <span className="text-sm text-gray-600">Get both physical books with FREE shipping!</span>
+                    </label>
+                    <div className="absolute -right-2 -top-2">
+                      <span className="bg-yellow-400 text-xs font-bold text-black px-2 py-0.5 rounded-full transform rotate-3 shadow">BEST VALUE</span>
+                    </div>
+                  </div>
                 </div>
                 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -560,7 +587,7 @@ const CTASection = () => {
                     />
                   </div>
                   
-                  {productType === 'physical' && (
+                  {(productType === 'physical' || productType === 'dual-books') && (
                     <>
                       <div>
                         <select
@@ -639,10 +666,16 @@ const CTASection = () => {
                       </div>
                       
                       <div className="text-sm">
-                        <p className="font-medium">Shipping Costs:</p>
+                        <p className="font-medium">Shipping Information:</p>
                         <ul className="list-disc pl-5 mt-1 text-gray-600">
-                          <li>USA & Canada: $11.99 + $2.98 handling</li>
-                          <li>Europe: $14.99+ $3.98 handling</li>
+                          {productType === 'dual-books' ? (
+                            <li className="text-green-600 font-medium">FREE shipping and handling on both books bundle!</li>
+                          ) : (
+                            <>
+                              <li>USA & Canada: $11.99 + $2.98 handling</li>
+                              <li>Europe: $14.99+ $3.98 handling</li>
+                            </>
+                          )}
                         </ul>
                       </div>
                     </>
@@ -666,8 +699,11 @@ const CTASection = () => {
                     className="w-full cta-button justify-center"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? 'Processing...' : productType === 'physical' ? 'Rush Me A Free Copy Now' : 
-                    productType === 'digital' ? 'Get Digital Access Now' : 'Get Bundle Access Now'}
+                    {isSubmitting ? 'Processing...' : 
+                     productType === 'physical' ? 'Rush Me A Free Copy Now' : 
+                     productType === 'digital' ? 'Get Digital Access Now' : 
+                     productType === 'dual-books' ? 'Get Both Books Now' :
+                     'Get Bundle Access Now'}
                   </button>
                   
                   <p className="text-center text-xs text-brand-black/60">
@@ -675,6 +711,8 @@ const CTASection = () => {
                       ? 'By clicking above, you agree to pay $29.99 plus shipping & handling' 
                       : productType === 'digital' 
                       ? 'By clicking above, you agree to pay $9.99 for digital access'
+                      : productType === 'dual-books'
+                      ? 'By clicking above, you agree to pay $53.98 for both books with free shipping'
                       : 'By clicking above, you agree to pay for the bundle with 5% discount plus shipping'}
                   </p>
                 </form>
@@ -684,20 +722,41 @@ const CTASection = () => {
             <div className="bg-gradient-to-br from-brand-gray/50 to-white p-8 md:p-12 flex items-center">
               <div>
                 <div className="mb-8 flex justify-center">
-                  <div className="relative w-64">
-                  <div className="absolute -inset-1 bg-gradient-to-br from-brand-purple to-brand-red opacity-20 blur-sm rounded-lg"></div>
-                  <img 
-  src="2222222222.png" 
-  alt="Elevate Higher book" 
-  className="relative max-w-full h-[400px] shadow-xl rounded-lg" 
-  
-/>
-                  </div>
+                  {productType === 'dual-books' ? (
+                    <div className="relative w-64">
+                      <div className="absolute -inset-1 bg-gradient-to-br from-brand-purple to-brand-red opacity-20 blur-sm rounded-lg"></div>
+                      <div className="flex relative">
+                        <img 
+                          src="/1111.png" 
+                          alt="Elevate Higher book" 
+                          className="max-w-[50%] h-[300px] shadow-xl rounded-lg transform -rotate-6 relative z-10" 
+                        />
+                        <img 
+                          src="/2222222222.png" 
+                          alt="Swaggerism My Religion book" 
+                          className="max-w-[50%] h-[300px] shadow-xl rounded-lg transform rotate-6 relative z-0" 
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative w-64">
+                      <div className="absolute -inset-1 bg-gradient-to-br from-brand-purple to-brand-red opacity-20 blur-sm rounded-lg"></div>
+                      <img 
+                        src="2222222222.png" 
+                        alt="Elevate Higher book" 
+                        className="relative max-w-full h-[400px] shadow-xl rounded-lg" 
+                      />
+                    </div>
+                  )}
                 </div>
                 
-                <h4 className="text-lg font-bold mb-2">Discover the Secrets to Success</h4>
+                <h4 className="text-lg font-bold mb-2">
+                  {productType === 'dual-books' ? 'Ultimate Transformation Bundle' : 'Discover the Secrets to Success'}
+                </h4>
                 <p className="text-brand-black/70 mb-6">
-                  This book will transform your mindset and help you achieve greatness. Choose your preferred format and start your journey today!
+                  {productType === 'dual-books' 
+                    ? 'Get both bestselling books and transform your life with complementary wisdom at a special discounted price.'
+                    : 'This book will transform your mindset and help you achieve greatness. Choose your preferred format and start your journey today!'}
                 </p>
                 
                 <div className="space-y-3">
@@ -708,13 +767,19 @@ const CTASection = () => {
                       </svg>
                     </div>
                     <div>
-                      <span className="font-medium">Premium {productType === 'bundle' ? 'Bundle' : productType === 'physical' ? 'Hardcover' : 'Digital'} Edition</span>
+                      <span className="font-medium">
+                        {productType === 'dual-books' 
+                          ? 'Two Complete Books, One Amazing Price' 
+                          : `Premium ${productType === 'bundle' ? 'Bundle' : productType === 'physical' ? 'Hardcover' : 'Digital'} Edition`}
+                      </span>
                       <p className="text-sm text-brand-black/60">
-                        {productType === 'bundle' 
-                          ? 'Get both digital and physical editions together'
-                          : productType === 'physical' 
-                          ? 'High-quality print with beautiful design' 
-                          : 'Instant access with easy navigation'}
+                        {productType === 'dual-books'
+                          ? 'Save 10% compared to buying separately'
+                          : productType === 'bundle' 
+                            ? 'Get both digital and physical editions together'
+                            : productType === 'physical' 
+                              ? 'High-quality print with beautiful design' 
+                              : 'Instant access with easy navigation'}
                       </p>
                     </div>
                   </div>
@@ -726,8 +791,14 @@ const CTASection = () => {
                       </svg>
                     </div>
                     <div>
-                      <span className="font-medium">7 Life-Changing Strategies</span>
-                      <p className="text-sm text-brand-black/60">Practical techniques you can apply immediately</p>
+                      <span className="font-medium">
+                        {productType === 'dual-books' ? 'FREE Shipping & Handling' : '7 Life-Changing Strategies'}
+                      </span>
+                      <p className="text-sm text-brand-black/60">
+                        {productType === 'dual-books'
+                          ? 'No additional shipping costs worldwide'
+                          : 'Practical techniques you can apply immediately'}
+                      </p>
                     </div>
                   </div>
                   
@@ -742,6 +813,20 @@ const CTASection = () => {
                       <p className="text-sm text-brand-black/60">Risk-free satisfaction promise</p>
                     </div>
                   </div>
+                  
+                  {productType === 'dual-books' && (
+                    <div className="flex items-start space-x-3">
+                      <div className="mt-0.5 w-5 h-5 rounded-full bg-brand-red flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </div>
+                      <div>
+                        <span className="font-medium">Complementary Knowledge</span>
+                        <p className="text-sm text-brand-black/60">Experience the power of both perspectives</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

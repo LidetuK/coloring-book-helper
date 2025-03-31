@@ -15,7 +15,7 @@ const corsHeaders = {
 interface PaymentRequest {
   amount: number;
   currency: string;
-  productType: "digital" | "physical" | "bundle";
+  productType: "digital" | "physical" | "bundle" | "dual-books";
   customerEmail: string;
   customerName: string;
   shippingAddress?: {
@@ -54,6 +54,8 @@ serve(async (req) => {
       description = "Physical Book - Elevate Higher - Will be shipped";
     } else if (productType === "bundle") {
       description = "Bundle - Digital + Physical Book - Elevate Higher";
+    } else if (productType === "dual-books") {
+      description = "Both Books Bundle - Elevate Higher + Swaggerism My Religion - 10% discount, free shipping";
     }
 
     // Create payment intent
