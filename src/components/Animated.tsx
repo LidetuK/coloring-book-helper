@@ -2,9 +2,61 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Download, BookOpen } from "lucide-react";
+import { ArrowRight, BookOpen, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const Animated = () => {
+  const [timeLeft, setTimeLeft] = useState(() => {
+    // Try to get saved time from localStorage, otherwise start with default values
+    const savedTime = localStorage.getItem('freeOfferTime');
+    if (savedTime) {
+      const parsedTime = JSON.parse(savedTime);
+      return parsedTime;
+    }
+    return {
+      minutes: 5,
+      seconds: 0
+    };
+  });
+  
+  const [offerExpired, setOfferExpired] = useState(() => {
+    const expired = localStorage.getItem('freeOfferExpired');
+    return expired === 'true';
+  });
+
+  useEffect(() => {
+    // Save current time to localStorage whenever it changes
+    localStorage.setItem('freeOfferTime', JSON.stringify(timeLeft));
+    
+    const timer = setInterval(() => {
+      if (offerExpired) return; // Don't countdown if expired
+      
+      setTimeLeft(current => {
+        if (current.seconds > 0) {
+          return { ...current, seconds: current.seconds - 1 };
+        }
+        if (current.minutes > 0) {
+          return { minutes: current.minutes - 1, seconds: 59 };
+        }
+        // Timer reached 0:00
+        setOfferExpired(true);
+        localStorage.setItem('freeOfferExpired', 'true');
+        return { minutes: 0, seconds: 0 };
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft, offerExpired]);
+
+  const handleRedirectToCheckout = () => {
+    document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" });
+    // Store the information that user has clicked the offer
+    localStorage.setItem('freeOfferClicked', 'true');
+    localStorage.setItem('freeOfferClickTime', Date.now().toString());
+  };
+  
+  const formatNumber = (num: number) => String(num).padStart(2, '0');
+
   return (
     <section className="py-16 bg-gradient-to-br from-purple-50 to-white text-gray-900">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -74,22 +126,40 @@ const Animated = () => {
             
             <div className="pt-6">
               <div className="flex flex-wrap items-center gap-3 mb-6">
-                <span className="text-3xl font-bold text-[#DC2626]">$29.99</span>
-                <span className="text-lg text-gray-500 line-through">$39.99</span>
-                <span className="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded">25% OFF</span>
+                {!offerExpired ? (
+                  <>
+                    <div className="flex items-center gap-2 bg-green-100 px-3 py-1 rounded-full animate-pulse">
+                      <Clock className="h-4 w-4 text-green-700" />
+                      <span className="font-bold text-green-700">{formatNumber(timeLeft.minutes)}:{formatNumber(timeLeft.seconds)}</span>
+                    </div>
+                    <span className="text-xl font-bold text-green-600">FREE TODAY!</span>
+                    <div className="flex items-center">
+                      <span className="text-lg text-gray-500 line-through mr-1">$29.99</span>
+                      <span className="text-lg text-gray-500 line-through mr-1">$39.99</span>
+                      <span className="bg-gray-200 text-gray-500 text-sm line-through px-2.5 py-0.5 rounded">25% OFF</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-3xl font-bold text-[#DC2626]">$29.99</span>
+                    <span className="text-lg text-gray-500 line-through">$39.99</span>
+                    <span className="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded">25% OFF</span>
+                  </>
+                )}
               </div>
               
               <Button
-                className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-lg px-8 py-6 font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-xl"
-                onClick={() => window.location.href = "https://books.reskque.com/empowerment/self-development-guide/elevate-higher-the-book/"}
+                variant={offerExpired ? "cta" : "freeCta"}
+                className="text-lg px-8 py-6 font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-xl"
+                onClick={handleRedirectToCheckout}
               >
-                Claim Your Copy
+                {offerExpired ? "Claim Your Copy" : "GET IT FREE NOW"}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               
               <p className="text-sm text-gray-500 mt-4">
-                <Download className="inline-block h-4 w-4 mr-1" />
-                Digital version included with every purchase
+                <BookOpen className="inline-block h-4 w-4 mr-1" />
+                Digital version {offerExpired ? "included with every purchase" : "included free"}
               </p>
             </div>
           </motion.div>

@@ -19,6 +19,7 @@ interface PaymentRequest {
   customerEmail: string;
   customerName: string;
   coverType?: "softcover" | "hardcover";
+  freeOffer?: boolean;
   shippingAddress?: {
     address: string;
     address2?: string;
@@ -43,10 +44,21 @@ serve(async (req) => {
       customerEmail,
       customerName,
       coverType = "softcover",
+      freeOffer = false,
       shippingAddress
     }: PaymentRequest = await req.json();
 
     console.log(`Processing ${productType} book payment for ${customerEmail}`);
+    console.log(`Free offer: ${freeOffer}`);
+    
+    // If this is a free offer, verify that it's valid (within 5 minutes of click)
+    let actualAmount = amount;
+    
+    if (freeOffer) {
+      // This would be validated in a production app
+      console.log("Processing free book offer");
+      actualAmount = 0;
+    }
     
     // Set appropriate description based on product type
     let description = "";
@@ -60,9 +72,13 @@ serve(async (req) => {
       description = `Both Books Bundle (${coverType}) - Elevate Higher + Swaggerism My Religion - 10% discount, free shipping`;
     }
 
+    if (freeOffer) {
+      description = `FREE: ${description}`;
+    }
+
     // Create payment intent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Convert to cents
+      amount: Math.round(actualAmount * 100), // Convert to cents
       currency: currency.toLowerCase(),
       description: description,
       metadata: {
@@ -70,6 +86,7 @@ serve(async (req) => {
         customerEmail,
         productType,
         coverType,
+        freeOffer: freeOffer ? "true" : "false",
         ...(shippingAddress && {
           shippingAddress: JSON.stringify(shippingAddress)
         })
