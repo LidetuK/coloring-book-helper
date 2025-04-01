@@ -2,10 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, BookOpen, Clock } from "lucide-react";
+import { ArrowRight, BookOpen, Clock, Gift } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const Animated = () => {
+  const { toast } = useToast();
   const [timeLeft, setTimeLeft] = useState(() => {
     // Try to get saved time from localStorage, otherwise start with default values
     const savedTime = localStorage.getItem('freeOfferTime');
@@ -53,6 +55,12 @@ const Animated = () => {
     // Store the information that user has clicked the offer
     localStorage.setItem('freeOfferClicked', 'true');
     localStorage.setItem('freeOfferClickTime', Date.now().toString());
+    
+    toast({
+      title: "Free Offer Activated!",
+      description: "Complete checkout within 5 minutes to claim your free book.",
+      duration: 5000,
+    });
   };
   
   const formatNumber = (num: number) => String(num).padStart(2, '0');
@@ -150,7 +158,8 @@ const Animated = () => {
               
               <Button
                 variant={offerExpired ? "cta" : "freeCta"}
-                className="text-lg px-8 py-6 font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-xl"
+                size="xl"
+                className="font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-xl"
                 onClick={handleRedirectToCheckout}
               >
                 {offerExpired ? "Claim Your Copy" : "GET IT FREE NOW"}

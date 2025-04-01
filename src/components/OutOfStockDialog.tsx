@@ -5,8 +5,11 @@ import {
   DialogDescription,
   DialogTitle,
   DialogHeader,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface OutOfStockDialogProps {
   open: boolean;
@@ -14,6 +17,17 @@ interface OutOfStockDialogProps {
 }
 
 const OutOfStockDialog = ({ open, onClose }: OutOfStockDialogProps) => {
+  const { toast } = useToast();
+
+  const handleSwitchToSoftcover = () => {
+    toast({
+      title: "Switched to Softcover",
+      description: "We've updated your selection to softcover.",
+      duration: 3000,
+    });
+    onClose();
+  };
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md animate-in animate-out zoom-in-95 slide-in-from-left-1/2">
@@ -28,14 +42,14 @@ const OutOfStockDialog = ({ open, onClose }: OutOfStockDialogProps) => {
             We're sorry, but hardcover copies are currently out of stock. Please select the softcover option instead.
           </DialogDescription>
         </DialogHeader>
-        <div className="mt-4 flex justify-end">
-          <button
-            onClick={onClose}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded"
+        <DialogFooter className="mt-4 sm:justify-end">
+          <Button 
+            onClick={handleSwitchToSoftcover}
+            className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium"
           >
             Switch to Softcover
-          </button>
-        </div>
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

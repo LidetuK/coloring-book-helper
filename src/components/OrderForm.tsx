@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -172,6 +171,12 @@ const OrderForm = () => {
   const [productTypeOrdered, setProductTypeOrdered] = useState("");
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [downloadLink, setDownloadLink] = useState("");
+  const [showFreeBonusOption, setShowFreeBonusOption] = useState(() => {
+    const freeOfferClicked = localStorage.getItem('freeOfferClicked') === 'true';
+    const freeOfferExpired = localStorage.getItem('freeOfferExpired') === 'true';
+    return freeOfferClicked && !freeOfferExpired;
+  });
+  const [freeOfferTimeLeft, setFreeOfferTimeLeft] = useState({ minutes: 0, seconds: 0 });
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderFormSchema),
@@ -218,6 +223,42 @@ const OrderForm = () => {
     }
   }, [productType, form, needsShipping]);
 
+  useEffect(() => {
+    const freeOfferClicked = localStorage.getItem('freeOfferClicked') === 'true';
+    const clickTime = localStorage.getItem('freeOfferClickTime');
+    const freeOfferExpired = localStorage.getItem('freeOfferExpired') === 'true';
+    
+    if (freeOfferClicked && clickTime && !freeOfferExpired) {
+      setShowFreeBonusOption(true);
+      
+      const elapsedMs = Date.now() - parseInt(clickTime);
+      const totalMs = 5 * 60 * 1000;
+      const remainingMs = Math.max(0, totalMs - elapsedMs);
+      
+      const minutes = Math.floor(remainingMs / (60 * 1000));
+      const seconds = Math.floor((remainingMs % (60 * 1000)) / 1000);
+      
+      setFreeOfferTimeLeft({ minutes, seconds });
+      
+      const freeOfferInterval = setInterval(() => {
+        setFreeOfferTimeLeft(prev => {
+          if (prev.seconds > 0) {
+            return { ...prev, seconds: prev.seconds - 1 };
+          } else if (prev.minutes > 0) {
+            return { minutes: prev.minutes - 1, seconds: 59 };
+          }
+          
+          setShowFreeBonusOption(false);
+          localStorage.setItem('freeOfferExpired', 'true');
+          clearInterval(freeOfferInterval);
+          return { minutes: 0, seconds: 0 };
+        });
+      }, 1000);
+      
+      return () => clearInterval(freeOfferInterval);
+    }
+  }, []);
+
   const calculatePrice = () => {
     const prices = {
       elevate_digital: 9.99,
@@ -226,6 +267,7 @@ const OrderForm = () => {
       both_digital: 18.99,
       both_physical: 50.99,
       both_mix: 35.99,
+      free_bonus: 0.00,
     };
     
     const originalPrices = {
@@ -235,6 +277,7 @@ const OrderForm = () => {
       both_digital: 29.98,
       both_physical: 79.98,
       both_mix: 54.98,
+      free_bonus: 39.99,
     };
     
     let basePrice = prices[productType];
@@ -485,6 +528,8 @@ const OrderForm = () => {
     }
   };
 
+  const formatNumber = (num: number) => num.toString().padStart(2, '0');
+
   return (
     <section id="order" className="py-10 md:py-20 bg-gray-100">
       <div className="max-w-6xl mx-auto px-4">
@@ -712,6 +757,30 @@ const OrderForm = () => {
                               </FormItem>
                             </div>
                           </div>
+                          {showFreeBonusOption && (
+                            <div className="p-4 border border-green-500 rounded-md bg-green-50 animate-pulse">
+                              <div className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full w-fit mb-2">FREE BONUS</div>
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <h4 className="font-medium text-green-700 mb-2">Limited Time Free Offer!</h4>
+                                  <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                      <RadioGroupItem value="free_bonus" checked={field.value === "free_bonus"} />
+                                    </FormControl>
+                                    <div>
+                                      <FormLabel className="font-normal">
+                                        Free Book Bundle - <span className="text-green-600 font-bold">$0.00</span> (100% FREE)
+                                      </FormLabel>
+                                      <p className="text-xs text-green-600 flex items-center mt-1">
+                                        <Gift className="h-3 w-3 mr-1" />
+                                        Complete checkout in {formatNumber(freeOfferTimeLeft.minutes)}:{formatNumber(freeOfferTimeLeft.seconds)} to claim!
+                                      </p>
+                                    </div>
+                                  </FormItem>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </RadioGroup>
                       </FormControl>
                       <FormMessage />

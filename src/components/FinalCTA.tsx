@@ -4,6 +4,9 @@ import { ArrowRight, CheckCircle, Clock, Flame } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
 import OutOfStockDialog from "./OutOfStockDialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 const benefits = [
   "Transform your business with proven sales strategies",
@@ -14,6 +17,7 @@ const benefits = [
 
 const FinalCTA = () => {
   const isMobile = useIsMobile();
+  const { toast } = useToast();
   const [timeLeft, setTimeLeft] = useState(() => {
     const savedTime = localStorage.getItem('finalCtaTime');
     if (savedTime) {
@@ -32,6 +36,7 @@ const FinalCTA = () => {
   const [showOutOfStockDialog, setShowOutOfStockDialog] = useState(false);
   const [freeOffer, setFreeOffer] = useState(false);
   const [freeOfferTimeLeft, setFreeOfferTimeLeft] = useState({ minutes: 0, seconds: 0 });
+  const [showFreeBonus, setShowFreeBonus] = useState(false);
   
   useEffect(() => {
     localStorage.setItem('finalCtaTime', JSON.stringify(timeLeft));
@@ -72,6 +77,7 @@ const FinalCTA = () => {
     
     if (freeOfferClicked && clickTime && !freeOfferExpired) {
       setFreeOffer(true);
+      setShowFreeBonus(true);
       
       // Calculate remaining time from the 5 minute offer
       const elapsedMs = Date.now() - parseInt(clickTime);
@@ -94,6 +100,7 @@ const FinalCTA = () => {
           
           // Time's up for free offer
           setFreeOffer(false);
+          setShowFreeBonus(false);
           localStorage.setItem('freeOfferExpired', 'true');
           clearInterval(freeOfferInterval);
           return { minutes: 0, seconds: 0 };
@@ -113,6 +120,10 @@ const FinalCTA = () => {
   };
   
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
+
+  const scrollToCheckout = () => {
+    document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" });
+  };
   
   return (
     <section className="py-10 md:py-20 bg-gradient-to-br from-theme-purple-light via-theme-purple-DEFAULT to-theme-purple-dark text-white">
@@ -168,44 +179,36 @@ const FinalCTA = () => {
           <div className="mb-6 border rounded-lg p-4 bg-white/10">
             <h3 className="font-medium mb-2 text-white">Choose Your Cover Type:</h3>
             <div className="flex justify-center space-x-6">
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="coverType"
-                  value="softcover"
-                  checked={coverType === 'softcover'}
-                  onChange={() => handleCoverTypeChange('softcover')}
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Softcover</span>
-              </label>
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="coverType" 
-                  value="hardcover"
-                  checked={coverType === 'hardcover'}
-                  onChange={() => handleCoverTypeChange('hardcover')}
-                  className="mr-2 h-5 w-5"
-                />
-                <span>Hardcover (+$5.00)</span>
-              </label>
+              <RadioGroup
+                value={coverType}
+                onValueChange={handleCoverTypeChange}
+                className="flex justify-center space-x-6"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="softcover" id="softcover" />
+                  <Label htmlFor="softcover" className="text-white cursor-pointer">Softcover</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="hardcover" id="hardcover" />
+                  <Label htmlFor="hardcover" className="text-white cursor-pointer">Hardcover (+$5.00)</Label>
+                </div>
+              </RadioGroup>
             </div>
           </div>
         )}
 
-        <button
-          className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-base sm:text-xl md:text-2xl px-6 sm:px-10 md:px-16 py-4 sm:py-6 md:py-8 mt-6 md:mt-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-110 shadow-xl w-full sm:w-auto"
-          onClick={() =>
-            document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })
-          }
+        <Button
+          variant="cta"
+          size="xl"
+          className="mt-6 md:mt-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-110 shadow-xl w-full sm:w-auto"
+          onClick={scrollToCheckout}
         >
           {!timerExpired ? (
             <>Define Your Religion <br /> Order 'Swaggerism' Today</>
           ) : (
             <>RUSH ME MY COPIES NOW</>
           )}
-        </button>
+        </Button>
 
         <p className="mt-4 md:mt-6 text-base md:text-lg opacity-90 text-white">
           {!timerExpired ? (
