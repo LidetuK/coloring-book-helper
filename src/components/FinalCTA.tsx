@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Clock, Flame } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -11,20 +10,6 @@ const benefits = [
   "Generate unlimited leads and sales on autopilot",
   "Close high-ticket deals with confidence",
   "Build a powerful sales team that delivers results"
-];
-
-const swaggerismPoints = [
-  "Develop unshakable self-confidence in any situation",
-  "Master the art of authentic personal branding",
-  "Unlock your natural charisma to influence others positively",
-  "Transform adversity into your greatest advantage",
-  "Create meaningful connections that accelerate your success",
-  "Harness the power of body language for maximum impact",
-  "Cultivate a powerful mindset that attracts opportunities",
-  "Break free from limiting beliefs that hold you back",
-  "Discover your unique voice and personal style",
-  "Leverage storytelling to captivate any audience",
-  "Build a legacy that continues beyond your lifetime"
 ];
 
 const FinalCTA = () => {
@@ -59,18 +44,9 @@ const FinalCTA = () => {
   return (
     <section className="py-10 md:py-20 bg-gradient-to-br from-theme-purple-light via-theme-purple-DEFAULT to-theme-purple-dark text-white">
       <div className="max-w-4xl mx-auto px-4 text-center">
-        <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold uppercase tracking-wide leading-tight text-white mb-8">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold uppercase tracking-wide leading-tight text-white">
           {freeOffer ? "Get Your Free Book Now!" : "Get My Bestselling Book For Free!"}
         </h1>
-
-        {/* Book image pushed to the top */}
-        <div className="mb-10 transform hover:scale-105 transition-all duration-300">
-          <img 
-            src="/2222222222.png" 
-            alt="Swaggerism: My Religion" 
-            className="w-48 md:w-64 mx-auto shadow-2xl rounded-md"
-          />
-        </div>
 
         <div className="mt-6 mb-8 bg-black p-4 rounded-lg animate-pulse-glow">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
@@ -113,26 +89,6 @@ const FinalCTA = () => {
         <p className="mt-4 md:mt-6 text-base md:text-lg opacity-90 text-white">
           {timerExpired ? "Order Today For Fast Delivery!" : "Limited Time Offer - Act Now While Supplies Last!"}
         </p>
-
-        {/* Added content about Swaggerism */}
-        <div className="mt-16 bg-theme-purple-darkest bg-opacity-60 p-6 rounded-lg shadow-xl">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Discover the Secrets to Success</h2>
-          <p className="mb-6 text-lg">
-            This book will transform your mindset and help you achieve greatness. 
-            Explore 11 Life-Changing Strategies that have helped thousands achieve their dreams.
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-            {swaggerismPoints.map((point, idx) => (
-              <div key={idx} className="flex items-start">
-                <div className="mt-1 w-5 h-5 rounded-full bg-red-500 flex-shrink-0 flex items-center justify-center">
-                  <span className="text-xs font-bold">{idx + 1}</span>
-                </div>
-                <span className="ml-2 text-sm md:text-base">{point}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

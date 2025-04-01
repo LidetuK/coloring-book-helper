@@ -517,7 +517,30 @@ const CTASection = () => {
                   Select Your Preferred Format
                 </h3>
                 
-                <div className="mb-6 space-y-4">
+             <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="digital"
+                      name="productType"
+                      value="digital"
+                      checked={productType === 'digital'}
+                      onChange={() => setProductType('digital')}
+                      className="mr-3 h-5 w-5"
+                    />
+                    <label htmlFor="digital" className="flex flex-col">
+                      <span className="font-medium">Digital Copy - 
+                        {!timerExpired ? (
+                          <span> <span className="line-through text-gray-500">
+                            ${prices.original.digital.toFixed(2)}
+                          </span> ${prices.discounted.digital.toFixed(2)}</span>
+                        ) : (
+                          <span> ${prices.discounted.digital.toFixed(2)}</span>
+                        )}
+                      </span>
+                      <span className="text-sm text-gray-600">Instant download access</span>
+                    </label>
+                  </div>
+                  <div className="mb-6 space-y-4">
                   <div className="flex items-center">
                     <input
                       type="radio"
@@ -539,30 +562,6 @@ const CTASection = () => {
                         )}
                       </span>
                       <span className="text-sm text-gray-600">Plus shipping & handling</span>
-                    </label>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <input
-                      type="radio"
-                      id="digital"
-                      name="productType"
-                      value="digital"
-                      checked={productType === 'digital'}
-                      onChange={() => setProductType('digital')}
-                      className="mr-3 h-5 w-5"
-                    />
-                    <label htmlFor="digital" className="flex flex-col">
-                      <span className="font-medium">Digital Copy - 
-                        {!timerExpired ? (
-                          <span> <span className="line-through text-gray-500">
-                            ${prices.original.digital.toFixed(2)}
-                          </span> ${prices.discounted.digital.toFixed(2)}</span>
-                        ) : (
-                          <span> ${prices.discounted.digital.toFixed(2)}</span>
-                        )}
-                      </span>
-                      <span className="text-sm text-gray-600">Instant download access</span>
                     </label>
                   </div>
                   
