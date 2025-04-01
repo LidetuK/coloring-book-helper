@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ArrowRight, Check, Package, BookOpen, Gift, Calendar } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 const DualBookOffer = () => {
   const isMobile = useIsMobile();
@@ -35,6 +36,13 @@ const DualBookOffer = () => {
     "FREE shipping and handling included",
     "Immediate access to both digital versions"
   ];
+
+  const handleScrollToCheckout = () => {
+    const checkoutElement = document.getElementById('claim');
+    if (checkoutElement) {
+      checkoutElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <section 
@@ -90,6 +98,12 @@ const DualBookOffer = () => {
                   <span className="text-sm">Practical exercises and action steps</span>
                 </li>
               </ul>
+              <Button 
+                onClick={handleScrollToCheckout}
+                className="w-full mt-4 bg-white text-theme-purple-dark hover:bg-white/90"
+              >
+                Claim Your Copy
+              </Button>
             </div>
           </motion.div>
 
@@ -133,6 +147,12 @@ const DualBookOffer = () => {
                   <span className="text-sm">Pre-order now for FREE shipping!</span>
                 </li>
               </ul>
+              <Button 
+                onClick={handleScrollToCheckout}
+                className="w-full mt-4 bg-[#DC2626] hover:bg-[#B91C1C] text-white"
+              >
+                PRE-ORDER (Launches July 15)
+              </Button>
             </div>
           </motion.div>
         </div>

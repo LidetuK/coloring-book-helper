@@ -1,9 +1,11 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Check, ChevronDown } from "lucide-react";
+import OutOfStockDialog from "./OutOfStockDialog";
 
 const stripePromise = loadStripe("pk_test_51Gx2sVCNjyaQ14tCaqL6XpRPHLRMtzOK8vjEx6WrqHsA4g6PwjQrMJbjgIkpUCj9Rll9t6wPhYfQt35w0qZ0zvrX003sS4B1yS");
 
@@ -159,6 +161,7 @@ const CTASection = () => {
   const [orderComplete, setOrderComplete] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [timerExpired, setTimerExpired] = useState(false);
+  const [showOutOfStockDialog, setShowOutOfStockDialog] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   
   useEffect(() => {
@@ -309,6 +312,14 @@ const CTASection = () => {
     
     return () => clearInterval(interval);
   }, []);
+
+  const handleCoverTypeChange = (type) => {
+    if (type === 'hardcover') {
+      setShowOutOfStockDialog(true);
+    } else {
+      setCoverType(type);
+    }
+  };
 
   if (orderComplete) {
     return (
@@ -605,28 +616,18 @@ const CTASection = () => {
                 <div className="mb-6 border p-3 rounded-md bg-gray-50">
                   <h4 className="font-medium text-sm mb-2">Cover Type:</h4>
                   <div className="flex space-x-4">
-                    <label className="flex items-center cursor-pointer">
-                      <input
-                        type="radio"
-                        name="coverType"
-                        value="softcover"
-                        checked={coverType === 'softcover'}
-                        onChange={() => setCoverType('softcover')}
-                        className="mr-2 h-4 w-4"
-                      />
+                    <div 
+                      className={`border p-2 rounded-md cursor-pointer ${coverType === 'softcover' ? 'border-theme-purple-dark bg-purple-50' : ''}`}
+                      onClick={() => handleCoverTypeChange('softcover')}
+                    >
                       <span className="text-sm">Softcover</span>
-                    </label>
-                    <label className="flex items-center cursor-pointer">
-                      <input
-                        type="radio"
-                        name="coverType"
-                        value="hardcover"
-                        checked={coverType === 'hardcover'}
-                        onChange={() => setCoverType('hardcover')}
-                        className="mr-2 h-4 w-4"
-                      />
+                    </div>
+                    <div 
+                      className={`border p-2 rounded-md cursor-pointer ${coverType === 'hardcover' ? 'border-theme-purple-dark bg-purple-50' : ''}`}
+                      onClick={() => handleCoverTypeChange('hardcover')}
+                    >
                       <span className="text-sm">Hardcover (+$5.00)</span>
-                    </label>
+                    </div>
                   </div>
                 </div>
                 
@@ -914,6 +915,14 @@ const CTASection = () => {
           </div>
         </div>
       </div>
+      
+      <OutOfStockDialog 
+        open={showOutOfStockDialog} 
+        onClose={() => {
+          setShowOutOfStockDialog(false);
+          setCoverType('softcover');
+        }} 
+      />
     </section>
   );
 };
