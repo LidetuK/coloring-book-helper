@@ -275,7 +275,7 @@ const CTASection = () => {
 
     const discountedPrices = {
       digital: 9.99,
-      physical: coverType === 'hardcover' ? 34.99 : 29.99,
+      physical: coverType === 'hardcover' ? 34.99 : 25.99,
       bundle: coverType === 'hardcover' ? (9.99 + 34.99) * 0.95 : (9.99 + 29.99) * 0.95,
       dualBooks: coverType === 'hardcover' ? 62.98 : 53.98
     };
@@ -826,7 +826,7 @@ const CTASection = () => {
                       <img 
                         src="2222222222.png" 
                         alt="Elevate Higher book" 
-                        className="relative max-w-full h-[400px] shadow-xl rounded-lg" 
+                        
                       />
                     </div>
                   )}
