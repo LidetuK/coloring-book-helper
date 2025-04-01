@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { Lock, CreditCard, Shield, Mail, Truck, Download, Calendar, Gift } from "lucide-react";
+import OutOfStockDialog from "./OutOfStockDialog";
 
 const stripePromise = loadStripe("pk_test_51Gx2sVCNjyaQ14tCaqL6XpRPHLRMtzOK8vjEx6WrqHsA4g6PwjQrMJbjgIkpUCj9Rll9t6wPhYfQt35w0qZ0zvrX003sS4B1yS");
 
@@ -55,7 +56,8 @@ const orderFormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address"),
-  productType: z.enum(["elevate_digital", "elevate_physical", "swaggerism_physical_preorder", "both_digital", "both_physical", "both_mix"]),
+  productType: z.enum(["elevate_digital", "elevate_physical", "swaggerism_physical_preorder", "both_digital", "both_physical", "both_mix", "free_bonus"]),
+  coverType: z.enum(["softcover", "hardcover"]).optional(),
   address: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
@@ -177,6 +179,8 @@ const OrderForm = () => {
     return freeOfferClicked && !freeOfferExpired;
   });
   const [freeOfferTimeLeft, setFreeOfferTimeLeft] = useState({ minutes: 0, seconds: 0 });
+  const [coverType, setCoverType] = useState<"softcover" | "hardcover">("softcover");
+  const [showOutOfStockDialog, setShowOutOfStockDialog] = useState(false);
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderFormSchema),
@@ -185,6 +189,7 @@ const OrderForm = () => {
       lastName: "",
       email: "",
       productType: "elevate_digital",
+      coverType: "softcover",
       address: "",
       city: "",
       state: "",
@@ -370,6 +375,15 @@ const OrderForm = () => {
     }
     
     form.reset();
+  };
+
+  const handleCoverTypeChange = (type: "softcover" | "hardcover") => {
+    if (type === "hardcover") {
+      setShowOutOfStockDialog(true);
+    } else {
+      setCoverType(type);
+      form.setValue("coverType", type);
+    }
   };
 
   if (orderComplete) {
@@ -706,6 +720,26 @@ const OrderForm = () => {
                                   Physical - <span className="line-through text-gray-500">$39.99</span> $29.99 + Shipping
                                 </FormLabel>
                               </FormItem>
+
+                              {field.value === "elevate_physical" && (
+                                <div className="pl-6 pt-2 space-y-2">
+                                  <p className="text-sm text-gray-600 mb-1">Cover Type:</p>
+                                  <div className="flex space-x-4">
+                                    <div 
+                                      className={`border p-2 rounded-md cursor-pointer ${coverType === "softcover" ? "border-theme-purple-dark bg-purple-50" : ""}`}
+                                      onClick={() => handleCoverTypeChange("softcover")}
+                                    >
+                                      <div className="text-sm font-medium">Softcover</div>
+                                    </div>
+                                    <div 
+                                      className={`border p-2 rounded-md cursor-pointer ${coverType === "hardcover" ? "border-theme-purple-dark bg-purple-50" : ""}`}
+                                      onClick={() => handleCoverTypeChange("hardcover")}
+                                    >
+                                      <div className="text-sm font-medium">Hardcover</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                           
@@ -934,6 +968,11 @@ const OrderForm = () => {
           </div>
         </div>
       </div>
+      
+      <OutOfStockDialog 
+        open={showOutOfStockDialog} 
+        onClose={() => setShowOutOfStockDialog(false)} 
+      />
     </section>
   );
 };
