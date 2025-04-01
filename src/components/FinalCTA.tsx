@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Clock, Flame } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -25,6 +26,8 @@ const FinalCTA = () => {
     };
   });
   const [copiesLeft, setCopiesLeft] = useState(37);
+  const [coverType, setCoverType] = useState('softcover');
+  const [timerExpired, setTimerExpired] = useState(false);
   
   useEffect(() => {
     localStorage.setItem('finalCtaTime', JSON.stringify(timeLeft));
@@ -38,7 +41,8 @@ const FinalCTA = () => {
         } else if (prev.hours > 0) {
           return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
         }
-        return { hours: 3, minutes: 59, seconds: 59 };
+        setTimerExpired(true);
+        return { hours: 0, minutes: 0, seconds: 0 };
       });
     }, 1000);
     
@@ -97,18 +101,62 @@ const FinalCTA = () => {
           ))}
         </div>
 
+        {!timerExpired && (
+          <div className="mb-6 border rounded-lg p-4 bg-white/10">
+            <h3 className="font-medium mb-2 text-white">Choose Your Cover Type:</h3>
+            <div className="flex justify-center space-x-6">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="coverType"
+                  value="softcover"
+                  checked={coverType === 'softcover'}
+                  onChange={() => setCoverType('softcover')}
+                  className="mr-2 h-5 w-5"
+                />
+                <span>Softcover</span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="coverType" 
+                  value="hardcover"
+                  checked={coverType === 'hardcover'}
+                  onChange={() => setCoverType('hardcover')}
+                  className="mr-2 h-5 w-5"
+                />
+                <span>Hardcover (+$5.00)</span>
+              </label>
+            </div>
+          </div>
+        )}
+
         <button
           className="bg-[#DC2626] hover:bg-[#B91C1C] text-white text-base sm:text-xl md:text-2xl px-6 sm:px-10 md:px-16 py-4 sm:py-6 md:py-8 mt-6 md:mt-8 font-bold uppercase rounded-xl transform transition-all duration-300 hover:scale-110 shadow-xl w-full sm:w-auto"
           onClick={() =>
             document.getElementById("claim")?.scrollIntoView({ behavior: "smooth" })
           }
         >
-          Define Your Religion <br /> Order 'Swaggerism' Today"
+          {!timerExpired ? (
+            <>Define Your Religion <br /> Order 'Swaggerism' Today</>
+          ) : (
+            <>RUSH ME MY COPIES NOW</>
+          )}
         </button>
 
         <p className="mt-4 md:mt-6 text-base md:text-lg opacity-90 text-white">
-          Limited Time Offer - Act Now While Supplies Last!
+          {!timerExpired ? (
+            "Limited Time Offer - Act Now While Supplies Last!"
+          ) : (
+            "Order Today For Fast Delivery!"
+          )}
         </p>
+
+        {!timerExpired && (
+          <div className="mt-4 text-sm bg-white/10 p-2 rounded">
+            <span>Original price: <span className="line-through">${coverType === 'hardcover' ? '44.99' : '39.99'}</span> - Today's price: <span className="font-bold text-yellow-300">${coverType === 'hardcover' ? '34.99' : '29.99'}</span></span>
+          </div>
+        )}
       </div>
     </section>
   );

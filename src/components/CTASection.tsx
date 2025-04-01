@@ -153,10 +153,12 @@ const CTASection = () => {
     country: 'United States'
   });
   const [productType, setProductType] = useState('physical'); // 'digital', 'physical', 'bundle' or 'dual-books'
+  const [coverType, setCoverType] = useState('softcover'); // 'softcover' or 'hardcover'
   const [showCheckout, setShowCheckout] = useState(false);
   const [clientSecret, setClientSecret] = useState('');
   const [orderComplete, setOrderComplete] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [timerExpired, setTimerExpired] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   
   useEffect(() => {
@@ -192,18 +194,20 @@ const CTASection = () => {
     
     try {
       let amount = 0;
+      
       if (productType === 'digital') {
         amount = 9.99;
       } else if (productType === 'physical') {
-        amount = 29.99;
+        amount = coverType === 'hardcover' ? 34.99 : 29.99;
       } else if (productType === 'bundle') {
-        amount = (9.99 + 29.99) * 0.95;
+        const physicalPrice = coverType === 'hardcover' ? 34.99 : 29.99;
+        amount = (9.99 + physicalPrice) * 0.95;
       } else if (productType === 'dual-books') {
-        amount = 53.98; // Fixed price for both books bundle
+        amount = coverType === 'hardcover' ? 62.98 : 53.98;
       }
       
       const shippingCost = (productType === 'digital') ? 0 : 
-                          (productType === 'dual-books') ? 0 : // Free shipping for dual books bundle
+                          (productType === 'dual-books') ? 0 : 
                           (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
       const totalAmount = amount + ((productType === 'digital' || productType === 'dual-books') ? 0 : shippingCost);
       
@@ -221,7 +225,8 @@ const CTASection = () => {
             state: formData.state,
             zipCode: formData.zipCode,
             country: formData.country
-          } : undefined
+          } : undefined,
+          coverType: coverType,
         },
       });
       
@@ -257,6 +262,29 @@ const CTASection = () => {
     });
   };
 
+  const calculatePrices = () => {
+    const originalPrices = {
+      digital: 14.99,
+      physical: coverType === 'hardcover' ? 44.99 : 39.99,
+      bundle: coverType === 'hardcover' ? (14.99 + 44.99) : (14.99 + 39.99),
+      dualBooks: coverType === 'hardcover' ? 69.98 : 59.98
+    };
+
+    const discountedPrices = {
+      digital: 9.99,
+      physical: coverType === 'hardcover' ? 34.99 : 29.99,
+      bundle: coverType === 'hardcover' ? (9.99 + 34.99) * 0.95 : (9.99 + 29.99) * 0.95,
+      dualBooks: coverType === 'hardcover' ? 62.98 : 53.98
+    };
+
+    return {
+      original: originalPrices,
+      discounted: discountedPrices
+    };
+  };
+
+  const prices = calculatePrices();
+
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
     minutes: 57,
@@ -273,7 +301,8 @@ const CTASection = () => {
         } else if (prev.hours > 0) {
           return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
         } else {
-          return { hours: 23, minutes: 59, seconds: 59 };
+          setTimerExpired(true);
+          return { hours: 0, minutes: 0, seconds: 0 };
         }
       });
     }, 1000);
@@ -312,11 +341,11 @@ const CTASection = () => {
     if (productType === 'digital') {
       price = 9.99;
     } else if (productType === 'physical') {
-      price = 29.99;
+      price = coverType === 'hardcover' ? 34.99 : 29.99;
     } else if (productType === 'bundle') {
-      price = (9.99 + 29.99) * 0.95;
+      price = (9.99 + coverType === 'hardcover' ? 34.99 : 29.99) * 0.95;
     } else if (productType === 'dual-books') {
-      price = 53.98;
+      price = coverType === 'hardcover' ? 62.98 : 53.98;
     }
     
     const shipping = (productType === 'digital' || productType === 'dual-books') ? 0 : 
@@ -489,7 +518,15 @@ const CTASection = () => {
                       className="mr-3 h-5 w-5"
                     />
                     <label htmlFor="physical" className="flex flex-col">
-                      <span className="font-medium">Physical Book - <span className="line-through text-gray-500">$39.99</span> $29.99</span>
+                      <span className="font-medium">Physical Book - 
+                        {!timerExpired ? (
+                          <span> <span className="line-through text-gray-500">
+                            ${prices.original.physical.toFixed(2)}
+                          </span> ${prices.discounted.physical.toFixed(2)}</span>
+                        ) : (
+                          <span> ${prices.discounted.physical.toFixed(2)}</span>
+                        )}
+                      </span>
                       <span className="text-sm text-gray-600">Plus shipping & handling</span>
                     </label>
                   </div>
@@ -505,7 +542,15 @@ const CTASection = () => {
                       className="mr-3 h-5 w-5"
                     />
                     <label htmlFor="digital" className="flex flex-col">
-                      <span className="font-medium">Digital Copy - <span className="line-through text-gray-500">$14.99</span> $9.99</span>
+                      <span className="font-medium">Digital Copy - 
+                        {!timerExpired ? (
+                          <span> <span className="line-through text-gray-500">
+                            ${prices.original.digital.toFixed(2)}
+                          </span> ${prices.discounted.digital.toFixed(2)}</span>
+                        ) : (
+                          <span> ${prices.discounted.digital.toFixed(2)}</span>
+                        )}
+                      </span>
                       <span className="text-sm text-gray-600">Instant download access</span>
                     </label>
                   </div>
@@ -538,7 +583,15 @@ const CTASection = () => {
                     />
                     <label htmlFor="dual-books" className="flex flex-col">
                       <div className="flex items-center">
-                        <span className="font-medium">Both Books Bundle (Elevate Higher + Swaggerism) - <span className="text-green-500 font-bold">$53.98</span></span>
+                        <span className="font-medium">Both Books Bundle (Elevate Higher + Swaggerism) - 
+                          {!timerExpired ? (
+                            <span> <span className="line-through text-gray-500">
+                              ${prices.original.dualBooks.toFixed(2)}
+                            </span> <span className="text-green-500 font-bold">${prices.discounted.dualBooks.toFixed(2)}</span></span>
+                          ) : (
+                            <span> <span className="text-green-500 font-bold">${prices.discounted.dualBooks.toFixed(2)}</span></span>
+                          )}
+                        </span>
                         <span className="ml-2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">10% OFF</span>
                       </div>
                       <span className="text-sm text-gray-600">Get both physical books with FREE shipping!</span>
@@ -546,6 +599,34 @@ const CTASection = () => {
                     <div className="absolute -right-2 -top-2">
                       <span className="bg-yellow-400 text-xs font-bold text-black px-2 py-0.5 rounded-full transform rotate-3 shadow">BEST VALUE</span>
                     </div>
+                  </div>
+                </div>
+
+                <div className="mb-6 border p-3 rounded-md bg-gray-50">
+                  <h4 className="font-medium text-sm mb-2">Cover Type:</h4>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="coverType"
+                        value="softcover"
+                        checked={coverType === 'softcover'}
+                        onChange={() => setCoverType('softcover')}
+                        className="mr-2 h-4 w-4"
+                      />
+                      <span className="text-sm">Softcover</span>
+                    </label>
+                    <label className="flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="coverType"
+                        value="hardcover"
+                        checked={coverType === 'hardcover'}
+                        onChange={() => setCoverType('hardcover')}
+                        className="mr-2 h-4 w-4"
+                      />
+                      <span className="text-sm">Hardcover (+$5.00)</span>
+                    </label>
                   </div>
                 </div>
                 
@@ -700,20 +781,20 @@ const CTASection = () => {
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? 'Processing...' : 
-                     productType === 'physical' ? 'Rush Me A Free Copy Now' : 
+                     productType === 'physical' ? 'RUSH ME MY COPIES NOW' : 
                      productType === 'digital' ? 'Get Digital Access Now' : 
-                     productType === 'dual-books' ? 'Get Both Books Now' :
+                     productType === 'dual-books' ? 'RUSH ME MY COPIES NOW' :
                      'Get Bundle Access Now'}
                   </button>
                   
                   <p className="text-center text-xs text-brand-black/60">
                     {productType === 'physical' 
-                      ? 'By clicking above, you agree to pay $29.99 plus shipping & handling' 
+                      ? `By clicking above, you agree to pay $${coverType === 'hardcover' ? '34.99' : '29.99'} plus shipping & handling` 
                       : productType === 'digital' 
                       ? 'By clicking above, you agree to pay $9.99 for digital access'
                       : productType === 'dual-books'
-                      ? 'By clicking above, you agree to pay $53.98 for both books with free shipping'
-                      : 'By clicking above, you agree to pay for the bundle with 5% discount plus shipping'}
+                      ? `By clicking above, you agree to pay $${coverType === 'hardcover' ? '62.98' : '53.98'} for both books with free shipping`
+                      : `By clicking above, you agree to pay for the bundle with 5% discount plus shipping`}
                   </p>
                 </form>
               </div>
@@ -755,8 +836,8 @@ const CTASection = () => {
                 </h4>
                 <p className="text-brand-black/70 mb-6">
                   {productType === 'dual-books' 
-                    ? 'Get both bestselling books and transform your life with complementary wisdom at a special discounted price.'
-                    : 'This book will transform your mindset and help you achieve greatness. Choose your preferred format and start your journey today!'}
+                    ? `Get both bestselling books in ${coverType} format and transform your life with complementary wisdom at a special discounted price.`
+                    : `This book will transform your mindset and help you achieve greatness. Choose your preferred format and start your journey today!`}
                 </p>
                 
                 <div className="space-y-3">
@@ -769,16 +850,16 @@ const CTASection = () => {
                     <div>
                       <span className="font-medium">
                         {productType === 'dual-books' 
-                          ? 'Two Complete Books, One Amazing Price' 
-                          : `Premium ${productType === 'bundle' ? 'Bundle' : productType === 'physical' ? 'Hardcover' : 'Digital'} Edition`}
+                          ? `Two Complete ${coverType === 'hardcover' ? 'Hardcover' : 'Softcover'} Books, One Amazing Price` 
+                          : `Premium ${productType === 'bundle' ? 'Bundle' : productType === 'physical' ? (coverType === 'hardcover' ? 'Hardcover' : 'Softcover') : 'Digital'} Edition`}
                       </span>
                       <p className="text-sm text-brand-black/60">
                         {productType === 'dual-books'
                           ? 'Save 10% compared to buying separately'
                           : productType === 'bundle' 
-                            ? 'Get both digital and physical editions together'
+                            ? `Get both digital and ${coverType} editions together`
                             : productType === 'physical' 
-                              ? 'High-quality print with beautiful design' 
+                              ? `High-quality ${coverType} print with beautiful design` 
                               : 'Instant access with easy navigation'}
                       </p>
                     </div>

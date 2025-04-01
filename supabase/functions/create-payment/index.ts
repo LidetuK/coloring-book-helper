@@ -18,6 +18,7 @@ interface PaymentRequest {
   productType: "digital" | "physical" | "bundle" | "dual-books";
   customerEmail: string;
   customerName: string;
+  coverType?: "softcover" | "hardcover";
   shippingAddress?: {
     address: string;
     address2?: string;
@@ -41,6 +42,7 @@ serve(async (req) => {
       productType,
       customerEmail,
       customerName,
+      coverType = "softcover",
       shippingAddress
     }: PaymentRequest = await req.json();
 
@@ -51,11 +53,11 @@ serve(async (req) => {
     if (productType === "digital") {
       description = "Digital Book - Elevate Higher - Immediate Access";
     } else if (productType === "physical") {
-      description = "Physical Book - Elevate Higher - Will be shipped";
+      description = `Physical Book (${coverType}) - Elevate Higher - Will be shipped`;
     } else if (productType === "bundle") {
-      description = "Bundle - Digital + Physical Book - Elevate Higher";
+      description = `Bundle - Digital + Physical Book (${coverType}) - Elevate Higher`;
     } else if (productType === "dual-books") {
-      description = "Both Books Bundle - Elevate Higher + Swaggerism My Religion - 10% discount, free shipping";
+      description = `Both Books Bundle (${coverType}) - Elevate Higher + Swaggerism My Religion - 10% discount, free shipping`;
     }
 
     // Create payment intent
@@ -67,6 +69,7 @@ serve(async (req) => {
         customerName,
         customerEmail,
         productType,
+        coverType,
         ...(shippingAddress && {
           shippingAddress: JSON.stringify(shippingAddress)
         })
