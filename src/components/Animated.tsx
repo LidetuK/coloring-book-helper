@@ -142,8 +142,8 @@ const Animated = () => {
                     </div>
                     <span className="text-xl font-bold text-green-600">FREE TODAY!</span>
                     <div className="flex items-center">
-                      <span className="text-lg text-gray-500 line-through mr-1">$29.99</span>
-                      <span className="text-lg text-gray-500 line-through mr-1">$39.99</span>
+                      <span className="text-lg text-gray-500 line-through mr-1">$25.99</span>
+                      <span className="text-lg text-gray-500 line-through mr-1">$35.99</span>
                       <span className="bg-gray-200 text-gray-500 text-sm line-through px-2.5 py-0.5 rounded">25% OFF</span>
                     </div>
                   </>
