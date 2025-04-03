@@ -75,7 +75,7 @@ const BookPopup = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            We noticed you're leaving. Get Elevate Higher at 50% off - our special exit offer! This limited-time deal gives you all the transformative strategies at half the regular price. Don't miss this exclusive opportunity!
+            We noticed you're leaving. Get Swaggerism at 50% off – our special exit offer! This limited-time deal gives you all the transformative strategies at half the regular price. Don't miss this exclusive opportunity!
           </motion.p>
           
           {/* Book Images */}
@@ -86,7 +86,7 @@ const BookPopup = () => {
             transition={{ duration: 0.5, delay: 0.6 }}
           >
             <img 
-              src="/download (2).png" 
+              src="/2222222222.png" 
               alt="Elevate Higher Book"
               className="max-w-full h-auto max-h-[300px] rounded-md shadow-lg hover:scale-105 transition-transform duration-300"
             />
