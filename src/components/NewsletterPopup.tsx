@@ -70,19 +70,19 @@ const NewsletterPopup = () => {
         
         {/* Content */}
         <div className="flex flex-col md:flex-row">
-          {/* Left Side - Yellow */}
-          <div className="bg-[#FFD700] p-6 md:p-8 text-center md:text-left md:w-1/2">
+          {/* Left Side - Theme Purple */}
+          <div className="bg-theme-purple-DEFAULT p-6 md:p-8 text-center md:text-left md:w-1/2">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="h-full flex flex-col justify-center"
             >
-              <h2 className="text-2xl md:text-4xl font-bold text-black mb-4">
+              <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
                 Join Our Newsletter
               </h2>
               
-              <p className="text-black/90 text-base md:text-lg mb-4">
+              <p className="text-white/90 text-base md:text-lg mb-4">
                 Get exclusive updates and content delivered straight to your inbox
               </p>
 
@@ -123,7 +123,7 @@ const NewsletterPopup = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Your email address"
-                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-full text-white focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50"
+                    className="w-full px-4 py-3 pl-10 bg-zinc-800 border border-zinc-700 rounded-full text-white focus:outline-none focus:ring-2 focus:ring-theme-purple-light/50"
                     required
                   />
                   <Mail className="absolute top-1/2 transform -translate-y-1/2 left-3 text-zinc-400 h-4 w-4" />
@@ -131,7 +131,7 @@ const NewsletterPopup = () => {
                 
                 <motion.button
                   type="submit"
-                  className="w-full bg-[#FFD700] hover:bg-[#F8CC00] text-black font-bold py-3 rounded-full transition-colors duration-300 flex items-center justify-center"
+                  className="w-full bg-theme-pink-DEFAULT hover:bg-theme-pink-medium text-white font-bold py-3 rounded-full transition-colors duration-300 flex items-center justify-center"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >

@@ -35,8 +35,14 @@ const BookPopup = () => {
   }, []);
 
   const handleRedirect = () => {
-    window.open("https://books.reskque.com/empowerment/self-development-guide/elevate-higher-the-book/", "_blank");
+    // Close the popup
     setIsOpen(false);
+    
+    // Scroll to the claim/checkout section
+    const claimSection = document.getElementById("claim");
+    if (claimSection) {
+      claimSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (

@@ -154,7 +154,7 @@ const CTASection = () => {
     zipCode: '',
     country: 'United States'
   });
-  const [productType, setProductType] = useState('physical'); // 'digital', 'physical', 'bundle' or 'dual-books'
+  const [productType, setProductType] = useState('digital'); // Default is now 'digital'
   const [coverType, setCoverType] = useState('softcover'); // 'softcover' or 'hardcover'
   const [showCheckout, setShowCheckout] = useState(false);
   const [clientSecret, setClientSecret] = useState('');
