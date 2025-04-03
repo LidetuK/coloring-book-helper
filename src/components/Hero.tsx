@@ -67,7 +67,7 @@ const Hero = () => {
         {/* Logos Section Adjusted */}
         <div className="mt-6 md:mt-8 flex flex-wrap justify-center items-center gap-4 md:gap-6 opacity-80 mb-16 md:mb-32 w-full max-w-5xl px-2 md:px-0">
           <img 
-            src="/logo.png" 
+            src="/image-removebg-preview.png" 
             alt="Forbes" 
             className="h-auto w-full object-contain"
           />
