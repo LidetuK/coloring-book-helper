@@ -78,13 +78,14 @@ const NewsletterPopup = () => {
               transition={{ duration: 0.5 }}
               className="h-full flex flex-col justify-center"
             >
-              <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
-                Join Our Newsletter
-              </h2>
-              
-              <p className="text-white/90 text-base md:text-lg mb-4">
-                Get exclusive updates and content delivered straight to your inbox
-              </p>
+              <h2 className="text-2xl md:text-4xl font-bold text-black mb-4">
+  Join Our Newsletter
+</h2>
+
+<p className="text-black text-base md:text-lg mb-4">
+  Get exclusive updates and content delivered straight to your inbox
+</p>
+
 
               <div className="hidden md:block">
                 <img 
