@@ -625,7 +625,7 @@ const CTASection = () => {
                       className={`border p-2 rounded-md cursor-pointer ${coverType === 'hardcover' ? 'border-theme-purple-dark bg-purple-50' : ''}`}
                       onClick={() => handleCoverTypeChange('hardcover')}
                     >
-                      <span className="text-sm">Hardcover (+$5.00)</span>
+                      <span className="text-sm">Hardcover (+$10.00)</span>
                     </div>
                   </div>
                 </div>
