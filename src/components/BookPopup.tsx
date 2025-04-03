@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -8,12 +8,30 @@ const BookPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Show popup after 5 seconds on page load
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-    }, 5000);
+    // Check if the user has already seen the popup
+    const hasSeenExitPopup = localStorage.getItem('hasSeenExitPopup') === 'true';
+    
+    if (hasSeenExitPopup) {
+      return;
+    }
 
-    return () => clearTimeout(timer);
+    // Add exit intent detection
+    const handleMouseLeave = (e: MouseEvent) => {
+      if (e.clientY <= 0) {
+        setIsOpen(true);
+        // Mark that user has seen the popup
+        localStorage.setItem('hasSeenExitPopup', 'true');
+        // Remove event listener after triggering once
+        document.removeEventListener('mouseleave', handleMouseLeave);
+      }
+    };
+
+    // Add event listener for mouse leaving the viewport (moving towards browser toolbar)
+    document.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
   }, []);
 
   const handleRedirect = () => {
@@ -24,6 +42,9 @@ const BookPopup = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-3xl p-0 border-0 overflow-hidden rounded-lg w-[90vw] md:w-auto bg-gradient-to-br from-theme-purple-light via-theme-purple-DEFAULT to-theme-purple-dark">
+        {/* This DialogTitle is visually hidden but needed for accessibility */}
+        <DialogTitle className="sr-only">Special Exit Offer</DialogTitle>
+        
         {/* Progress Bar */}
         <div className="w-full h-2 bg-gray-700">
           <div className="h-full bg-gradient-to-r from-theme-pink-DEFAULT to-theme-purple-light w-1/2 animate-pulse"></div>
@@ -45,7 +66,7 @@ const BookPopup = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            ELEVATE HIGHER: Unlock Your Potential
+            WAIT! Don't Leave Without Your 50% OFF
           </motion.h2>
           
           <motion.p 
@@ -54,7 +75,7 @@ const BookPopup = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            Grab a copy of Elevate Higher! This book is designed to help you expand your mindset and achieve greater success. It's the perfect complement to your journey. Get it now, and if you're not completely satisfied, I'll refund the cost of shipping and handling. Elevate your future today!
+            We noticed you're leaving. Get Elevate Higher at 50% off - our special exit offer! This limited-time deal gives you all the transformative strategies at half the regular price. Don't miss this exclusive opportunity!
           </motion.p>
           
           {/* Book Images */}
@@ -81,7 +102,7 @@ const BookPopup = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            RUSH ME A FREE COPY
+            GRAB YOUR 50% DISCOUNT
           </motion.button>
         </div>
       </DialogContent>

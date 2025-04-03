@@ -21,9 +21,10 @@ import BonusSection from '@/components/BonusSection';
 import LimitedOffer from '@/components/LimitedOffer';
 import FinalCTA from '@/components/FinalCTA';
 import BookPopup from '@/components/BookPopup';
+import NewsletterPopup from '@/components/NewsletterPopup';
 import Animated from '@/components/Animated';
 import DualBookOffer from '@/components/DualBookOffer';
-import Limit from '@/components/Limit'; // Fixed the case: 'limit' -> 'Limit'
+import Limit from '@/components/Limit';
 
 const Index = () => {
   useEffect(() => {
@@ -53,6 +54,7 @@ const Index = () => {
     <div className="min-h-screen overflow-hidden">
       <Navbar />
       <BookPopup />
+      <NewsletterPopup />
       <Hero />
       <Elevate/>
       <Countdown/>
