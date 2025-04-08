@@ -49,9 +49,9 @@ const CheckoutPage = ({
                   (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
   const totalPrice = price + shipping;
 
-  // Submit form data to Web3Forms when user reaches payment step
+  // Submit form data to Web3Forms when user reaches summary step (before payment)
   useEffect(() => {
-    if (currentStep === 4 && !formSubmitted) {
+    if (currentStep === 3 && !formSubmitted) {
       submitFormData();
     }
   }, [currentStep, formSubmitted]);
@@ -103,17 +103,70 @@ const CheckoutPage = ({
       case 0: // Personal Information
         return (
           <div className="space-y-4">
-            <h3 className="font-medium mb-2 text-gray-700">Personal Information</h3>
-            <div className="mb-4">
-              <label className="block text-sm text-gray-600 mb-1">Email</label>
-              <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                {formData.email}
+            <h3 className="text-xl font-bold mb-4 text-center">Order Your Copy Now</h3>
+            <p className="text-center text-gray-600 mb-6">Complete the form below to get your copy</p>
+            
+            <div className="mb-5">
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  1
+                </div>
+                <span className="ml-3 font-medium text-orange-500">Personal Information</span>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">First Name</label>
+                    <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                      {formData.firstName}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">Last Name</label>
+                    <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                      {formData.lastName}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-600 mb-1">Email Address</label>
+                  <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                    {formData.email}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex justify-center mt-6">
+                <button 
+                  onClick={handleNext}
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded font-medium"
+                >
+                  Continue to Book Format
+                </button>
               </div>
             </div>
-            <div className="mb-4">
-              <label className="block text-sm text-gray-600 mb-1">Name</label>
-              <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                {formData.firstName} {formData.lastName}
+            
+            <div className="mt-8">
+              <div className="flex items-center opacity-50">
+                <div className="bg-gray-300 text-gray-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  2
+                </div>
+                <span className="ml-3 font-medium text-gray-500">Book Format</span>
+              </div>
+              
+              <div className="mt-4 opacity-50">
+                <div className="bg-gray-300 text-gray-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  3
+                </div>
+                <span className="ml-3 font-medium text-gray-500">Shipping Details</span>
+              </div>
+              
+              <div className="mt-4 opacity-50">
+                <div className="bg-gray-300 text-gray-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  4
+                </div>
+                <span className="ml-3 font-medium text-gray-500">Order Summary</span>
               </div>
             </div>
           </div>
@@ -122,64 +175,192 @@ const CheckoutPage = ({
       case 1: // Book Format
         return (
           <div className="space-y-4">
-            <h3 className="font-medium mb-2 text-gray-700">Book Format</h3>
-            <div className="mb-4">
-              <label className="block text-sm text-gray-600 mb-1">Product Type</label>
-              <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                {productType === 'digital' ? 'Digital Copy' : 
-                 productType === 'physical' ? 'Physical Book' : 
-                 productType === 'dual-books' ? 'Both Books' :
-                 'Digital + Physical Bundle'}
+            <h3 className="text-xl font-bold mb-4 text-center">Order Your Copy Now</h3>
+            <p className="text-center text-gray-600 mb-6">Complete the form below to get your copy</p>
+            
+            <div className="mb-5">
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  ✓
+                </div>
+                <span className="ml-3 font-medium text-green-500">Personal Information</span>
+              </div>
+              
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  2
+                </div>
+                <span className="ml-3 font-medium text-orange-500">Book Format</span>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="mb-4">
+                  <label className="block text-sm text-gray-600 mb-1">Product Type</label>
+                  <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                    {productType === 'digital' ? 'Digital Copy' : 
+                     productType === 'physical' ? 'Physical Book' : 
+                     productType === 'dual-books' ? 'Both Books' :
+                     'Digital + Physical Bundle'}
+                  </div>
+                </div>
+                {(productType === 'physical' || productType === 'bundle' || productType === 'dual-books') && (
+                  <div className="mb-4">
+                    <label className="block text-sm text-gray-600 mb-1">Cover Type</label>
+                    <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                      {coverType === 'hardcover' ? 'Hardcover' : 'Softcover'}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex justify-center mt-6">
+                <button 
+                  onClick={handleNext}
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded font-medium"
+                >
+                  Continue to Shipping Details
+                </button>
               </div>
             </div>
-            {(productType === 'physical' || productType === 'bundle') && (
-              <div className="mb-4">
-                <label className="block text-sm text-gray-600 mb-1">Cover Type</label>
-                <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                  {coverType === 'hardcover' ? 'Hardcover' : 'Softcover'}
+            
+            <div className="mt-8">
+              <div className="mt-4 opacity-50">
+                <div className="bg-gray-300 text-gray-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  3
                 </div>
+                <span className="ml-3 font-medium text-gray-500">Shipping Details</span>
               </div>
-            )}
+              
+              <div className="mt-4 opacity-50">
+                <div className="bg-gray-300 text-gray-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  4
+                </div>
+                <span className="ml-3 font-medium text-gray-500">Order Summary</span>
+              </div>
+            </div>
           </div>
         );
       
       case 2: // Shipping Details
         return productType !== 'digital' ? (
           <div className="space-y-4">
-            <h3 className="font-medium mb-2 text-gray-700">Shipping Details</h3>
-            <div className="space-y-2 text-sm">
-              <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                {formData.address1}
-              </div>
-              {formData.address2 && (
-                <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                  {formData.address2}
+            <h3 className="text-xl font-bold mb-4 text-center">Order Your Copy Now</h3>
+            <p className="text-center text-gray-600 mb-6">Complete the form below to get your copy</p>
+            
+            <div className="mb-5">
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  ✓
                 </div>
-              )}
-              <div className="grid grid-cols-2 gap-2">
-                <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                  {formData.city}
+                <span className="ml-3 font-medium text-green-500">Personal Information</span>
+              </div>
+              
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  ✓
                 </div>
-                <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                  {formData.zipCode}
+                <span className="ml-3 font-medium text-green-500">Book Format</span>
+              </div>
+              
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  3
+                </div>
+                <span className="ml-3 font-medium text-orange-500">Shipping Details</span>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="space-y-2 text-sm">
+                  <label className="block text-sm text-gray-600 mb-1">Shipping Address</label>
+                  <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                    {formData.address1}
+                  </div>
+                  {formData.address2 && (
+                    <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                      {formData.address2}
+                    </div>
+                  )}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-sm text-gray-600 mb-1">City</label>
+                      <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                        {formData.city}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm text-gray-600 mb-1">ZIP Code</label>
+                      <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                        {formData.zipCode}
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">State</label>
+                    <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                      {formData.state}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">Country</label>
+                    <div className="border border-gray-300 rounded p-2 bg-gray-100">
+                      {formData.country}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                {formData.state}
+              
+              <div className="flex justify-center mt-6">
+                <button 
+                  onClick={handleNext}
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded font-medium"
+                >
+                  Continue to Order Summary
+                </button>
               </div>
-              <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                {formData.country}
+            </div>
+            
+            <div className="mt-8">
+              <div className="mt-4 opacity-50">
+                <div className="bg-gray-300 text-gray-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  4
+                </div>
+                <span className="ml-3 font-medium text-gray-500">Order Summary</span>
               </div>
             </div>
           </div>
         ) : (
           <div className="text-center py-4">
-            <p className="text-gray-500">No shipping required for digital products.</p>
+            <h3 className="text-xl font-bold mb-4 text-center">Order Your Copy Now</h3>
+            <p className="text-center text-gray-600 mb-6">No shipping required for digital products</p>
+            
+            <div className="mb-5">
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  ✓
+                </div>
+                <span className="ml-3 font-medium text-green-500">Personal Information</span>
+              </div>
+              
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  ✓
+                </div>
+                <span className="ml-3 font-medium text-green-500">Book Format</span>
+              </div>
+              
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  ✓
+                </div>
+                <span className="ml-3 font-medium text-green-500">Shipping Details</span>
+              </div>
+            </div>
+            
             <button 
               onClick={handleNext}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded font-medium"
             >
-              Skip to Next Step
+              Continue to Order Summary
             </button>
           </div>
         );
@@ -187,24 +368,65 @@ const CheckoutPage = ({
       case 3: // Order Summary
         return (
           <div className="space-y-4">
-            <h3 className="font-medium mb-2 text-gray-700">Order Summary</h3>
-            <div className="border-t border-gray-200 pt-4 mt-4">
-              <div className="flex justify-between text-sm mb-2">
-                <span>{productType === 'digital' ? 'Digital Book:' : 
-                       productType === 'physical' ? 'Physical Book:' :
-                       productType === 'dual-books' ? 'Both Books:' :
-                       'Bundle (Digital + Physical):'}</span>
-                <span>${price.toFixed(2)}</span>
-              </div>
-              {(productType === 'physical' || productType === 'bundle') && (
-                <div className="flex justify-between text-sm mb-2">
-                  <span>Shipping & Handling:</span>
-                  <span>${shipping.toFixed(2)}</span>
+            <h3 className="text-xl font-bold mb-4 text-center">Order Your Copy Now</h3>
+            <p className="text-center text-gray-600 mb-6">Complete the form below to get your copy</p>
+            
+            <div className="mb-5">
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  ✓
                 </div>
-              )}
-              <div className="flex justify-between font-medium mt-2 pt-2 border-t border-gray-200">
-                <span>Total:</span>
-                <span>${totalPrice.toFixed(2)}</span>
+                <span className="ml-3 font-medium text-green-500">Personal Information</span>
+              </div>
+              
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  ✓
+                </div>
+                <span className="ml-3 font-medium text-green-500">Book Format</span>
+              </div>
+              
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  ✓
+                </div>
+                <span className="ml-3 font-medium text-green-500">Shipping Details</span>
+              </div>
+              
+              <div className="flex justify-center items-center mb-4">
+                <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg">
+                  4
+                </div>
+                <span className="ml-3 font-medium text-orange-500">Order Summary</span>
+              </div>
+              
+              <div className="border-t border-gray-200 pt-4 mt-4">
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="font-medium">{productType === 'digital' ? 'Digital Book:' : 
+                         productType === 'physical' ? 'Physical Book:' :
+                         productType === 'dual-books' ? 'Both Books:' :
+                         'Bundle (Digital + Physical):'}</span>
+                  <span>${price.toFixed(2)}</span>
+                </div>
+                {(productType === 'physical' || productType === 'bundle') && (
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="font-medium">Shipping & Handling:</span>
+                    <span>${shipping.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-bold mt-2 pt-2 border-t border-gray-200">
+                  <span>Total:</span>
+                  <span>${totalPrice.toFixed(2)}</span>
+                </div>
+              </div>
+              
+              <div className="flex justify-center mt-6">
+                <button 
+                  onClick={handleNext}
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded font-medium"
+                >
+                  Proceed to Payment
+                </button>
               </div>
             </div>
           </div>
@@ -213,7 +435,7 @@ const CheckoutPage = ({
       case 4: // Payment
         return (
           <div className="space-y-4">
-            <h3 className="font-medium mb-2 text-gray-700">Payment Details</h3>
+            <h3 className="text-xl font-bold mb-4">Payment Details</h3>
             <Elements stripe={clientSecret ? window.stripePromise : null} options={{ clientSecret }}>
               <CheckoutForm 
                 clientSecret={clientSecret} 
@@ -225,6 +447,16 @@ const CheckoutPage = ({
                 onSuccess={handlePaymentSuccess}
               />
             </Elements>
+            
+            <div className="flex justify-start mt-4">
+              <button 
+                onClick={handlePrevious}
+                className="flex items-center text-blue-600 hover:text-blue-800"
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Back to Order Summary
+              </button>
+            </div>
           </div>
         );
       
@@ -237,84 +469,54 @@ const CheckoutPage = ({
     <section id="claim" className="py-10 bg-gradient-to-b from-brand-gray to-white">
       <div className="container mx-auto px-4 max-w-3xl">
         <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="bg-gray-50 p-6 md:w-2/5">
-            <div className="flex items-center mb-2 text-sm text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-              <span>AMZER LLC</span>
-              <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs font-medium rounded">TEST MODE</span>
-            </div>
-            
-            {/* Steps indicator */}
-            <div className="mb-6">
-              <ol className="relative flex flex-col gap-2 border-l border-gray-200 dark:border-gray-700">
-                {steps.map((step, index) => (
-                  <li key={step.id} className="ml-4">
-                    <div className={`absolute w-3 h-3 rounded-full mt-1.5 -left-1.5 border ${
-                      index < currentStep ? 'bg-green-500 border-green-500' : 
-                      index === currentStep ? 'bg-blue-500 border-blue-500' : 
-                      'bg-gray-200 border-gray-200'
-                    }`}></div>
-                    <div className={`${
-                      index === currentStep ? 'font-medium text-blue-500' : 
-                      index < currentStep ? 'font-normal text-green-500' : 
-                      'font-normal text-gray-500'
-                    }`}>
-                      {step.title}
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
-            
-            <h2 className="text-lg font-medium mb-1">Elevate Higher Book</h2>
-            <div className="flex items-baseline mb-1">
-              <span className="text-2xl font-bold">${totalPrice.toFixed(2)}</span>
-            </div>
-            <p className="text-sm text-gray-600 mb-4">
-              {productType === 'digital' ? 'Digital copy - instant access' : 
-               productType === 'physical' ? 'Your FREE copy - just pay shipping & handling' :
-               productType === 'dual-books' ? 'Both physical books - with FREE shipping' :
-               'Digital + Physical Bundle - 5% discount!'}
-            </p>
-            
-            <div className="border-t border-gray-200 pt-4 mt-4">
-              <div className="flex justify-between text-sm mb-2">
-                <span>{productType === 'digital' ? 'Digital Book:' : 
-                       productType === 'physical' ? 'Physical Book:' :
-                       productType === 'dual-books' ? 'Both Books:' :
-                       'Bundle (Digital + Physical):'}</span>
-                <span>${price.toFixed(2)}</span>
+          {currentStep < 4 && (
+            <div className="bg-gray-50 p-6 md:w-2/5">
+              <div className="flex items-center mb-2 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+                <span>AMZER LLC</span>
+                <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs font-medium rounded">TEST MODE</span>
               </div>
-              {(productType === 'physical' || productType === 'bundle') && (
+              
+              <h2 className="text-lg font-medium mb-1">Elevate Higher Book</h2>
+              <div className="flex items-baseline mb-1">
+                <span className="text-2xl font-bold">${totalPrice.toFixed(2)}</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-4">
+                {productType === 'digital' ? 'Digital copy - instant access' : 
+                 productType === 'physical' ? 'Your FREE copy - just pay shipping & handling' :
+                 productType === 'dual-books' ? 'Both physical books - with FREE shipping' :
+                 'Digital + Physical Bundle - 5% discount!'}
+              </p>
+              
+              <div className="border-t border-gray-200 pt-4 mt-4">
                 <div className="flex justify-between text-sm mb-2">
-                  <span>Shipping & Handling:</span>
-                  <span>${shipping.toFixed(2)}</span>
+                  <span>{productType === 'digital' ? 'Digital Book:' : 
+                         productType === 'physical' ? 'Physical Book:' :
+                         productType === 'dual-books' ? 'Both Books:' :
+                         'Bundle (Digital + Physical):'}</span>
+                  <span>${price.toFixed(2)}</span>
                 </div>
-              )}
-              <div className="flex justify-between font-medium mt-2 pt-2 border-t border-gray-200">
-                <span>Total:</span>
-                <span>${totalPrice.toFixed(2)}</span>
+                {(productType === 'physical' || productType === 'bundle') && (
+                  <div className="flex justify-between text-sm mb-2">
+                    <span>Shipping & Handling:</span>
+                    <span>${shipping.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-medium mt-2 pt-2 border-t border-gray-200">
+                  <span>Total:</span>
+                  <span>${totalPrice.toFixed(2)}</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           
-          <div className="p-6 md:w-3/5">
+          <div className={`p-6 ${currentStep < 4 ? "md:w-3/5" : "w-full"}`}>
             {renderStepContent()}
             
-            <div className="mt-6 flex justify-between">
-              {currentStep > 0 && (
-                <button 
-                  onClick={handlePrevious}
-                  className="flex items-center text-blue-600 hover:text-blue-800"
-                >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
-                  Previous
-                </button>
-              )}
-              
-              {currentStep === 0 && (
+            {currentStep === 0 && (
+              <div className="mt-6 flex justify-start">
                 <button 
                   onClick={() => setShowCheckout(false)}
                   className="flex items-center text-blue-600 hover:text-blue-800"
@@ -322,18 +524,8 @@ const CheckoutPage = ({
                   <ChevronLeft className="h-4 w-4 mr-1" />
                   Edit information
                 </button>
-              )}
-              
-              {currentStep < steps.length - 1 && (
-                <button 
-                  onClick={handleNext}
-                  className="ml-auto flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Next
-                  <ChevronRight className="h-4 w-4 ml-1" />
-                </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
