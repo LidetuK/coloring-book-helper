@@ -8,8 +8,13 @@ interface OrderSummaryProps {
 }
 
 const OrderSummary = ({ productType, coverType, step = 0 }: OrderSummaryProps) => {
+  // For digital products, step 3 is the order summary, step 4 for other products
+  const showOrder = (productType === 'digital' && step === 3) || 
+                   (productType !== 'digital' && step === 4) ||
+                   step === 0;
+                    
   return (
-    <div className={`bg-gradient-to-r from-theme-purple-dark to-theme-purple p-8 md:p-12 text-white ${step === 4 ? '' : 'hidden md:block'}`}>
+    <div className={`bg-gradient-to-r from-theme-purple-dark to-theme-purple p-8 md:p-12 text-white ${showOrder ? '' : 'hidden md:block'}`}>
       <div className="flex items-center justify-center mb-8">
         <img src="/2-removebg-preview (1).png" alt="Book" className="w-32 h-auto" />
       </div>
