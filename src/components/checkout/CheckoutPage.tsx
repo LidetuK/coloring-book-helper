@@ -1,12 +1,12 @@
-
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
+import { ProductType, CoverType } from './ProductTypeSelection';
 
 interface CheckoutPageProps {
   clientSecret: string;
   formData: any;
-  productType: 'digital' | 'physical' | 'bundle' | 'dual-books';
-  coverType: 'softcover' | 'hardcover';
+  productType: ProductType;
+  coverType: CoverType;
   setShowCheckout: (show: boolean) => void;
   handlePaymentSuccess: (data: any) => void;
 }

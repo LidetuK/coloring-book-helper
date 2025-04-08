@@ -1,10 +1,9 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { toast } from "sonner";
 import { loadStripe } from "@stripe/stripe-js";
 import { supabase } from "@/integrations/supabase/client";
 import OutOfStockDialog from "./OutOfStockDialog";
-import ProductTypeSelection from './checkout/ProductTypeSelection';
+import ProductTypeSelection, { ProductType, CoverType } from './checkout/ProductTypeSelection';
 import AddressForm from './checkout/AddressForm';
 import OrderSummary from './checkout/OrderSummary';
 import CheckoutPage from './checkout/CheckoutPage';
@@ -37,8 +36,8 @@ const CTASection = () => {
     zipCode: '',
     country: 'United States'
   });
-  const [productType, setProductType] = useState('digital'); // Default is 'digital'
-  const [coverType, setCoverType] = useState('softcover'); // 'softcover' or 'hardcover'
+  const [productType, setProductType] = useState<ProductType>('digital'); // Default is 'digital'
+  const [coverType, setCoverType] = useState<CoverType>('softcover'); // 'softcover' or 'hardcover'
   const [showCheckout, setShowCheckout] = useState(false);
   const [clientSecret, setClientSecret] = useState('');
   const [orderComplete, setOrderComplete] = useState(false);
@@ -148,7 +147,7 @@ const CTASection = () => {
     });
   };
 
-  const handleCoverTypeChange = (type: 'softcover' | 'hardcover') => {
+  const handleCoverTypeChange = (type: CoverType) => {
     if (type === 'hardcover') {
       setShowOutOfStockDialog(true);
     } else {

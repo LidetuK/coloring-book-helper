@@ -1,8 +1,8 @@
 
 import { useState } from 'react';
 
-type ProductType = 'digital' | 'physical' | 'bundle' | 'dual-books';
-type CoverType = 'softcover' | 'hardcover';
+export type ProductType = 'digital' | 'physical' | 'bundle' | 'dual-books';
+export type CoverType = 'softcover' | 'hardcover';
 
 interface ProductTypeSelectionProps {
   productType: ProductType;

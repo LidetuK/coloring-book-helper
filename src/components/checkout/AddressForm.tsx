@@ -1,5 +1,6 @@
 
 import { ChangeEvent } from 'react';
+import { ProductType } from './ProductTypeSelection';
 
 interface FormData {
   firstName: string;
@@ -17,7 +18,7 @@ interface AddressFormProps {
   formData: FormData;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   setFormData: (data: FormData) => void;
-  productType: 'digital' | 'physical' | 'bundle' | 'dual-books';
+  productType: ProductType;
 }
 
 const AddressForm = ({ formData, handleChange, setFormData, productType }: AddressFormProps) => {
@@ -66,7 +67,10 @@ const AddressForm = ({ formData, handleChange, setFormData, productType }: Addre
             <select
               name="country"
               value={formData.country}
-              onChange={(e) => setFormData(prev => ({ ...prev, country: e.target.value }))}
+              onChange={(e) => {
+                const updatedData = { ...formData, country: e.target.value };
+                setFormData(updatedData);
+              }}
               className="w-full px-4 py-2 border border-brand-black/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red/50"
               required
             >
