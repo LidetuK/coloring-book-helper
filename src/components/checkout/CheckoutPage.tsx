@@ -1,6 +1,8 @@
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { ProductType, CoverType } from './ProductTypeSelection';
+import { useState, useEffect } from 'react';
+import { ArrowRight, Check, User, Book, Truck, Receipt, CreditCard } from 'lucide-react';
 
 interface CheckoutPageProps {
   clientSecret: string;
@@ -11,6 +13,14 @@ interface CheckoutPageProps {
   handlePaymentSuccess: (data: any) => void;
 }
 
+const steps = [
+  { id: 1, name: 'Personal Information', icon: User },
+  { id: 2, name: 'Book Format', icon: Book },
+  { id: 3, name: 'Shipping Details', icon: Truck },
+  { id: 4, name: 'Order Summary', icon: Receipt },
+  { id: 5, name: 'Payment', icon: CreditCard },
+];
+
 const CheckoutPage = ({ 
   clientSecret, 
   formData, 
@@ -19,6 +29,10 @@ const CheckoutPage = ({
   setShowCheckout,
   handlePaymentSuccess 
 }: CheckoutPageProps) => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [stepFormData, setStepFormData] = useState(formData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   // Calculate prices
   let price = 0;
   if (productType === 'digital') {
@@ -34,126 +48,431 @@ const CheckoutPage = ({
   const shipping = (productType === 'digital' || productType === 'dual-books') ? 0 : 
                   (formData.country === 'United States' || formData.country === 'Canada') ? 14.97 : 14.99;
   const totalPrice = price + shipping;
-
-  return (
-    <section id="claim" className="py-10 bg-gradient-to-b from-brand-gray to-white">
-      <div className="container mx-auto px-4 max-w-3xl">
-        <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="bg-gray-50 p-6 md:w-2/5">
-            <div className="flex items-center mb-2 text-sm text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-              <span>AMZER LLC</span>
-              <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs font-medium rounded">TEST MODE</span>
-            </div>
-            
-            <h2 className="text-lg font-medium mb-1">Elevate Higher Book</h2>
-            <div className="flex items-baseline mb-1">
-              <span className="text-2xl font-bold">${totalPrice.toFixed(2)}</span>
-            </div>
-            <p className="text-sm text-gray-600 mb-4">
-              {productType === 'digital' ? 'Digital copy - instant access' : 
-               productType === 'physical' ? 'Your FREE copy - just pay shipping & handling' :
-               'Digital + Physical Bundle - 5% discount!'}
-            </p>
-            
-            <div className="border-t border-gray-200 pt-4 mt-4">
-              <div className="flex justify-between text-sm mb-2">
-                <span>{productType === 'digital' ? 'Digital Book:' : 
-                       productType === 'physical' ? 'Physical Book:' :
-                       'Bundle (Digital + Physical):'}</span>
-                <span>${price.toFixed(2)}</span>
+  
+  const needsShipping = productType === 'physical' || productType === 'bundle' || productType === 'dual-books';
+  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setStepFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  
+  const handleContinue = () => {
+    // If we're at the shipping step, submit the form to Web3Forms
+    if (currentStep === 3 && needsShipping) {
+      submitFormToWeb3Forms();
+    } else if (currentStep === 2 && !needsShipping) {
+      // Skip shipping step for digital only
+      submitFormToWeb3Forms();
+      setCurrentStep(4); // Jump to order summary
+    } else {
+      // Otherwise just go to next step
+      setCurrentStep(prev => prev + 1);
+    }
+  };
+  
+  const submitFormToWeb3Forms = async () => {
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData();
+      
+      // Add the form data to the FormData object
+      Object.entries(stepFormData).forEach(([key, value]) => {
+        formData.append(key, value as string);
+      });
+      
+      // Add product info
+      formData.append('productType', productType);
+      formData.append('coverType', coverType);
+      formData.append('totalPrice', totalPrice.toFixed(2));
+      
+      // Add the access key
+      formData.append('access_key', 'f39f7a05-fac0-4032-a2cc-e68fff78426c');
+      
+      // Submit the form
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log('Form submitted successfully', data);
+        // Continue to next step after submission
+        setCurrentStep(prev => prev + 1);
+      } else {
+        console.error('Form submission failed', data);
+        // Still continue to next step even if form submission fails
+        setCurrentStep(prev => prev + 1);
+      }
+    } catch (error) {
+      console.error('Error submitting form', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  const handleBack = () => {
+    if (currentStep === 4 && !needsShipping) {
+      setCurrentStep(2); // Go back to book format if shipping was skipped
+    } else {
+      setCurrentStep(prev => prev - 1);
+    }
+  };
+  
+  // Render appropriate step content based on currentStep
+  const renderStepContent = () => {
+    switch(currentStep) {
+      case 1:
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Personal Information</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={stepFormData.firstName}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                  required
+                />
               </div>
-              {(productType === 'physical' || productType === 'bundle') && (
-                <div className="flex justify-between text-sm mb-2">
-                  <span>Shipping & Handling:</span>
-                  <span>${shipping.toFixed(2)}</span>
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={stepFormData.lastName}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Email Address</label>
+              <input
+                type="email"
+                name="email"
+                value={stepFormData.email}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Book Format</h3>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  id="digital"
+                  name="bookFormat"
+                  value="digital"
+                  checked={productType === 'digital'}
+                  onChange={() => {}}
+                  className="h-4 w-4"
+                  disabled
+                />
+                <label htmlFor="digital" className="flex flex-col">
+                  <span className="font-medium">Digital Copy - <span className="line-through text-gray-500">$14.99</span> $9.99</span>
+                  <span className="text-sm text-gray-600">Instant download access</span>
+                </label>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  id="physical"
+                  name="bookFormat"
+                  value="physical"
+                  checked={productType === 'physical'}
+                  onChange={() => {}}
+                  className="h-4 w-4"
+                  disabled
+                />
+                <label htmlFor="physical" className="flex flex-col">
+                  <span className="font-medium">Physical Book - <span className="line-through text-gray-500">$39.99</span> $25.99</span>
+                  <span className="text-sm text-gray-600">Plus shipping & handling</span>
+                </label>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  id="bundle"
+                  name="bookFormat"
+                  value="bundle"
+                  checked={productType === 'bundle'}
+                  onChange={() => {}}
+                  className="h-4 w-4"
+                  disabled
+                />
+                <label htmlFor="bundle" className="flex flex-col">
+                  <span className="font-medium">Bundle (Digital + Physical) - <span className="text-green-500 font-bold">Save 5%</span></span>
+                  <span className="text-sm text-gray-600">Get both formats at a special discount!</span>
+                </label>
+              </div>
+              
+              <div className="flex items-center space-x-3 relative">
+                <input
+                  type="radio"
+                  id="dual-books"
+                  name="bookFormat"
+                  value="dual-books"
+                  checked={productType === 'dual-books'}
+                  onChange={() => {}}
+                  className="h-4 w-4"
+                  disabled
+                />
+                <label htmlFor="dual-books" className="flex flex-col">
+                  <div className="flex items-center">
+                    <span className="font-medium">Both Books Bundle (Elevate Higher + Swaggerism) - 
+                      <span className="line-through text-gray-500">$59.98</span> <span className="text-green-500 font-bold">$53.98</span>
+                    </span>
+                    <span className="ml-2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">10% OFF</span>
+                  </div>
+                  <span className="text-sm text-gray-600">Get both physical books with FREE shipping!</span>
+                </label>
+                <div className="absolute -right-2 -top-2">
+                  <span className="bg-yellow-400 text-xs font-bold text-black px-2 py-0.5 rounded-full transform rotate-3 shadow">BEST VALUE</span>
                 </div>
-              )}
-              <div className="flex justify-between font-medium mt-2 pt-2 border-t border-gray-200">
-                <span>Total:</span>
-                <span>${totalPrice.toFixed(2)}</span>
+              </div>
+              
+              <div className="border p-3 rounded-md bg-gray-50 mt-4">
+                <h4 className="font-medium text-sm mb-2">Cover Type:</h4>
+                <div className="flex space-x-4">
+                  <div 
+                    className={`border p-2 rounded-md ${coverType === 'softcover' ? 'border-theme-purple-dark bg-purple-50' : ''}`}
+                  >
+                    <span className="text-sm">Softcover</span>
+                  </div>
+                  <div 
+                    className={`border p-2 rounded-md ${coverType === 'hardcover' ? 'border-theme-purple-dark bg-purple-50' : ''}`}
+                  >
+                    <span className="text-sm">Hardcover (+$10.00)</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          
-          <div className="p-6 md:w-3/5">
-            <div className="mb-6 flex justify-center">
-              <button className="bg-green-500 text-white font-medium py-2 px-4 rounded w-full">
-                Pay with <span className="font-bold">Link</span>
-              </button>
+        );
+      case 3:
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Shipping Details</h3>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Country</label>
+              <select
+                name="country"
+                value={stepFormData.country}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                required
+              >
+                <option value="United States">United States</option>
+                <option value="Canada">Canada</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="France">France</option>
+                <option value="Germany">Germany</option>
+                <option value="Italy">Italy</option>
+                <option value="Spain">Spain</option>
+              </select>
             </div>
-            
-            <div className="flex items-center justify-center text-sm text-gray-500 mb-6">
-              <div className="border-t border-gray-200 flex-grow mr-3"></div>
-              <span>Or pay with card</span>
-              <div className="border-t border-gray-200 flex-grow ml-3"></div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Address Line 1</label>
+              <input
+                type="text"
+                name="address1"
+                value={stepFormData.address1}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                required
+              />
             </div>
-            
-            <div className="mb-6">
-              <h3 className="font-medium mb-2 text-gray-700">Shipping information</h3>
-              <div className="mb-4">
-                <label className="block text-sm text-gray-600 mb-1">Email</label>
-                <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                  {formData.email}
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Address Line 2 (optional)</label>
+              <input
+                type="text"
+                name="address2"
+                value={stepFormData.address2}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">City</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={stepFormData.city}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">ZIP Code</label>
+                <input
+                  type="text"
+                  name="zipCode"
+                  value={stepFormData.zipCode}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">State/Province</label>
+              <input
+                type="text"
+                name="state"
+                value={stepFormData.state}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Order Summary</h3>
+            <div className="bg-gray-50 p-4 rounded-md">
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="font-medium">Product:</span>
+                  <span>
+                    {productType === 'digital' 
+                      ? 'Digital Copy' 
+                      : productType === 'physical'
+                      ? 'Physical Book'
+                      : productType === 'bundle'
+                      ? 'Bundle (Digital + Physical)'
+                      : 'Both Books Bundle'}
+                  </span>
+                </div>
+                {productType !== 'digital' && (
+                  <div className="flex justify-between">
+                    <span>Cover Type:</span>
+                    <span>{coverType === 'hardcover' ? 'Hardcover' : 'Softcover'}</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span>Base Price:</span>
+                  <span>${price.toFixed(2)}</span>
+                </div>
+                {shipping > 0 && (
+                  <div className="flex justify-between">
+                    <span>Shipping & Handling:</span>
+                    <span>${shipping.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between pt-2 border-t border-gray-200 font-medium">
+                  <span>Total:</span>
+                  <span>${totalPrice.toFixed(2)}</span>
                 </div>
               </div>
-              
-              {productType !== 'digital' && (
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Shipping address</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                      {formData.firstName} {formData.lastName}
-                    </div>
-                    <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                      {formData.country}
-                    </div>
-                    <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                      {formData.address1}
-                    </div>
-                    {formData.address2 && (
-                      <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                        {formData.address2}
-                      </div>
-                    )}
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                        {formData.city}
-                      </div>
-                      <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                        {formData.zipCode}
-                      </div>
-                    </div>
-                    <div className="border border-gray-300 rounded p-2 bg-gray-100">
-                      {formData.state}
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              <button 
-                onClick={() => setShowCheckout(false)}
-                className="mt-4 text-sm text-blue-600 hover:text-blue-800"
-              >
-                Edit information
-              </button>
             </div>
-            
-            <h3 className="font-medium mb-2 text-gray-700">Payment details</h3>
-            
+            <div className="bg-gray-50 p-4 rounded-md">
+              <h4 className="font-medium mb-2">Contact Information</h4>
+              <p>{stepFormData.firstName} {stepFormData.lastName}</p>
+              <p>{stepFormData.email}</p>
+            </div>
+            {needsShipping && (
+              <div className="bg-gray-50 p-4 rounded-md">
+                <h4 className="font-medium mb-2">Shipping Address</h4>
+                <p>{stepFormData.address1}</p>
+                {stepFormData.address2 && <p>{stepFormData.address2}</p>}
+                <p>{stepFormData.city}, {stepFormData.state} {stepFormData.zipCode}</p>
+                <p>{stepFormData.country}</p>
+              </div>
+            )}
+          </div>
+        );
+      case 5:
+        return (
+          <div>
+            <h3 className="text-lg font-medium mb-4">Payment Details</h3>
             <Elements stripe={clientSecret ? window.stripePromise : null} options={{ clientSecret }}>
               <CheckoutForm 
                 clientSecret={clientSecret} 
                 orderDetails={{
-                  ...formData,
+                  ...stepFormData,
                   productType,
                   totalPrice: `$${totalPrice.toFixed(2)}`
                 }}
                 onSuccess={handlePaymentSuccess}
               />
             </Elements>
+          </div>
+        );
+      default:
+        return <div>Unknown step</div>;
+    }
+  };
+  
+  return (
+    <section id="claim" className="py-10 bg-gradient-to-b from-brand-gray to-white">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="p-6">
+            <h2 className="text-2xl font-bold mb-4">Order Your Copy Now</h2>
+            <p className="text-gray-600 mb-6">Complete the form below to get your copy</p>
+            
+            {/* Stepper */}
+            <div className="flex justify-between mb-8">
+              {steps.map((step) => (
+                <div 
+                  key={step.id} 
+                  className={`flex flex-col items-center ${step.id === currentStep ? 'text-theme-purple-dark' : step.id < currentStep ? 'text-green-500' : 'text-gray-400'}`}
+                >
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full mb-2 ${
+                    step.id === currentStep ? 'bg-theme-purple-dark text-white' : 
+                    step.id < currentStep ? 'bg-green-500 text-white' : 
+                    'bg-gray-200 text-gray-500'
+                  }`}>
+                    {step.id < currentStep ? <Check className="h-4 w-4" /> : step.id}
+                  </div>
+                  <span className={`text-xs hidden md:block ${step.id === currentStep ? 'font-medium' : ''}`}>{step.name}</span>
+                </div>
+              ))}
+            </div>
+            
+            {/* Step Content */}
+            <div className="mb-6">
+              {renderStepContent()}
+            </div>
+            
+            {/* Navigation Buttons */}
+            <div className="flex justify-between mt-8">
+              {currentStep > 1 && currentStep !== 5 && (
+                <button 
+                  onClick={handleBack}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50"
+                >
+                  Back
+                </button>
+              )}
+              {currentStep < 5 && (
+                <button 
+                  onClick={handleContinue}
+                  className={`ml-auto px-4 py-2 bg-theme-purple-dark text-white rounded-md hover:bg-theme-purple ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Processing...' : currentStep === 4 ? 'Proceed to Payment' : 'Continue'}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

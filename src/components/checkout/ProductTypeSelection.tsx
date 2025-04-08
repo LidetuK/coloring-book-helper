@@ -10,6 +10,7 @@ interface ProductTypeSelectionProps {
   coverType: CoverType;
   handleCoverTypeChange: (type: CoverType) => void;
   timerExpired: boolean;
+  step?: number;
 }
 
 const ProductTypeSelection = ({
@@ -17,7 +18,8 @@ const ProductTypeSelection = ({
   setProductType,
   coverType,
   handleCoverTypeChange,
-  timerExpired
+  timerExpired,
+  step = 0
 }: ProductTypeSelectionProps) => {
   
   const calculatePrices = () => {
@@ -42,7 +44,109 @@ const ProductTypeSelection = ({
   };
 
   const prices = calculatePrices();
+  
+  // If we're in step 2 of the checkout process, render a more compact version
+  if (step === 2) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center">
+          <input
+            type="radio"
+            id="digital-step"
+            name="productType"
+            value="digital"
+            checked={productType === 'digital'}
+            onChange={() => setProductType('digital')}
+            className="mr-3 h-5 w-5"
+          />
+          <label htmlFor="digital-step" className="flex flex-col">
+            <span className="font-medium">Digital Copy - 
+              <span className="line-through text-gray-500"> ${prices.original.digital.toFixed(2)}</span> ${prices.discounted.digital.toFixed(2)}
+            </span>
+            <span className="text-sm text-gray-600">Instant download access</span>
+          </label>
+        </div>
+        
+        <div className="flex items-center">
+          <input
+            type="radio"
+            id="physical-step"
+            name="productType"
+            value="physical"
+            checked={productType === 'physical'}
+            onChange={() => setProductType('physical')}
+            className="mr-3 h-5 w-5"
+          />
+          <label htmlFor="physical-step" className="flex flex-col">
+            <span className="font-medium">Physical Book - 
+              <span className="line-through text-gray-500"> ${prices.original.physical.toFixed(2)}</span> ${prices.discounted.physical.toFixed(2)}
+            </span>
+            <span className="text-sm text-gray-600">Plus shipping & handling</span>
+          </label>
+        </div>
+        
+        <div className="flex items-center">
+          <input
+            type="radio"
+            id="bundle-step"
+            name="productType"
+            value="bundle"
+            checked={productType === 'bundle'}
+            onChange={() => setProductType('bundle')}
+            className="mr-3 h-5 w-5"
+          />
+          <label htmlFor="bundle-step" className="flex flex-col">
+            <span className="font-medium">Bundle (Digital + Physical) - <span className="text-green-500 font-bold">Save 5%</span></span>
+            <span className="text-sm text-gray-600">Get both formats at a special discount!</span>
+          </label>
+        </div>
+        
+        <div className="flex items-center relative">
+          <input
+            type="radio"
+            id="dual-books-step"
+            name="productType"
+            value="dual-books"
+            checked={productType === 'dual-books'}
+            onChange={() => setProductType('dual-books')}
+            className="mr-3 h-5 w-5"
+          />
+          <label htmlFor="dual-books-step" className="flex flex-col">
+            <div className="flex items-center">
+              <span className="font-medium">Both Books Bundle (Elevate Higher + Swaggerism) - 
+                <span className="line-through text-gray-500"> ${prices.original.dualBooks.toFixed(2)}</span> ${prices.discounted.dualBooks.toFixed(2)}
+              </span>
+              <span className="ml-2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">10% OFF</span>
+            </div>
+            <span className="text-sm text-gray-600">Get both physical books with FREE shipping!</span>
+          </label>
+          <div className="absolute -right-2 -top-2">
+            <span className="bg-yellow-400 text-xs font-bold text-black px-2 py-0.5 rounded-full transform rotate-3 shadow">BEST VALUE</span>
+          </div>
+        </div>
 
+        <div className="border p-3 rounded-md bg-gray-50">
+          <h4 className="font-medium text-sm mb-2">Cover Type:</h4>
+          <div className="flex space-x-4">
+            <div 
+              className={`border p-2 rounded-md cursor-pointer ${coverType === 'softcover' ? 'border-theme-purple-dark bg-purple-50' : ''}`}
+              onClick={() => handleCoverTypeChange('softcover')}
+            >
+              <span className="text-sm">Softcover</span>
+            </div>
+            <div 
+              className={`border p-2 rounded-md cursor-pointer ${coverType === 'hardcover' ? 'border-theme-purple-dark bg-purple-50' : ''}`}
+              onClick={() => handleCoverTypeChange('hardcover')}
+            >
+              <span className="text-sm">Hardcover (+$10.00)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default rendering for the original form
   return (
     <>
       <h3 className="text-2xl font-bold mb-4">
