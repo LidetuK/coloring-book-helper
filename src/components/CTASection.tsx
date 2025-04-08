@@ -44,7 +44,6 @@ const CTASection = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [timerExpired, setTimerExpired] = useState(false);
   const [showOutOfStockDialog, setShowOutOfStockDialog] = useState(false);
-  const [formSubmittedToWeb3Forms, setFormSubmittedToWeb3Forms] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   
   useEffect(() => {
@@ -74,47 +73,11 @@ const CTASection = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const submitFormToWeb3Forms = async () => {
-    if (formSubmittedToWeb3Forms) return;
-    
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('access_key', 'f39f7a05-fac0-4032-a2cc-e68fff78426c');
-      formDataToSend.append('firstName', formData.firstName);
-      formDataToSend.append('lastName', formData.lastName);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('productType', productType);
-      formDataToSend.append('coverType', coverType);
-      
-      if (productType !== 'digital') {
-        formDataToSend.append('address1', formData.address1);
-        formDataToSend.append('address2', formData.address2 || '');
-        formDataToSend.append('city', formData.city);
-        formDataToSend.append('state', formData.state);
-        formDataToSend.append('zipCode', formData.zipCode);
-        formDataToSend.append('country', formData.country);
-      }
-      
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formDataToSend
-      });
-      
-      const data = await response.json();
-      console.log('Web3Forms submission response:', data);
-      setFormSubmittedToWeb3Forms(true);
-    } catch (error) {
-      console.error('Error submitting form to Web3Forms:', error);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
-      await submitFormToWeb3Forms();
-      
       let amount = 0;
       
       if (productType === 'digital') {
@@ -182,7 +145,6 @@ const CTASection = () => {
       zipCode: '',
       country: 'United States'
     });
-    setFormSubmittedToWeb3Forms(false);
   };
 
   const handleCoverTypeChange = (type: CoverType) => {
@@ -193,6 +155,7 @@ const CTASection = () => {
     }
   };
 
+  // Handle completed order view
   if (orderComplete) {
     return (
       <OrderComplete 
@@ -202,6 +165,7 @@ const CTASection = () => {
     );
   }
 
+  // Handle checkout view
   if (showCheckout && clientSecret) {
     return (
       <CheckoutPage
@@ -215,6 +179,7 @@ const CTASection = () => {
     );
   }
 
+  // Main order form view
   return (
     <section id="claim" className="py-20 bg-gradient-to-b from-brand-gray to-white">
       <div className="container mx-auto px-4">
