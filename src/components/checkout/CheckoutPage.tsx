@@ -1,4 +1,3 @@
-
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { ProductType, CoverType } from './ProductTypeSelection';
@@ -59,8 +58,8 @@ const CheckoutPage = ({
       return [
         { id: 1, name: 'Personal Information', icon: User },
         { id: 2, name: 'Book Format', icon: Book },
-        { id: 3, name: 'Order Summary', icon: Receipt }, // Now at position 3 instead of 4
-        { id: 4, name: 'Payment', icon: CreditCard }, // Now at position 4 instead of 5
+        { id: 3, name: 'Order Summary', icon: Receipt },
+        { id: 4, name: 'Payment', icon: CreditCard },
       ];
     }
     return steps;
@@ -360,7 +359,6 @@ const CheckoutPage = ({
             </div>
           </div>
         ) : (
-          // For digital products, step 3 is Order Summary
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Order Summary</h3>
             <div className="bg-gray-50 p-4 rounded-md">
@@ -436,7 +434,6 @@ const CheckoutPage = ({
             </div>
           </div>
         ) : (
-          // For digital products, step 4 is Payment
           <div>
             <h3 className="text-lg font-medium mb-4">Payment Details</h3>
             <Elements stripe={clientSecret ? window.stripePromise : null} options={{ clientSecret }}>
@@ -487,9 +484,6 @@ const CheckoutPage = ({
              (currentStep < 4 && productType === 'digital') ? (
               <div className="flex justify-between mb-8">
                 {visibleSteps.map((step, index) => {
-                  // For digital products, make sure step 3 is Order Summary and 4 is Payment
-                  const displayNumber = index + 1;
-                    
                   // Determine if step is active, completed, or upcoming
                   const isActive = step.id === currentStep;
                   const isCompleted = step.id < currentStep;
@@ -509,9 +503,9 @@ const CheckoutPage = ({
                         isCompleted ? 'bg-green-500 text-white' : 
                         'bg-gray-200 text-gray-500'
                       }`}>
-                        {isCompleted ? <Check className="h-4 w-4" /> : displayNumber}
+                        {isCompleted ? <Check className="h-4 w-4" /> : <step.icon className="h-4 w-4" />}
                       </div>
-                      <span className={`text-xs hidden md:block ${isActive ? 'font-medium' : ''}`}>
+                      <span className={`text-xs ${isActive ? 'font-medium' : ''}`}>
                         {step.name}
                       </span>
                     </div>

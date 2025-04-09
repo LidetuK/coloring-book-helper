@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { toast } from "sonner";
 import { loadStripe } from "@stripe/stripe-js";
@@ -75,7 +74,6 @@ const CTASection = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   
-  // Function to validate current step data
   const validateStepData = (step: number): boolean => {
     switch (step) {
       case 1: // Personal Information
@@ -83,7 +81,6 @@ const CTASection = () => {
           toast.error("Please fill in all required fields");
           return false;
         }
-        // Basic email validation
         if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
           toast.error("Please enter a valid email address");
           return false;
@@ -91,12 +88,10 @@ const CTASection = () => {
         return true;
       
       case 2: // Book Format
-        // No validation needed here, product type is already selected
         return true;
         
       case 3: // Shipping Details
         if (productType === 'digital') {
-          // Skip validation for digital products
           return true;
         }
         if (!formData.address1 || !formData.city || !formData.state || !formData.zipCode) {
@@ -110,11 +105,9 @@ const CTASection = () => {
     }
   };
   
-  // Move to next step
   const handleNextStep = () => {
     if (validateStepData(currentStep)) {
       if (currentStep === 3) {
-        // Submit form to Web3Forms if shipping step is completed
         submitFormToWeb3Forms();
       } else {
         setCurrentStep(prev => prev + 1);
@@ -122,25 +115,20 @@ const CTASection = () => {
     }
   };
   
-  // Submit form data to Web3Forms
   const submitFormToWeb3Forms = async () => {
     setIsSubmitting(true);
     try {
       const apiFormData = new FormData();
       
-      // Add form data
       Object.entries(formData).forEach(([key, value]) => {
         apiFormData.append(key, value as string);
       });
       
-      // Add product info
       apiFormData.append('productType', productType);
       apiFormData.append('coverType', coverType);
       
-      // Required Web3Forms field
       apiFormData.append('access_key', 'f39f7a05-fac0-4032-a2cc-e68fff78426c');
       
-      // Submit the form
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         body: apiFormData
@@ -151,16 +139,16 @@ const CTASection = () => {
       if (data.success) {
         console.log('Form successfully submitted to Web3Forms');
         toast.success("Your information has been saved");
-        setCurrentStep(prev => prev + 1); // Move to next step
+        setCurrentStep(prev => prev + 1);
       } else {
         console.error('Form submission failed', data);
         toast.error("There was an issue saving your information. Continuing anyway.");
-        setCurrentStep(prev => prev + 1); // Move to next step anyway
+        setCurrentStep(prev => prev + 1);
       }
     } catch (error) {
       console.error('Error submitting form to Web3Forms', error);
       toast.error("There was an issue saving your information. Continuing anyway.");
-      setCurrentStep(prev => prev + 1); // Move to next step anyway
+      setCurrentStep(prev => prev + 1);
     } finally {
       setIsSubmitting(false);
     }
@@ -178,7 +166,7 @@ const CTASection = () => {
       } else if (productType === 'physical') {
         amount = coverType === 'hardcover' ? 34.99 : 29.99;
       } else if (productType === 'bundle') {
-        const physicalPrice = coverType === 'hardcover' ? 34.99 : 29.99;
+        const physicalPrice = coverType === 'hardcover' ? 34.99 : 25.99;
         amount = (9.99 + physicalPrice) * 0.95;
       } else if (productType === 'dual-books') {
         amount = coverType === 'hardcover' ? 62.98 : 53.98;
@@ -249,7 +237,6 @@ const CTASection = () => {
     }
   };
 
-  // Handle completed order view
   if (orderComplete) {
     return (
       <OrderComplete 
@@ -259,7 +246,6 @@ const CTASection = () => {
     );
   }
 
-  // Handle checkout view
   if (showCheckout && clientSecret) {
     return (
       <CheckoutPage
@@ -273,7 +259,6 @@ const CTASection = () => {
     );
   }
 
-  // Prepare step indicator
   const steps = [
     { id: 1, name: 'Personal Information' },
     { id: 2, name: 'Book Format' },
@@ -281,12 +266,10 @@ const CTASection = () => {
     { id: 4, name: 'Order Summary' },
   ];
 
-  // Only show shipping step if needed
   const filteredSteps = productType === 'digital' 
     ? steps.filter(step => step.id !== 3) 
     : steps;
 
-  // Main order form view
   return (
     <section id="claim" className="py-20 bg-gradient-to-b from-brand-gray to-white">
       <div className="container mx-auto px-4">
@@ -307,7 +290,7 @@ const CTASection = () => {
                     <h3 className="text-2xl font-bold mb-4">Order Your Copy Now</h3>
                     <p className="text-gray-600 mb-6">Complete the form below to get your copy</p>
                     
-                    <div className="flex mb-6">
+                    <div className="flex mb-6 justify-between">
                       {filteredSteps.map((step, index) => (
                         <div key={step.id} className="flex-1">
                           <div className="flex flex-col items-center">
@@ -321,14 +304,11 @@ const CTASection = () => {
                                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                 </svg>
                               ) : (
-                                step.id
+                                <span className="text-xs">{step.name[0]}</span>
                               )}
                             </div>
-                            <span className="text-xs hidden md:block">{step.name}</span>
+                            <span className="text-xs font-medium">{step.name}</span>
                           </div>
-                          {index < filteredSteps.length - 1 && (
-                            <div className="hidden md:block h-1 bg-gray-200 w-full mt-4"></div>
-                          )}
                         </div>
                       ))}
                     </div>
@@ -371,7 +351,7 @@ const CTASection = () => {
                     <h3 className="text-2xl font-bold mb-4">Order Your Copy Now</h3>
                     <p className="text-gray-600 mb-6">Complete the form below to get your copy</p>
                     
-                    <div className="flex mb-6">
+                    <div className="flex mb-6 justify-between">
                       {filteredSteps.map((step, index) => (
                         <div key={step.id} className="flex-1">
                           <div className="flex flex-col items-center">
@@ -385,14 +365,11 @@ const CTASection = () => {
                                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                 </svg>
                               ) : (
-                                step.id
+                                <span className="text-xs">{step.name[0]}</span>
                               )}
                             </div>
-                            <span className="text-xs hidden md:block">{step.name}</span>
+                            <span className="text-xs font-medium">{step.name}</span>
                           </div>
-                          {index < filteredSteps.length - 1 && (
-                            <div className="hidden md:block h-1 bg-gray-200 w-full mt-4"></div>
-                          )}
                         </div>
                       ))}
                     </div>
@@ -419,7 +396,6 @@ const CTASection = () => {
                         className="px-4 py-2 bg-theme-purple-dark text-white rounded-md hover:bg-theme-purple"
                         onClick={() => {
                           if (productType === 'digital') {
-                            // Skip shipping step for digital products
                             submitFormToWeb3Forms();
                             setCurrentStep(4);
                           } else {
@@ -438,7 +414,7 @@ const CTASection = () => {
                     <h3 className="text-2xl font-bold mb-4">Order Your Copy Now</h3>
                     <p className="text-gray-600 mb-6">Complete the form below to get your copy</p>
                     
-                    <div className="flex mb-6">
+                    <div className="flex mb-6 justify-between">
                       {filteredSteps.map((step, index) => (
                         <div key={step.id} className="flex-1">
                           <div className="flex flex-col items-center">
@@ -452,14 +428,11 @@ const CTASection = () => {
                                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                 </svg>
                               ) : (
-                                step.id
+                                <span className="text-xs">{step.name[0]}</span>
                               )}
                             </div>
-                            <span className="text-xs hidden md:block">{step.name}</span>
+                            <span className="text-xs font-medium">{step.name}</span>
                           </div>
-                          {index < filteredSteps.length - 1 && (
-                            <div className="hidden md:block h-1 bg-gray-200 w-full mt-4"></div>
-                          )}
                         </div>
                       ))}
                     </div>
@@ -499,7 +472,7 @@ const CTASection = () => {
                     <h3 className="text-2xl font-bold mb-4">Order Your Copy Now</h3>
                     <p className="text-gray-600 mb-6">Complete the form below to get your copy</p>
                     
-                    <div className="flex mb-6">
+                    <div className="flex mb-6 justify-between">
                       {filteredSteps.map((step, index) => (
                         <div key={step.id} className="flex-1">
                           <div className="flex flex-col items-center">
@@ -513,14 +486,11 @@ const CTASection = () => {
                                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                 </svg>
                               ) : (
-                                step.id
+                                <span className="text-xs">{step.name[0]}</span>
                               )}
                             </div>
-                            <span className="text-xs hidden md:block">{step.name}</span>
+                            <span className="text-xs font-medium">{step.name}</span>
                           </div>
-                          {index < filteredSteps.length - 1 && (
-                            <div className="hidden md:block h-1 bg-gray-200 w-full mt-4"></div>
-                          )}
                         </div>
                       ))}
                     </div>
