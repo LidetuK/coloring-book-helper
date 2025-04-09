@@ -1,8 +1,9 @@
+
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { ProductType, CoverType } from './ProductTypeSelection';
 import { useState, useEffect } from 'react';
-import { ArrowRight, Check, User, Book, Truck, Receipt, CreditCard } from 'lucide-react';
+import { User, Book, Truck, Receipt, CreditCard } from 'lucide-react';
 import OrderSummary from "./OrderSummary";
 
 interface CheckoutPageProps {
@@ -14,13 +15,13 @@ interface CheckoutPageProps {
   handlePaymentSuccess: (data: any) => void;
 }
 
-const steps = [
-  { id: 1, name: 'Personal Information', icon: User },
-  { id: 2, name: 'Book Format', icon: Book },
-  { id: 3, name: 'Shipping Details', icon: Truck },
-  { id: 4, name: 'Order Summary', icon: Receipt },
-  { id: 5, name: 'Payment', icon: CreditCard },
-];
+const icons = {
+  personal: User,
+  format: Book,
+  shipping: Truck,
+  summary: Receipt,
+  payment: CreditCard
+};
 
 const CheckoutPage = ({ 
   clientSecret, 
@@ -33,6 +34,7 @@ const CheckoutPage = ({
   const [currentStep, setCurrentStep] = useState(1);
   const [stepFormData, setStepFormData] = useState(formData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
   
   // Calculate prices
   let price = 0;
@@ -56,13 +58,19 @@ const CheckoutPage = ({
   const getVisibleSteps = () => {
     if (productType === 'digital') {
       return [
-        { id: 1, name: 'Personal Information', icon: User },
-        { id: 2, name: 'Book Format', icon: Book },
-        { id: 3, name: 'Order Summary', icon: Receipt },
-        { id: 4, name: 'Payment', icon: CreditCard },
+        { id: 1, name: 'Personal Information', icon: icons.personal },
+        { id: 2, name: 'Book Format', icon: icons.format },
+        { id: 3, name: 'Order Summary', icon: icons.summary },
+        { id: 4, name: 'Payment', icon: icons.payment },
       ];
     }
-    return steps;
+    return [
+      { id: 1, name: 'Personal Information', icon: icons.personal },
+      { id: 2, name: 'Book Format', icon: icons.format },
+      { id: 3, name: 'Shipping Details', icon: icons.shipping },
+      { id: 4, name: 'Order Summary', icon: icons.summary },
+      { id: 5, name: 'Payment', icon: icons.payment },
+    ];
   };
   
   const visibleSteps = getVisibleSteps();
@@ -129,6 +137,11 @@ const CheckoutPage = ({
   };
   
   const handleBack = () => {
+    if (showPayment) {
+      setShowPayment(false);
+      return;
+    }
+    
     if (currentStep === 3 && !needsShipping) {
       setCurrentStep(2); // Go back to book format if shipping was skipped
     } else {
@@ -136,8 +149,31 @@ const CheckoutPage = ({
     }
   };
   
+  const handleProceedToPayment = () => {
+    setShowPayment(true);
+  };
+  
   // Render appropriate step content based on currentStep
   const renderStepContent = () => {
+    if (showPayment) {
+      return (
+        <div>
+          <h3 className="text-lg font-medium mb-4">Payment Details</h3>
+          <Elements stripe={clientSecret ? window.stripePromise : null} options={{ clientSecret }}>
+            <CheckoutForm 
+              clientSecret={clientSecret} 
+              orderDetails={{
+                ...stepFormData,
+                productType,
+                totalPrice: `$${totalPrice.toFixed(2)}`
+              }}
+              onSuccess={handlePaymentSuccess}
+            />
+          </Elements>
+        </div>
+      );
+    }
+    
     switch(currentStep) {
       case 1:
         return (
@@ -385,7 +421,7 @@ const CheckoutPage = ({
           </div>
         );
       case 4:
-        return needsShipping ? (
+        return (
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Order Summary</h3>
             <div className="bg-gray-50 p-4 rounded-md">
@@ -397,13 +433,17 @@ const CheckoutPage = ({
                       ? 'Physical Book'
                       : productType === 'bundle'
                       ? 'Bundle (Digital + Physical)'
+                      : productType === 'digital'
+                      ? 'Digital Copy'
                       : 'Both Books Bundle'}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Cover Type:</span>
-                  <span>{coverType === 'hardcover' ? 'Hardcover' : 'Softcover'}</span>
-                </div>
+                {productType !== 'digital' && (
+                  <div className="flex justify-between">
+                    <span>Cover Type:</span>
+                    <span>{coverType === 'hardcover' ? 'Hardcover' : 'Softcover'}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span>Base Price:</span>
                   <span>${price.toFixed(2)}</span>
@@ -425,45 +465,15 @@ const CheckoutPage = ({
               <p>{stepFormData.firstName} {stepFormData.lastName}</p>
               <p>{stepFormData.email}</p>
             </div>
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h4 className="font-medium mb-2">Shipping Address</h4>
-              <p>{stepFormData.address1}</p>
-              {stepFormData.address2 && <p>{stepFormData.address2}</p>}
-              <p>{stepFormData.city}, {stepFormData.state} {stepFormData.zipCode}</p>
-              <p>{stepFormData.country}</p>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <h3 className="text-lg font-medium mb-4">Payment Details</h3>
-            <Elements stripe={clientSecret ? window.stripePromise : null} options={{ clientSecret }}>
-              <CheckoutForm 
-                clientSecret={clientSecret} 
-                orderDetails={{
-                  ...stepFormData,
-                  productType,
-                  totalPrice: `$${totalPrice.toFixed(2)}`
-                }}
-                onSuccess={handlePaymentSuccess}
-              />
-            </Elements>
-          </div>
-        );
-      case 5:
-        return (
-          <div>
-            <h3 className="text-lg font-medium mb-4">Payment Details</h3>
-            <Elements stripe={clientSecret ? window.stripePromise : null} options={{ clientSecret }}>
-              <CheckoutForm 
-                clientSecret={clientSecret} 
-                orderDetails={{
-                  ...stepFormData,
-                  productType,
-                  totalPrice: `$${totalPrice.toFixed(2)}`
-                }}
-                onSuccess={handlePaymentSuccess}
-              />
-            </Elements>
+            {needsShipping && (
+              <div className="bg-gray-50 p-4 rounded-md">
+                <h4 className="font-medium mb-2">Shipping Address</h4>
+                <p>{stepFormData.address1}</p>
+                {stepFormData.address2 && <p>{stepFormData.address2}</p>}
+                <p>{stepFormData.city}, {stepFormData.state} {stepFormData.zipCode}</p>
+                <p>{stepFormData.country}</p>
+              </div>
+            )}
           </div>
         );
       default:
@@ -479,15 +489,15 @@ const CheckoutPage = ({
             <h2 className="text-2xl font-bold mb-4">Order Your Copy Now</h2>
             <p className="text-gray-600 mb-6">Complete the form below to get your copy</p>
             
-            {/* Stepper - Only show for steps 1-4, hide for payment step */}
-            {(currentStep < 5 && productType !== 'digital') || 
-             (currentStep < 4 && productType === 'digital') ? (
+            {/* Stepper - Only show for steps 1-4, hide for payment */}
+            {!showPayment && (
               <div className="flex justify-between mb-8">
-                {visibleSteps.map((step, index) => {
+                {visibleSteps.slice(0, needsShipping ? 5 : 4).map((step, index) => {
                   // Determine if step is active, completed, or upcoming
                   const isActive = step.id === currentStep;
                   const isCompleted = step.id < currentStep;
-                  const isUpcoming = step.id > currentStep;
+                  
+                  const StepIcon = step.icon;
                   
                   return (
                     <div 
@@ -498,21 +508,21 @@ const CheckoutPage = ({
                         'text-gray-400'
                       }`}
                     >
-                      <div className={`flex items-center justify-center w-8 h-8 rounded-full mb-2 ${
+                      <div className={`flex items-center justify-center w-10 h-10 rounded-full mb-2 ${
                         isActive ? 'bg-theme-purple-dark text-white' : 
                         isCompleted ? 'bg-green-500 text-white' : 
                         'bg-gray-200 text-gray-500'
                       }`}>
-                        {isCompleted ? <Check className="h-4 w-4" /> : <step.icon className="h-4 w-4" />}
+                        <StepIcon className="h-5 w-5" />
                       </div>
-                      <span className={`text-xs ${isActive ? 'font-medium' : ''}`}>
+                      <span className={`text-sm ${isActive ? 'font-medium' : ''}`}>
                         {step.name}
                       </span>
                     </div>
                   );
                 })}
               </div>
-            ) : null}
+            )}
             
             {/* Step Content */}
             <div className="mb-6">
@@ -520,33 +530,52 @@ const CheckoutPage = ({
             </div>
             
             {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8">
-              {currentStep > 1 && 
-               currentStep !== (productType === 'digital' ? 4 : 5) && (
+            {!showPayment && (
+              <div className="flex justify-between mt-8">
+                {currentStep > 1 && (
+                  <button 
+                    onClick={handleBack}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50"
+                  >
+                    Back
+                  </button>
+                )}
+                
+                {currentStep < (needsShipping ? 4 : 3) ? (
+                  <button 
+                    onClick={handleContinue}
+                    className={`ml-auto px-4 py-2 bg-theme-purple-dark text-white rounded-md hover:bg-theme-purple ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Processing...' : 'Continue'}
+                  </button>
+                ) : currentStep === (needsShipping ? 4 : 3) ? (
+                  <button 
+                    onClick={handleProceedToPayment}
+                    className="ml-auto px-4 py-2 bg-theme-purple-dark text-white rounded-md hover:bg-theme-purple"
+                  >
+                    Proceed to Payment
+                  </button>
+                ) : null}
+              </div>
+            )}
+            
+            {showPayment && (
+              <div className="flex justify-start mt-8">
                 <button 
                   onClick={handleBack}
                   className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50"
                 >
-                  Back
+                  Back to Summary
                 </button>
-              )}
-              {currentStep < (productType === 'digital' ? 4 : 5) && (
-                <button 
-                  onClick={handleContinue}
-                  className={`ml-auto px-4 py-2 bg-theme-purple-dark text-white rounded-md hover:bg-theme-purple ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Processing...' : 
-                   currentStep === (productType === 'digital' ? 3 : 4) ? 'Proceed to Payment' : 'Continue'}
-                </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
       
-      {/* Mobile Order Summary for step 4 */}
-      {currentStep === (productType === 'digital' ? 3 : 4) && (
+      {/* Mobile Order Summary for last step before payment */}
+      {currentStep === (needsShipping ? 4 : 3) && !showPayment && (
         <div className="md:hidden mt-6">
           <OrderSummary productType={productType} coverType={coverType} step={currentStep} />
         </div>
