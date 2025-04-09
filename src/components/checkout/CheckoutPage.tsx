@@ -1,4 +1,3 @@
-
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { ProductType, CoverType } from './ProductTypeSelection';
@@ -61,7 +60,6 @@ const CheckoutPage = ({
         { id: 1, name: 'Personal Information', icon: icons.personal },
         { id: 2, name: 'Book Format', icon: icons.format },
         { id: 3, name: 'Order Summary', icon: icons.summary },
-        { id: 4, name: 'Payment', icon: icons.payment },
       ];
     }
     return [
@@ -69,7 +67,6 @@ const CheckoutPage = ({
       { id: 2, name: 'Book Format', icon: icons.format },
       { id: 3, name: 'Shipping Details', icon: icons.shipping },
       { id: 4, name: 'Order Summary', icon: icons.summary },
-      { id: 5, name: 'Payment', icon: icons.payment },
     ];
   };
   
@@ -492,7 +489,7 @@ const CheckoutPage = ({
             {/* Stepper - Only show for steps 1-4, hide for payment */}
             {!showPayment && (
               <div className="flex justify-between mb-8">
-                {visibleSteps.slice(0, needsShipping ? 5 : 4).map((step, index) => {
+                {visibleSteps.map((step, index) => {
                   // Determine if step is active, completed, or upcoming
                   const isActive = step.id === currentStep;
                   const isCompleted = step.id < currentStep;
