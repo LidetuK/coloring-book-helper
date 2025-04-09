@@ -60,6 +60,7 @@ const CheckoutPage = ({
         { id: 1, name: 'Personal Information', icon: icons.personal },
         { id: 2, name: 'Book Format', icon: icons.format },
         { id: 3, name: 'Order Summary', icon: icons.summary },
+        { id: 4, name: 'Payment', icon: icons.payment },
       ];
     }
     return [
@@ -67,6 +68,7 @@ const CheckoutPage = ({
       { id: 2, name: 'Book Format', icon: icons.format },
       { id: 3, name: 'Shipping Details', icon: icons.shipping },
       { id: 4, name: 'Order Summary', icon: icons.summary },
+      { id: 5, name: 'Payment', icon: icons.payment },
     ];
   };
   
@@ -147,12 +149,14 @@ const CheckoutPage = ({
   };
   
   const handleProceedToPayment = () => {
-    setShowPayment(true);
+    setCurrentStep(needsShipping ? 5 : 4); // Set to the payment step instead of just showing payment
   };
   
   // Render appropriate step content based on currentStep
   const renderStepContent = () => {
-    if (showPayment) {
+    const paymentStep = needsShipping ? 5 : 4;
+    
+    if (currentStep === paymentStep) {
       return (
         <div>
           <h3 className="text-lg font-medium mb-4">Payment Details</h3>
@@ -218,6 +222,17 @@ const CheckoutPage = ({
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Book Format</h3>
             <div className="space-y-4">
+              {/* Book display - making it bigger */}
+              <div className="flex justify-center mb-6">
+                <div className="w-full max-w-xs">
+                  <img 
+                    src={productType === 'dual-books' ? "/2-removebg-preview (1).png" : "/download (2).png"} 
+                    alt="Book Cover" 
+                    className="w-full h-auto object-contain mx-auto"
+                  />
+                </div>
+              </div>
+              
               <div className="flex items-center space-x-3">
                 <input
                   type="radio"
@@ -486,40 +501,38 @@ const CheckoutPage = ({
             <h2 className="text-2xl font-bold mb-4">Order Your Copy Now</h2>
             <p className="text-gray-600 mb-6">Complete the form below to get your copy</p>
             
-            {/* Stepper - Only show for steps 1-4, hide for payment */}
-            {!showPayment && (
-              <div className="flex justify-between mb-8">
-                {visibleSteps.map((step, index) => {
-                  // Determine if step is active, completed, or upcoming
-                  const isActive = step.id === currentStep;
-                  const isCompleted = step.id < currentStep;
-                  
-                  const StepIcon = step.icon;
-                  
-                  return (
-                    <div 
-                      key={step.id} 
-                      className={`flex flex-col items-center ${
-                        isActive ? 'text-theme-purple-dark' : 
-                        isCompleted ? 'text-green-500' : 
-                        'text-gray-400'
-                      }`}
-                    >
-                      <div className={`flex items-center justify-center w-10 h-10 rounded-full mb-2 ${
-                        isActive ? 'bg-theme-purple-dark text-white' : 
-                        isCompleted ? 'bg-green-500 text-white' : 
-                        'bg-gray-200 text-gray-500'
-                      }`}>
-                        <StepIcon className="h-5 w-5" />
-                      </div>
-                      <span className={`text-sm ${isActive ? 'font-medium' : ''}`}>
-                        {step.name}
-                      </span>
+            {/* Stepper */}
+            <div className="flex justify-between mb-8">
+              {visibleSteps.map((step, index) => {
+                // Determine if step is active, completed, or upcoming
+                const isActive = step.id === currentStep;
+                const isCompleted = step.id < currentStep;
+                
+                const StepIcon = step.icon;
+                
+                return (
+                  <div 
+                    key={step.id} 
+                    className={`flex flex-col items-center ${
+                      isActive ? 'text-theme-purple-dark' : 
+                      isCompleted ? 'text-green-500' : 
+                      'text-gray-400'
+                    }`}
+                  >
+                    <div className={`flex items-center justify-center w-10 h-10 rounded-full mb-2 ${
+                      isActive ? 'bg-theme-purple-dark text-white' : 
+                      isCompleted ? 'bg-green-500 text-white' : 
+                      'bg-gray-200 text-gray-500'
+                    }`}>
+                      <StepIcon className="h-5 w-5" />
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                    <span className={`text-sm ${isActive ? 'font-medium' : ''}`}>
+                      {step.name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
             
             {/* Step Content */}
             <div className="mb-6">
@@ -527,52 +540,39 @@ const CheckoutPage = ({
             </div>
             
             {/* Navigation Buttons */}
-            {!showPayment && (
-              <div className="flex justify-between mt-8">
-                {currentStep > 1 && (
-                  <button 
-                    onClick={handleBack}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50"
-                  >
-                    Back
-                  </button>
-                )}
-                
-                {currentStep < (needsShipping ? 4 : 3) ? (
-                  <button 
-                    onClick={handleContinue}
-                    className={`ml-auto px-4 py-2 bg-theme-purple-dark text-white rounded-md hover:bg-theme-purple ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? 'Processing...' : 'Continue'}
-                  </button>
-                ) : currentStep === (needsShipping ? 4 : 3) ? (
-                  <button 
-                    onClick={handleProceedToPayment}
-                    className="ml-auto px-4 py-2 bg-theme-purple-dark text-white rounded-md hover:bg-theme-purple"
-                  >
-                    Proceed to Payment
-                  </button>
-                ) : null}
-              </div>
-            )}
-            
-            {showPayment && (
-              <div className="flex justify-start mt-8">
+            <div className="flex justify-between mt-8">
+              {currentStep > 1 && (
                 <button 
                   onClick={handleBack}
                   className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50"
                 >
-                  Back to Summary
+                  Back
                 </button>
-              </div>
-            )}
+              )}
+              
+              {currentStep < (needsShipping ? 4 : 3) ? (
+                <button 
+                  onClick={handleContinue}
+                  className={`ml-auto px-4 py-2 bg-theme-purple-dark text-white rounded-md hover:bg-theme-purple ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Processing...' : 'Continue'}
+                </button>
+              ) : currentStep === (needsShipping ? 4 : 3) ? (
+                <button 
+                  onClick={handleProceedToPayment}
+                  className="ml-auto px-4 py-2 bg-theme-purple-dark text-white rounded-md hover:bg-theme-purple"
+                >
+                  Proceed to Payment
+                </button>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
       
       {/* Mobile Order Summary for last step before payment */}
-      {currentStep === (needsShipping ? 4 : 3) && !showPayment && (
+      {currentStep === (needsShipping ? 4 : 3) && (
         <div className="md:hidden mt-6">
           <OrderSummary productType={productType} coverType={coverType} step={currentStep} />
         </div>
