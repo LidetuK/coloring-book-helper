@@ -1,3 +1,4 @@
+
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { ProductType, CoverType } from './ProductTypeSelection';
@@ -56,10 +57,10 @@ const CheckoutPage = ({
   const getVisibleSteps = () => {
     if (productType === 'digital') {
       return [
-        steps[0], // Personal Information
-        steps[1], // Book Format
-        steps[3], // Order Summary (now at position 3)
-        steps[4], // Payment
+        { id: 1, name: 'Personal Information', icon: User },
+        { id: 2, name: 'Book Format', icon: Book },
+        { id: 3, name: 'Order Summary', icon: Receipt }, // Now at position 3 instead of 4
+        { id: 4, name: 'Payment', icon: CreditCard }, // Now at position 4 instead of 5
       ];
     }
     return steps;
@@ -482,12 +483,12 @@ const CheckoutPage = ({
             <p className="text-gray-600 mb-6">Complete the form below to get your copy</p>
             
             {/* Stepper - Only show for steps 1-4, hide for payment step */}
-            {currentStep < 5 && (
+            {(currentStep < 5 && productType !== 'digital') || 
+             (currentStep < 4 && productType === 'digital') ? (
               <div className="flex justify-between mb-8">
-                {visibleSteps.slice(0, 4).map((step, index) => {
-                  // Determine actual step number to display (for digital products)
-                  const displayNumber = productType === 'digital' && step.id > 2 ? 
-                    step.id - 1 : step.id;
+                {visibleSteps.map((step, index) => {
+                  // For digital products, make sure step 3 is Order Summary and 4 is Payment
+                  const displayNumber = index + 1;
                     
                   // Determine if step is active, completed, or upcoming
                   const isActive = step.id === currentStep;
@@ -517,7 +518,7 @@ const CheckoutPage = ({
                   );
                 })}
               </div>
-            )}
+            ) : null}
             
             {/* Step Content */}
             <div className="mb-6">
@@ -526,7 +527,8 @@ const CheckoutPage = ({
             
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-8">
-              {currentStep > 1 && currentStep !== 5 && (
+              {currentStep > 1 && 
+               currentStep !== (productType === 'digital' ? 4 : 5) && (
                 <button 
                   onClick={handleBack}
                   className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50"
@@ -540,7 +542,8 @@ const CheckoutPage = ({
                   className={`ml-auto px-4 py-2 bg-theme-purple-dark text-white rounded-md hover:bg-theme-purple ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Processing...' : currentStep === (productType === 'digital' ? 3 : 4) ? 'Proceed to Payment' : 'Continue'}
+                  {isSubmitting ? 'Processing...' : 
+                   currentStep === (productType === 'digital' ? 3 : 4) ? 'Proceed to Payment' : 'Continue'}
                 </button>
               )}
             </div>
