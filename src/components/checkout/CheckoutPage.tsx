@@ -1,4 +1,3 @@
-
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { ProductType, CoverType } from './ProductTypeSelection';
@@ -150,8 +149,7 @@ const CheckoutPage = ({
   };
   
   const handleProceedToPayment = () => {
-    // Open Stripe checkout URL in a new tab
-    window.open('https://checkout.stripe.com/', '_blank');
+    setCurrentStep(needsShipping ? 5 : 4); // Set to the payment step instead of just showing payment
   };
   
   // Render appropriate step content based on currentStep
@@ -226,12 +224,11 @@ const CheckoutPage = ({
             <div className="space-y-4">
               {/* Book display - making it bigger */}
               <div className="flex justify-center mb-6">
-                <div className="w-full max-w-sm">
+                <div className="w-full max-w-xs">
                   <img 
                     src={productType === 'dual-books' ? "/2-removebg-preview (1).png" : "/download (2).png"} 
                     alt="Book Cover" 
                     className="w-full h-auto object-contain mx-auto"
-                    style={{ maxHeight: "300px" }}
                   />
                 </div>
               </div>
