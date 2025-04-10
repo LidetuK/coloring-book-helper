@@ -16,7 +16,12 @@ const OrderSummary = ({ productType, coverType, step = 0 }: OrderSummaryProps) =
   return (
     <div className={`bg-gradient-to-r from-theme-purple-dark to-theme-purple p-8 md:p-12 text-white ${showOrder ? '' : 'hidden md:block'}`}>
       <div className="flex items-center justify-center mb-8">
-        <img src="/2-removebg-preview (1).png" alt="Book" className="w-32 h-auto" />
+        <img 
+          src="/2-removebg-preview (1).png" 
+          alt="Book" 
+          className="w-64 h-auto" // Increased size from w-32 to w-64
+          style={{ maxHeight: '350px' }} // Added max height
+        />
       </div>
       
       <h3 className="text-xl md:text-2xl font-bold mb-6">
@@ -126,3 +131,4 @@ const OrderSummary = ({ productType, coverType, step = 0 }: OrderSummaryProps) =
 };
 
 export default OrderSummary;
+

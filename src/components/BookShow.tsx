@@ -47,6 +47,16 @@ const BookShow = () => {
           <strong></strong> 
         </p>
 
+        {/* Book Display - Large Size */}
+        <div className="mt-6 md:mt-8 flex justify-center">
+          <img 
+            src="/download (2).png" 
+            alt="Book Cover" 
+            className="w-2/3 max-w-md h-auto object-contain mx-auto"
+            style={{ maxHeight: '500px' }}
+          />
+        </div>
+
         {/* Availability Notice */}
         <div className="mt-6 md:mt-8 bg-white text-gray-900 p-4 md:p-6 rounded-lg shadow-lg">
           <p className="text-base md:text-lg font-bold uppercase">
