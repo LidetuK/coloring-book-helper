@@ -1,4 +1,3 @@
-
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { ProductType, CoverType } from './ProductTypeSelection';
@@ -36,7 +35,6 @@ const CheckoutPage = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   
-  // Calculate prices
   let price = 0;
   if (productType === 'digital') {
     price = 9.99;
@@ -54,7 +52,6 @@ const CheckoutPage = ({
   
   const needsShipping = productType === 'physical' || productType === 'bundle' || productType === 'dual-books';
   
-  // Get visible steps based on product type
   const getVisibleSteps = () => {
     if (productType === 'digital') {
       return [
@@ -81,15 +78,12 @@ const CheckoutPage = ({
   };
   
   const handleContinue = () => {
-    // If we're at the shipping step, submit the form to Web3Forms
     if (currentStep === 3 && needsShipping) {
       submitFormToWeb3Forms();
     } else if (currentStep === 2 && !needsShipping) {
-      // Skip shipping step for digital only
       submitFormToWeb3Forms();
-      setCurrentStep(3); // Go to order summary (position 3 for digital)
+      setCurrentStep(3);
     } else {
-      // Otherwise just go to next step
       setCurrentStep(prev => prev + 1);
     }
   };
@@ -99,20 +93,16 @@ const CheckoutPage = ({
     try {
       const formData = new FormData();
       
-      // Add the form data to the FormData object
       Object.entries(stepFormData).forEach(([key, value]) => {
         formData.append(key, value as string);
       });
       
-      // Add product info
       formData.append('productType', productType);
       formData.append('coverType', coverType);
       formData.append('totalPrice', totalPrice.toFixed(2));
       
-      // Add the access key
       formData.append('access_key', 'f39f7a05-fac0-4032-a2cc-e68fff78426c');
       
-      // Submit the form
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         body: formData
@@ -122,11 +112,9 @@ const CheckoutPage = ({
       
       if (data.success) {
         console.log('Form submitted successfully', data);
-        // Continue to next step after submission
         setCurrentStep(prev => prev + 1);
       } else {
         console.error('Form submission failed', data);
-        // Still continue to next step even if form submission fails
         setCurrentStep(prev => prev + 1);
       }
     } catch (error) {
@@ -143,18 +131,16 @@ const CheckoutPage = ({
     }
     
     if (currentStep === 3 && !needsShipping) {
-      setCurrentStep(2); // Go back to book format if shipping was skipped
+      setCurrentStep(2);
     } else {
       setCurrentStep(prev => prev - 1);
     }
   };
   
   const handleProceedToPayment = () => {
-    // Open Stripe checkout in a new tab
     window.open("https://checkout.stripe.com/", "_blank");
   };
   
-  // Render appropriate step content based on currentStep
   const renderStepContent = () => {
     const paymentStep = needsShipping ? 5 : 4;
     
@@ -224,14 +210,13 @@ const CheckoutPage = ({
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Book Format</h3>
             <div className="space-y-4">
-              {/* Book display - making it much bigger */}
-              <div className="flex justify-center mb-6">
-                <div className="w-full max-w-md">
+              <div className="flex justify-center mb-8">
+                <div className="w-full max-w-2xl">
                   <img 
                     src={productType === 'dual-books' ? "/2-removebg-preview (1).png" : "/download (2).png"} 
                     alt="Book Cover" 
                     className="w-full h-auto object-contain mx-auto"
-                    style={{ maxHeight: '400px' }}
+                    style={{ maxHeight: '600px' }}
                   />
                 </div>
               </div>
@@ -504,10 +489,8 @@ const CheckoutPage = ({
             <h2 className="text-2xl font-bold mb-4">Order Your Copy Now</h2>
             <p className="text-gray-600 mb-6">Complete the form below to get your copy</p>
             
-            {/* Stepper */}
             <div className="flex justify-between mb-8">
               {visibleSteps.map((step, index) => {
-                // Determine if step is active, completed, or upcoming
                 const isActive = step.id === currentStep;
                 const isCompleted = step.id < currentStep;
                 
@@ -537,12 +520,10 @@ const CheckoutPage = ({
               })}
             </div>
             
-            {/* Step Content */}
             <div className="mb-6">
               {renderStepContent()}
             </div>
             
-            {/* Navigation Buttons */}
             <div className="flex justify-between mt-8">
               {currentStep > 1 && (
                 <button 
@@ -574,7 +555,6 @@ const CheckoutPage = ({
         </div>
       </div>
       
-      {/* Mobile Order Summary for last step before payment */}
       {currentStep === (needsShipping ? 4 : 3) && (
         <div className="md:hidden mt-6">
           <OrderSummary productType={productType} coverType={coverType} step={currentStep} />
