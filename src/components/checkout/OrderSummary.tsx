@@ -1,4 +1,3 @@
-
 import { CoverType, ProductType } from './ProductTypeSelection';
 
 interface OrderSummaryProps {
@@ -17,10 +16,10 @@ const OrderSummary = ({ productType, coverType, step = 0 }: OrderSummaryProps) =
     <div className={`bg-gradient-to-r from-theme-purple-dark to-theme-purple p-8 md:p-12 text-white ${showOrder ? '' : 'hidden md:block'}`}>
       <div className="flex items-center justify-center mb-8">
         <img 
-          src="/2-removebg-preview (1).png" 
+          src="https://res.cloudinary.com/dejyrbqvu/image/upload/v1744630158/2-removebg-preview_1_hwikae.png" 
           alt="Book" 
-          className="w-64 h-auto" // Increased size from w-32 to w-64
-          style={{ maxHeight: '350px' }} // Added max height
+          className="w-64 h-auto" 
+          style={{ maxHeight: '350px' }} 
         />
       </div>
       
@@ -131,4 +130,3 @@ const OrderSummary = ({ productType, coverType, step = 0 }: OrderSummaryProps) =
 };
 
 export default OrderSummary;
-
